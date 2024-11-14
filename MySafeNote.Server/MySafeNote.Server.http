@@ -1,0 +1,6 @@
+@MySafeNote.Server_HostAddress = http://localhost:5065
+
+GET {{MySafeNote.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
