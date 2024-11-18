@@ -3,9 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySafeNote.Server", "MySafeNote.Server\MySafeNote.Server.csproj", "{40DB523C-BE6D-4991-9C60-489BC6B20149}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MySafeNote.Server", "MySafeNote.Server\MySafeNote.Server.csproj", "{40DB523C-BE6D-4991-9C60-489BC6B20149}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8ECB861D-977A-4994-858D-334CBF2430C4} = {8ECB861D-977A-4994-858D-334CBF2430C4}
+	EndProjectSection
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "mysafenote.client", "mysafenote.client\mysafenote.client.esproj", "{99326721-35EB-4C29-84CA-7277A97A21BA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MySafeNote.Core", "MySafeNote.Core\MySafeNote.Core.csproj", "{23257807-A876-4F46-8D94-BF0C089B73CC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySafeNote.DataAccess", "MySafeNote.DataAccess\MySafeNote.DataAccess.csproj", "{8ECB861D-977A-4994-858D-334CBF2430C4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{23257807-A876-4F46-8D94-BF0C089B73CC} = {23257807-A876-4F46-8D94-BF0C089B73CC}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,6 +33,14 @@ Global
 		{99326721-35EB-4C29-84CA-7277A97A21BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99326721-35EB-4C29-84CA-7277A97A21BA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{99326721-35EB-4C29-84CA-7277A97A21BA}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{23257807-A876-4F46-8D94-BF0C089B73CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23257807-A876-4F46-8D94-BF0C089B73CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23257807-A876-4F46-8D94-BF0C089B73CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23257807-A876-4F46-8D94-BF0C089B73CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8ECB861D-977A-4994-858D-334CBF2430C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8ECB861D-977A-4994-858D-334CBF2430C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8ECB861D-977A-4994-858D-334CBF2430C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8ECB861D-977A-4994-858D-334CBF2430C4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
