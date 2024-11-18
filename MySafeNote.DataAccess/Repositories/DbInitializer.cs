@@ -14,8 +14,9 @@ namespace MySafeNote.DataAccess.Repositories
             {
                 await dbContext.Users.AddRangeAsync(FakeDataFactory.Users);
                 await dbContext.Notes.AddRangeAsync(FakeDataFactory.Notes);
+                await dbContext.SaveChangesAsync();
             }
-            await dbContext.SaveChangesAsync();
+
         }
     }
 }

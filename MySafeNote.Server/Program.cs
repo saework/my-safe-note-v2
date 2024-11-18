@@ -32,35 +32,52 @@ namespace MySafeNote
             //    configuration.RootPath = "ClientApp/build";
             //});
 
-            // Строительство приложения
             var app = builder.Build();
 
-            // Настройка конвейера обработки HTTP-запросов
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Error");
-                app.UseHsts();
-            }
+            //// Настройка конвейера обработки HTTP-запросов
+            //if (app.Environment.IsDevelopment())
+            //{
+            //    app.UseDeveloperExceptionPage();
+            //}
+            //else
+            //{
+            //    app.UseExceptionHandler("/Error");
+            //    app.UseHsts();
+            //}
 
             // Инициализация базы данных (если это требуется в вашем проекте)
-            DbInitializer.Initialize(app.Services.CreateScope().ServiceProvider.GetRequiredService<DataContext>());
-
-            // Настройка Swagger
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
+            //DbInitializer.Initialize(app.Services.CreateScope().ServiceProvider.GetRequiredService<DataContext>());
+            // Инициализация базы данных
+            using (var scope = app.Services.CreateScope())
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-            });
+                var dbContext = scope.ServiceProvider.GetRequiredService<DataContext>();
+                DbInitializer.Initialize(dbContext);
+            }
 
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
+            //// Настройка Swagger
+            //app.UseSwagger();
+            //app.UseSwaggerUI(c =>
+            //{
+            //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+            //});
+
+            //app.UseHttpsRedirection();
+            //app.UseStaticFiles();
             //app.UseSpaStaticFiles();
 
-            app.UseRouting();
+            //app.UseRouting();
+
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+
+            // Configure the HTTP request pipeline.
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
+
+            app.UseHttpsRedirection();
 
             app.UseAuthorization();
             app.MapControllers(); // Настройка маршрутов контроллеров
@@ -75,6 +92,7 @@ namespace MySafeNote
             //        spa.UseReactDevelopmentServer(npmScript: "start");
             //    }
             //});
+            app.MapFallbackToFile("/index.html");
 
             app.Run(); // Запуск приложения
         }

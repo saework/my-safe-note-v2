@@ -20,9 +20,6 @@ namespace MySafeNote.DataAccess
             modelBuilder.ApplyConfiguration(new UserEntityConfiguration());
             modelBuilder.ApplyConfiguration(new NoteEntityConfiguration());
 
-            // Выключил закомментированные строки
-            // Если вам нужно добавить начальные данные, вы можете сделать это здесь
-
             base.OnModelCreating(modelBuilder);
         }
     }
