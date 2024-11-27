@@ -6,6 +6,10 @@ using MySafeNote.Core;
 using MySafeNote.Core.Abstractions;
 using MySafeNote.WebHost.Model;
 using MySafeNote.DataAccess.Repositories;
+using MySafeNote.Server;
+using System.Collections.Generic;
+using System.Linq;
+using MySafeNote.Server.Controllers;
 
 namespace my_safe_note.Controllers
 {
@@ -13,21 +17,49 @@ namespace my_safe_note.Controllers
     [ApiController]
     public class NoteController : ControllerBase
     {
+        private readonly ILogger<NoteController> _logger;
         private readonly INoteRepository _noteRepository;
         private readonly IUserRepository _userRepository;
-        public NoteController(INoteRepository noteRepository, IUserRepository userRepository)
+        public NoteController(ILogger<NoteController> logger, INoteRepository noteRepository, IUserRepository userRepository)
         {
+            _logger = logger;
             _noteRepository = noteRepository;
             _userRepository = userRepository;
         }
 
+        //// GET: api/Note
+        //[HttpGet]
+        //public async Task<ActionResult<List<Note>>> GetAllNotesAsync()
+        //{
+        //    var notes = await _noteRepository.GetAllAsync();
+        //    return Ok(notes);
+        //}
+
+
         // GET: api/Note
-        [HttpGet]
+        [HttpGet(Name = "GetNote")]
         public async Task<ActionResult<List<Note>>> GetAllNotesAsync()
         {
             var notes = await _noteRepository.GetAllAsync();
             return Ok(notes);
         }
+
+        //        private static readonly string[] Summaries = new[]
+        //{
+        //                    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+        //                };
+
+        //        [HttpGet(Name = "GetNote")]
+        //        public IEnumerable<WeatherForecast> Get()
+        //        {
+        //            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        //            {
+        //                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+        //                TemperatureC = Random.Shared.Next(-20, 55),
+        //                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+        //            })
+        //            .ToArray();
+        //        }
 
         // GET api/Note/5
         [HttpGet("{id}")]
