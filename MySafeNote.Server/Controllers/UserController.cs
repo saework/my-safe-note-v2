@@ -6,6 +6,11 @@ using MySafeNote.Core;
 using MySafeNote.Core.Abstractions;
 using MySafeNote.WebHost.Model;
 using MySafeNote.DataAccess.Repositories;
+using Microsoft.IdentityModel.Tokens;
+using MySafeNote.Server.Auth;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using MySafeNote.Server.Model;
 
 namespace my_safe_note.Controllers
 {
@@ -128,6 +133,127 @@ namespace my_safe_note.Controllers
             else
                 return Ok(deletedId);
         }
+
+        //public Task<ActionResult<string>> LogInUserByEmail(string username)
+        ////app.Map("/login/{username}", (string username) => 
+        //{
+        //    var claims = new List<Claim> { new Claim(ClaimTypes.Name, username) };
+        //        var jwt = new JwtSecurityToken(
+        //                issuer: AuthOptions.ISSUER,
+        //                audience: AuthOptions.AUDIENCE,
+        //                claims: claims,
+        //                expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(2)), // время действия 2 минуты
+        //                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+
+        //    return new JwtSecurityTokenHandler().WriteToken(jwt);
+        //}
+
+        [HttpPost("login/")]
+        public async Task<IActionResult> LoginUserByEmail(UserLoginDto userLoginData)
+        {
+            if (userLoginData == null)
+            {
+                return BadRequest("UserLoginData не определен.");
+            }
+
+            var email = userLoginData.Email;
+            var password = userLoginData.Password;
+
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                return BadRequest("Email не определен.");
+            }
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                return BadRequest("Password не определен.");
+            }
+
+            var user = await _userRepository.GetUserByEmailAsync(email);
+            if (user == null)
+            {
+                return NotFound($"User с Email: {email} не найден.");
+            }
+
+            //// Проверка пароля
+            //if (!VerifyPassword(userLoginData.PasswordHash, user.PasswordHash))
+            //{
+            //    return Unauthorized("Неверный пароль.");
+            //}
+
+            var claims = new List<Claim> { new Claim(ClaimTypes.Name, email) };
+
+            var jwt = new JwtSecurityToken(
+                issuer: AuthOptions.ISSUER,
+                audience: AuthOptions.AUDIENCE,
+                claims: claims,
+                expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(60)), // время жизни токена
+                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+
+            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+
+            var response = new
+            {
+                access_token = encodedJwt,
+                userId = user.Id
+            };
+
+            return Ok(response);
+        }
+
+        //// Login api/User/login/
+        //[HttpPost("login/")]
+        //public async Task<ActionResult<string>> LoginUserByEmail(UserLoginDto userLoginData)
+        //{
+        //    //if (string.IsNullOrWhiteSpace(email))
+        //    if (userLoginData == null)
+        //    {
+        //        return BadRequest("UserLoginData не определен.");
+        //    }
+        //    var email = userLoginData.Email;
+        //    var passwordHash = userLoginData.PasswordHash;
+        //    if (string.IsNullOrWhiteSpace(email))
+        //    {
+        //        return BadRequest("Email не определен.");
+        //    }
+        //    if (string.IsNullOrWhiteSpace(passwordHash))
+        //    {
+        //        return BadRequest("PasswordHash не определен.");
+        //    }
+
+        //    var user = await _userRepository.GetUserByEmailAsync(email);
+        //    //!!!
+        //    //добавить обработку пароля!
+        //    //!!!
+
+        //    if (user == null)
+        //    {
+        //        return NotFound($"User с Email: {email} не найден.");
+        //         //return Results.Unauthorized();
+        //    }
+
+        //    var claims = new List<Claim> { new Claim(ClaimTypes.Name, email) };
+
+        //    var jwt = new JwtSecurityToken(
+        //        issuer: AuthOptions.ISSUER,
+        //        audience: AuthOptions.AUDIENCE,
+        //        claims: claims,
+        //        expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(60)), // время жизни токена
+        //        signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+
+        //    var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+        //    // формируем ответ
+        //    var response = new
+        //    {
+        //        access_token = encodedJwt,
+        //        //username = email
+        //        userId = user.Id
+        //    };
+
+        //    return Results.Json(response);
+
+        //    //return Ok(new JwtSecurityTokenHandler().WriteToken(jwt));
+        //}
+
     }
 }
 

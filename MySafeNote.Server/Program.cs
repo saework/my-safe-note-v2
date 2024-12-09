@@ -5,6 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using MySafeNote.DataAccess;
 using MySafeNote.DataAccess.Repositories;
 using MySafeNote.Core.Abstractions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.OAuth;
+using Microsoft.IdentityModel.Tokens;
+using MySafeNote.Server.Auth;
 
 namespace MySafeNote
 {
@@ -13,6 +17,33 @@ namespace MySafeNote
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            // добавление сервисов аутентификации
+            //builder.Services.AddAuthentication("Bearer")  // схема аутентификации - с помощью jwt-токенов
+            //    .AddJwtBearer();      // подключение аутентификации с помощью jwt-токенов
+
+            builder.Services.AddAuthorization();
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        // указывает, будет ли валидироваться издатель при валидации токена
+                        ValidateIssuer = true,
+                        // строка, представляющая издателя
+                        ValidIssuer = AuthOptions.ISSUER,
+                        // будет ли валидироваться потребитель токена
+                        ValidateAudience = true,
+                        // установка потребителя токена
+                        ValidAudience = AuthOptions.AUDIENCE,
+                        // будет ли валидироваться время существования
+                        ValidateLifetime = true,
+                        // установка ключа безопасности
+                        IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+                        // валидация ключа безопасности
+                        ValidateIssuerSigningKey = true,
+                    };
+                });
 
             // Настройка служб
             builder.Services.AddControllers();
@@ -33,6 +64,10 @@ namespace MySafeNote
             //});
 
             var app = builder.Build();
+
+            //app.UseAuthentication();   // добавление middleware аутентификации
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             //// Настройка конвейера обработки HTTP-запросов
             //if (app.Environment.IsDevelopment())

@@ -23,37 +23,46 @@ import { IAction, IRootReducer, INoteRow, ILoginData } from '../interfaces';
 
 export const initialState: IRootReducer = {
   currentUser: '',
-  needLoadData: true,
+  needLoadData: false,
   currentId: 0,
   //checkedId: 0,
   jwtToken: '',
-  noteRows: [
-    {
-      id: 1,
-      title: "title1",
-      createDate: "createDate1",
-      noteShortText: "noteShortText1",
-      lastChangeDate: "lastChangeDate",
-      // bdPeriod: "bdPeriod"
-    },
-    {
-      id: 2,
-      title: "title2",
-      createDate: "createDate2",
-      noteShortText: "noteShortText2",
-      lastChangeDate: "lastChangeDate2",
-      // bdPeriod: "bdPeriod2"
-    },
-    {
-      id: 3,
-      title: "title3",
-      createDate: "createDate3",
-      noteShortText: "noteShortText3",
-      lastChangeDate: "lastChangeDate3",
-      // bdPeriod: "bdPeriod3"
-    }
-  ],
+  noteRows: [],
 };
+
+// export const initialState: IRootReducer = {
+//   currentUser: '',
+//   needLoadData: false,
+//   currentId: 0,
+//   //checkedId: 0,
+//   jwtToken: '',
+//   noteRows: [
+//     {
+//       id: 1,
+//       title: "title1",
+//       createDate: "createDate1",
+//       noteShortText: "noteShortText1",
+//       lastChangeDate: "lastChangeDate",
+//       // bdPeriod: "bdPeriod"
+//     },
+//     {
+//       id: 2,
+//       title: "title2",
+//       createDate: "createDate2",
+//       noteShortText: "noteShortText2",
+//       lastChangeDate: "lastChangeDate2",
+//       // bdPeriod: "bdPeriod2"
+//     },
+//     {
+//       id: 3,
+//       title: "title3",
+//       createDate: "createDate3",
+//       noteShortText: "noteShortText3",
+//       lastChangeDate: "lastChangeDate3",
+//       // bdPeriod: "bdPeriod3"
+//     }
+//   ],
+// };
 
 
 // const reducer = (state, action) => {

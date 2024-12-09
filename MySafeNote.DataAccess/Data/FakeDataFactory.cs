@@ -12,8 +12,8 @@ namespace MySafeNote.DataAccess.Data
             new User()
             {
                 Id = 1,
-                Email = "owner1@somemail.ru",
-                PasswordHash = "asghal7eteysjgpoih"
+                Email = "test@test.ru",
+                PasswordHash = "111"
             },
             new User()
             {
