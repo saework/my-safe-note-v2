@@ -4,7 +4,7 @@ namespace MySafeNote.Core
 {
     public class Note : BaseEntity
     {
-        public int Number { get; set; }
+        // public int Number { get; set; }
         public string Title { get; set; }
         public Guid BodyLink { get; set; }
         public string NotePasswordHash { get; set; }

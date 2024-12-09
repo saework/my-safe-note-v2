@@ -12,7 +12,7 @@ namespace MySafeNote.DataAccess.EntityConfigurations
             builder.ToTable("Notes");
             builder.HasKey(r => r.Id);
             //builder.HasIndex(r => r.Number);
-            builder.Property(r => r.Number).IsRequired();
+            //builder.Property(r => r.Number).IsRequired();
             //builder.Property(r => r.CreateDate).IsRequired();
             //builder.Property(r => r.UserId).IsRequired();
 

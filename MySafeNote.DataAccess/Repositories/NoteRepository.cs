@@ -33,5 +33,11 @@ namespace MySafeNote.DataAccess.Repositories
             }
             return 0; // Если заметок не было, возвращаем 0
         }
+
+        public async Task<List<Note>> GetNotesByUserIdAsync(int userId)
+        {
+            var notes = await DbSet.Where(x => x.UserId == userId).ToListAsync();
+            return notes;
+        }
     }
 }

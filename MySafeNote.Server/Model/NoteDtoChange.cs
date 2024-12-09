@@ -5,7 +5,7 @@ namespace MySafeNote.WebHost.Model
     public class NoteDtoChange
     {
         public int Id { get; set; }
-        public int Number { get; set; }
+        //public int Number { get; set; }
         public string Title { get; set; }
         public Guid BodyLink { get; set; }
         public string NotePassword { get; set; }

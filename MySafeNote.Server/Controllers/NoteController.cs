@@ -10,6 +10,7 @@ using MySafeNote.Server;
 using System.Collections.Generic;
 using System.Linq;
 using MySafeNote.Server.Controllers;
+using MySafeNote.Server.Model;
 
 namespace my_safe_note.Controllers
 {
@@ -36,13 +37,56 @@ namespace my_safe_note.Controllers
         //}
 
 
+        //// GET: api/Note
+        //[HttpGet(Name = "GetNote")]
+        //public async Task<ActionResult<List<Note>>> GetAllNotesAsync()
+        //{
+        //    var notes = await _noteRepository.GetAllAsync();
+        //    return Ok(notes);
+        //}
+
+        //!!!
         // GET: api/Note
         [HttpGet(Name = "GetNote")]
         public async Task<ActionResult<List<Note>>> GetAllNotesAsync()
         {
+            var notesDto = new List<NoteDtoGet>();
             var notes = await _noteRepository.GetAllAsync();
-            return Ok(notes);
+            if (notes.Any())
+            {
+                notesDto = notes.Select(x => new NoteDtoGet
+                {
+                    Id = x.Id,
+                    Title = x.Title,
+                    CreateDate = x.CreateDate,
+                    LastChangeDate = x.LastChangeDate
+                }).ToList();
+            }
+            return Ok(notesDto);
         }
+
+        // DELETE api/User/email/{email}
+        //[HttpDelete("email/{email}")]
+
+        // GET: api/Note/userid/{id}
+        [HttpGet("userid/{userId}")]
+        public async Task<ActionResult<List<Note>>> GetNotesByUserIdAsync(int userId)
+        {
+            var notesDto = new List<NoteDtoGet>();
+            var notes = await _noteRepository.GetNotesByUserIdAsync(userId);
+            if (notes.Any())
+            {
+                notesDto = notes.Select(x => new NoteDtoGet
+                {
+                    Id = x.Id,
+                    Title = x.Title,
+                    CreateDate = x.CreateDate,
+                    LastChangeDate = x.LastChangeDate
+                }).ToList();
+            }
+            return Ok(notesDto);
+        }
+        //!!!
 
         //        private static readonly string[] Summaries = new[]
         //{
@@ -83,7 +127,7 @@ namespace my_safe_note.Controllers
             }
             try
             {
-                var number = noteDto.Number;
+                //var number = noteDto.Number;
                 var title = noteDto.Title;
                 var bodyLink = noteDto.BodyLink;
                 var notePassword = noteDto.NotePassword;
@@ -99,7 +143,7 @@ namespace my_safe_note.Controllers
 
                 var newNote = new Note
                 {
-                    Number = number,
+                    //Number = number,
                     Title = title,
                     BodyLink = bodyLink,
                     NotePasswordHash = notePasswordHash,
@@ -135,7 +179,7 @@ namespace my_safe_note.Controllers
                 return BadRequest($"Note с ID: {id} не найден.");
             }
             // Обновляем данные заметки
-            note.Number = changedNote.Number;
+            //note.Number = changedNote.Number;
             note.Title = changedNote.Title;
             note.BodyLink = changedNote.BodyLink;
             note.LastChangeDate = changedNote.LastChangeDate;

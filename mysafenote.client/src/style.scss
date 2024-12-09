@@ -1,0 +1,322 @@
+//@import '~bootstrap/scss/bootstrap';
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+$base-color: #28a745;
+* {
+  margin: 0;
+  padding: 0;
+}
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: normal;
+}
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+.sign-up__reqMessage-label {
+  margin: 0px auto 5px auto;
+  font-size: 18px;
+  color: darkred;
+}
+.main-page__bd-nodata {
+  display: flex;
+  justify-content: center;
+  font-size: 18px;
+  color: rgb(209, 209, 209);
+  margin: 10px 0 10px 0;
+}
+.main-form__button-add {
+  height: 70px;
+}
+.main-info__th-num {
+  width: 5%;
+}
+.main-info__th-num:hover {
+  cursor: pointer;
+}
+.main-info__th-name {
+  width: 25%;
+}
+.main-info__th-name:hover {
+  cursor: pointer;
+}
+.main-info__th-text {
+  width: 30%;
+}
+.main-info__th-text:hover {
+  cursor: pointer;
+}
+.main-info__th-date {
+  width: 15%;
+}
+.main-info__th-date:hover {
+  cursor: pointer;
+}
+.main-info__th-period {
+  width: 15%;
+}
+.main-info__th-period:hover {
+  cursor: pointer;
+}
+.main-info__th-edit {
+  width: 10%;
+}
+.was-validated .form-control:valid,
+.form-control.is-valid {
+  background-position: right calc(0.375em + 0.7875rem) center;
+}
+.was-validated textarea.form-control:valid,
+textarea.form-control.is-valid {
+  background-position: top calc(0.375em + 0.1875rem) right calc(0.375em + 0.7875rem);
+}
+.main-info__edit {
+  width: 30px;
+  height: 30px;
+}
+.main-info__edit:hover {
+  cursor: pointer;
+}
+.main-info__edit:active {
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+}
+th.main-info__th-edit {
+  width: 50px;
+  height: 50px;
+}
+.message__alert_center {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0;
+  height: 1.7rem;
+  padding: 0;
+}
+.react-datepicker__input-container {
+  width: inherit;
+  display: inherit;
+}
+.react-datepicker-wrapper {
+  width: 100%;
+  display: block;
+}
+.table thead th {
+  color: #5b635d;
+}
+.main-info__page-capt {
+  display: flex;
+  justify-content: center;
+  margin: 15px auto 20px auto;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #28a745;
+  padding-left: 60px;
+}
+.home__button {
+  margin-bottom: 1.7rem;
+}
+.manual__button {
+  border: none;
+  outline: none;
+  padding: 0;
+  color: inherit;
+  background-color: transparent;
+}
+.manual__button:active {
+  border: none;
+  outline: none;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+}
+.d1 {
+  width: 50px;
+  height: 50px;
+  background-color: yellow;
+}
+.d2 {
+  width: 70px;
+  height: 70px;
+  background-color: rgb(255, 123, 0);
+}
+.d3 {
+  width: 90px;
+  height: 90px;
+  background-color: rgb(0, 110, 255);
+}
+.dd {
+  background-color: rgb(1, 6, 12);
+}
+.main-info__capt-container {
+  display: flex;
+  justify-content: space-around;
+}
+.exit__button {
+  margin-top: 13px;
+}
+.main-form__button-cont {
+  display: flex;
+  justify-content: space-around;
+}
+.main-form__button-cancel {
+  height: 70px;
+  width: 30%;
+  margin-left: 5px;
+}
+.btn-block + .btn-block {
+  margin-top: 0;
+}
+.page-item.active .page-link {
+  background-color: #17a2b8;
+  border-color: #17a2b8;
+}
+.lds-dual-ring {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+}
+.lds-dual-ring:after {
+  content: ' ';
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 6px solid #28a745;
+  border-color: #28a745 transparent #28a745 transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+.modal-body p {
+  margin-bottom: 5px;
+  font-size: 20px;
+}
+.modal-header .close {
+  padding-top: 1.4rem;
+}
+.modal-footer button{
+  width: 52px;
+}
+
+// .sign-in__main {
+//   min-height: 100vh;
+// }
+
+.sign-up__box-links {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  letter-spacing: normal;
+}
+
+.sign-up__box-links a{
+  font-size: 18px;
+  letter-spacing: normal;
+}
+
+.sign-in__main-box {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 64px;
+  // min-height: 100vh;
+  // minHeight="100vh" // Устанавливаем минимальную высоту, чтобы центрировать по вертикали
+}
+
+// .sign-in__main {
+//   margin-top: 64px; /* 8 * 8px, если theme.spacing(1) = 8px */
+//   display: flex;
+//   justify-content: center;
+//   flex-direction: column;
+//   align-items: center;
+
+//   // width: 100%;
+//   // display: block;
+//   // box-sizing: border-box;
+//   // margin-left: auto;
+//   // margin-right: auto;
+// }
+
+// .sign-in__container {
+//     margin-top: 64px; /* 8 * 8px, если theme.spacing(1) = 8px */
+//     display: flex;
+//     flex-direction: column;
+//     align-items: center;
+// }
+
+// .avatar {
+//     margin: 8px; /* 1 * 8px, если theme.spacing(1) = 8px */
+//     // background-color: /* укажите конкретный цвет вместо theme.palette.secondary.main */;
+// }
+
+.sign-in__form form{
+    width: 100%; /* Fix IE11 */
+    margin-top: 64px; /* 3 * 8px, если theme.spacing(3) = 24px */
+}
+
+button.sign-in__button {
+    margin: 24px 0 16px; /* 3 * 8px 0 2 * 8px */
+}
+
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@media screen and (min-width: 780px) and (max-width: 1200px) {
+  .table th {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    padding-left: 0.3rem;
+    padding-right: 0.3rem;
+  }
+  .main-info__th-num {
+    min-width: 46px;
+  }
+}
+
+@media screen and (max-width: 780px) {
+  div.react-datepicker {
+    display: none;
+  }
+  .main-info__page-capt {
+    font-size: 19px;
+    padding-left: 0px;
+    margin: 15px auto 20px 0;
+  }
+  .main-form__button-add {
+    height: 65px;
+    font-size: 16px;
+  }
+  .main-form__button-cancel {
+    height: 65px;
+    font-size: 16px;
+  }
+  .table th {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    padding-left: 0.3rem;
+    padding-right: 0.3rem;
+  }
+  .main-info__th-num {
+    min-width: 46px;
+  }
+  .main-info__th-name {
+    min-width: 100px;
+  }
+  .main-info__th-text {
+    min-width: 130px;
+  }
+}

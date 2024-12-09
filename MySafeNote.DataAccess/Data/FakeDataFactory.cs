@@ -27,7 +27,7 @@ namespace MySafeNote.DataAccess.Data
             new Note()
             {
                 Id = 1,
-                Number = 1,
+                // Number = 1,
                 Title = "Заметка 1 пользователя 1",
                 BodyLink = Guid.NewGuid(),
                 NotePasswordHash = "",
@@ -39,7 +39,7 @@ namespace MySafeNote.DataAccess.Data
             new Note()
             {
                 Id = 2,
-                Number = 2,
+                // Number = 2,
                 Title = "Заметка 2 пользователя 1",
                 BodyLink = Guid.NewGuid(),
                 NotePasswordHash = "",
@@ -51,7 +51,7 @@ namespace MySafeNote.DataAccess.Data
             new Note()
             {
                 Id = 3,
-                Number = 3,
+                // Number = 3,
                 Title = "Заметка 1 пользователя 2",
                 BodyLink = Guid.NewGuid(),
                 NotePasswordHash = "",
@@ -63,7 +63,7 @@ namespace MySafeNote.DataAccess.Data
             new Note()
             {
                 Id = 4,
-                Number = 4,
+                // Number = 4,
                 Title = "Заметка 2 пользователя 2",
                 BodyLink = Guid.NewGuid(),
                 NotePasswordHash = "",
