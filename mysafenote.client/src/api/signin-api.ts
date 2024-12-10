@@ -25,7 +25,8 @@ const signInApi = async function (email: string, password: string, setReqMessage
       const loginData = await response.json();
 
       // сохраняем в хранилище sessionStorage токен доступа
-      sessionStorage.setItem(tokenKey, loginData.access_token);
+      //sessionStorage.setItem(tokenKey, loginData.access_token);
+      sessionStorage.setItem(tokenKey, loginData.accessToken);
       return loginData;
   }
   else  // если произошла ошибка, получаем код статуса

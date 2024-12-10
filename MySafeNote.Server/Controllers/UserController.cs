@@ -58,8 +58,8 @@ namespace my_safe_note.Controllers
             return Ok(user);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<int>> CreateUserAsync([FromBody] UserDto userDto)
+        [HttpPost("signup/")]
+        public async Task<IActionResult> CreateUserAsync(UserDto userDto)
         {
             // Проверяем, что данные в данные валидны
             if (userDto == null || string.IsNullOrEmpty(userDto.Email) || string.IsNullOrEmpty(userDto.Password))
@@ -73,10 +73,14 @@ namespace my_safe_note.Controllers
             }
             try
             {
+                var email = userDto.Email; 
                 var passwordHash = Services.HashPassword(userDto.Password);
                 var newUser = new User { Email = userDto.Email, PasswordHash = passwordHash };
                 var newUserId = await _userRepository.CreateAsync(newUser);
-                return CreatedAtAction(nameof(GetUserByIdAsync), new { id = newUserId }, newUserId);
+
+                var response = Services.CreateJwtToken(newUserId, email);
+                return Ok(response);
+                //return CreatedAtAction(nameof(GetUserByIdAsync), new { id = newUserId }, newUserId);
             }
             catch (ArgumentException ex)
             {
@@ -87,6 +91,36 @@ namespace my_safe_note.Controllers
                 return StatusCode(500, $"Внутренняя ошибка сервера. {ex.Message}");
             }
         }
+
+        //[HttpPost]
+        //public async Task<ActionResult<int>> CreateUserAsync([FromBody] UserDto userDto)
+        //{
+        //    // Проверяем, что данные в данные валидны
+        //    if (userDto == null || string.IsNullOrEmpty(userDto.Email) || string.IsNullOrEmpty(userDto.Password))
+        //    {
+        //        return BadRequest("Некорректные данные.");
+        //    }
+        //    var userExists = await _userRepository.CheckUserExists(userDto.Email.Trim());
+        //    if (userExists)
+        //    {
+        //        return NotFound($"User с Email: {userDto.Email} уже создан.");
+        //    }
+        //    try
+        //    {
+        //        var passwordHash = Services.HashPassword(userDto.Password);
+        //        var newUser = new User { Email = userDto.Email, PasswordHash = passwordHash };
+        //        var newUserId = await _userRepository.CreateAsync(newUser);
+        //        return CreatedAtAction(nameof(GetUserByIdAsync), new { id = newUserId }, newUserId);
+        //    }
+        //    catch (ArgumentException ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, $"Внутренняя ошибка сервера. {ex.Message}");
+        //    }
+        //}
 
         // PUT api/User/5
         [HttpPut("{id}")]
@@ -149,7 +183,7 @@ namespace my_safe_note.Controllers
         //}
 
         [HttpPost("login/")]
-        public async Task<IActionResult> LoginUserByEmail(UserLoginDto userLoginData)
+        public async Task<IActionResult> LoginUserByEmail(UserDto userLoginData)
         {
             if (userLoginData == null)
             {
@@ -180,23 +214,27 @@ namespace my_safe_note.Controllers
             //    return Unauthorized("Неверный пароль.");
             //}
 
-            var claims = new List<Claim> { new Claim(ClaimTypes.Name, email) };
 
-            var jwt = new JwtSecurityToken(
-                issuer: AuthOptions.ISSUER,
-                audience: AuthOptions.AUDIENCE,
-                claims: claims,
-                expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(60)), // время жизни токена
-                signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
 
-            var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+            //var claims = new List<Claim> { new Claim(ClaimTypes.Name, email) };
 
-            var response = new
-            {
-                access_token = encodedJwt,
-                userId = user.Id
-            };
+            //var jwt = new JwtSecurityToken(
+            //    issuer: AuthOptions.ISSUER,
+            //    audience: AuthOptions.AUDIENCE,
+            //    claims: claims,
+            //    expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(60)), // время жизни токена
+            //    signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
 
+            //var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
+
+            //var response = new
+            //{
+            //    access_token = encodedJwt,
+            //    userId = user.Id
+            //};
+
+
+            var response = Services.CreateJwtToken(user.Id, email);
             return Ok(response);
         }
 

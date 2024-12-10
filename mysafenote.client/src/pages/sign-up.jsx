@@ -11,43 +11,95 @@
 // import Copyright from '../components/copyright';
 // import useStyles from '../configs/signstl-conf';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { Link } from 'react-router-dom';
-//import signUpApi from '../api/signup-api';
+//import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import signUpApi from '../api/signup-api';
 import Copyright from '../components/copyright';
+import { StateContext } from "../state/notes-context";
+//import { ACTIONS, DispatchContext } from "../state/notes-context";
+import { DispatchContext } from "../state/notes-context";
 
 function SignUp() {
   //const classes = useStyles();
-  const [reqMessage, setReqMessage] = useState<string>('');
-  const [email, setEmailVal] = useState<string>('');
-  const [password, setPasswordVal] = useState<string>('');
-  const [passwordRpt, setPasswordRptVal] = useState<string>('');
+  const dispatch = useContext(DispatchContext);
+  // const [reqMessage, setReqMessage] = useState<string>('');
+  // const [email, setEmailVal] = useState<string>('');
+  // const [password, setPasswordVal] = useState<string>('');
+  // const [passwordRpt, setPasswordRptVal] = useState<string>('');
+
+  const [reqMessage, setReqMessage] = useState('');
+  const [email, setEmailVal] = useState('');
+  const [password, setPasswordVal] = useState('');
+  const [passwordRpt, setPasswordRptVal] = useState('');
 
   // Регистрация пользователя
-  const signUpHandler = () => {
-    //signUpApi(email, password, passwordRpt, setReqMessage);
+  // const signUpHandler = () => {
+  //   signUpApi(email, password, passwordRpt, setReqMessage);
+  // };
+
+  // const signInHandler = async function (){
+  //   let data = await signInApi(email, password, setReqMessage);
+    
+  const navigate = useNavigate();
+
+  //const signUpHandler = () => {\
+  const signUpHandler = async function (){
+    let data = await signUpApi(email, password, passwordRpt, setReqMessage);
+    if (data){
+      const loginData = {
+        currentUser: email,
+        jwtToken: data.accessToken 
+        //!!!добавить userId!
+      }
+     //store.dispatch(loginSaveStore(loginData));
+      dispatch({ type: "LOGIN_SAVE_STORE", payload: loginData });
+      dispatch({ type: "NEED_LOAD_DATA", payload: true });
+      console.log("signUpHandler");
+      console.log(loginData);
+      const url = '/main';
+      navigate(url);
+    }
   };
-  const emailInputHandler = (e: React.SyntheticEvent) => {
+
+
+  const emailInputHandler = (e) => {
     e.preventDefault();
-    const emailEl = e.currentTarget as HTMLInputElement;
+    const emailEl = e.currentTarget;
     setEmailVal(emailEl.value);
   };
-  const passInputHandler = (e: React.SyntheticEvent) => {
+  const passInputHandler = (e) => {
     e.preventDefault();
-    const passwordEl = e.currentTarget as HTMLInputElement;
+    const passwordEl = e.currentTarget;
     setPasswordVal(passwordEl.value);
   };
-  const passInputRptHandler = (e: React.SyntheticEvent) => {
+  const passInputRptHandler = (e) => {
     e.preventDefault();
-    const passwordRptEl = e.currentTarget as HTMLInputElement;
+    const passwordRptEl = e.currentTarget;
     setPasswordRptVal(passwordRptEl.value);
   };
+
+  // const emailInputHandler = (e: React.SyntheticEvent) => {
+  //   e.preventDefault();
+  //   const emailEl = e.currentTarget as HTMLInputElement;
+  //   setEmailVal(emailEl.value);
+  // };
+  // const passInputHandler = (e: React.SyntheticEvent) => {
+  //   e.preventDefault();
+  //   const passwordEl = e.currentTarget as HTMLInputElement;
+  //   setPasswordVal(passwordEl.value);
+  // };
+  // const passInputRptHandler = (e: React.SyntheticEvent) => {
+  //   e.preventDefault();
+  //   const passwordRptEl = e.currentTarget as HTMLInputElement;
+  //   setPasswordRptVal(passwordRptEl.value);
+  // };
 
   return (
     <Container className="sign-in__main" component="main" maxWidth="xs">

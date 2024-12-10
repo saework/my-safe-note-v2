@@ -7,7 +7,7 @@ import ReactPaginate from 'react-paginate';
 //import { Row, Col, Table, Button } from 'react-bootstrap';
 import { Row, Col, Table} from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
-
+import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 //import { delNoteRow, checkIdNoteRow, resetStore } from '../actions/actions';
 import { getRowById } from '../functions';
@@ -44,6 +44,8 @@ function MainInfo(props : IProps) {
   //!!!
   const dispatch = useContext(DispatchContext);
   const notesState = useContext(StateContext);
+  const navigate = useNavigate();
+  
   //const currentUser = notesState.currentUser;
   //const jwtToken = notesState.jwtToken;
   const noteRows = notesState.noteRows;
@@ -245,6 +247,11 @@ function MainInfo(props : IProps) {
 
   const handleExitButtonClick = () => {
     localStorage.removeItem('loginData');
+    //dispatch({ type: "NEED_LOAD_DATA", payload: true });
+    dispatch?.({ type: "RESET_STORE", payload: 0});
+    navigate('/login');
+    
+    
     // history.push({
     //   pathname: '/login',
     // });

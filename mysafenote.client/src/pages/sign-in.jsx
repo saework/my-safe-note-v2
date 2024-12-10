@@ -40,7 +40,8 @@ function SignIn({ onLogin }) {
         const loginData = {
           currentUser: email,
           //jwtToken: jwt.jwtToken
-          jwtToken: data.access_token 
+          //jwtToken: data.access_token 
+          jwtToken: data.accessToken 
           //!!!добавить userId!
         }
        //store.dispatch(loginSaveStore(loginData));
