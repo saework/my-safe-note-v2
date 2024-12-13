@@ -19,8 +19,7 @@ import DeleteModal from './delete-modal';
 import config from '../configs/config';
 
 import { StateContext } from "../state/notes-context";
-//import { ACTIONS, DispatchContext } from "../state/notes-context";
-import { DispatchContext } from "../state/notes-context";
+import { ACTIONS, DispatchContext } from "../state/notes-context";
 //import '../style.scss';
 
 interface IProps {
@@ -248,7 +247,7 @@ function MainInfo(props : IProps) {
   const handleExitButtonClick = () => {
     localStorage.removeItem('loginData');
     //dispatch({ type: "NEED_LOAD_DATA", payload: true });
-    dispatch?.({ type: "RESET_STORE", payload: 0});
+    dispatch?.({ type: ACTIONS.RESET_STORE, payload: 0});
     navigate('/login');
     
     

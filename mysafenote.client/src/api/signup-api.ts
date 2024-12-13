@@ -34,16 +34,24 @@ const signUpApi = async function (
         // если запрос прошел нормально
         if (response.ok === true) {
           // получаем данные
-          const loginData = await response.json();
-
+          const responseData = await response.json();
+          var loginData = {
+            currentUser: email,
+            userId: responseData.userId,
+            jwtToken: responseData.accessToken 
+          }
           // сохраняем в хранилище sessionStorage токен доступа
           //sessionStorage.setItem(tokenKey, loginData.access_token);
-          sessionStorage.setItem(tokenKey, loginData.accessToken);
+          //sessionStorage.setItem(tokenKey, loginData.accessToken);
+          localStorage.setItem('loginData', JSON.stringify(loginData));
+          console.log('Регистрация прошла успешно, loginData записан в LocalStorage');
           return loginData;
         } // если произошла ошибка, получаем код статуса
         //console.log("Status: ", response.status);
-        else
+        else {
           console.log(`signUpApi - Ошибка соединения:${response.statusText}`);
+          setReqMessage('Ошибка сервера');
+        }
       } else {
         setReqMessage("Email имеет не верный формат!");
       }

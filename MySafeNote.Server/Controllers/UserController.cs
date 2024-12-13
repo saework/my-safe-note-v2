@@ -11,6 +11,7 @@ using MySafeNote.Server.Auth;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using MySafeNote.Server.Model;
+using Microsoft.AspNetCore.Identity;
 
 namespace my_safe_note.Controllers
 {
@@ -18,10 +19,12 @@ namespace my_safe_note.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+        private readonly PasswordHasher<User> _passwordHasher;
         private readonly IUserRepository _userRepository;
         private readonly INoteRepository _noteRepository;
         public UserController(IUserRepository userRepository, INoteRepository noteRepository)
         {
+            _passwordHasher = new PasswordHasher<User>();
             _userRepository = userRepository;
             _noteRepository = noteRepository;
         }
@@ -69,12 +72,16 @@ namespace my_safe_note.Controllers
             var userExists = await _userRepository.CheckUserExists(userDto.Email.Trim());
             if (userExists)
             {
-                return NotFound($"User с Email: {userDto.Email} уже создан.");
+                //return NotFound($"User с Email: {userDto.Email} уже создан.");
+                //return BadRequest("Пользователь с таким Email уже создан.");
+                //return Ok("Пользователь с таким Email уже создан.");
+                return Unauthorized("Пользователь с таким Email уже создан.");
             }
             try
             {
-                var email = userDto.Email; 
-                var passwordHash = Services.HashPassword(userDto.Password);
+                var email = userDto.Email;
+                //var passwordHash = Services.HashPassword(new User { Email = userDto.Email }, userDto.Password);
+                var passwordHash = _passwordHasher.HashPassword(new User { Email = userDto.Email }, userDto.Password);
                 var newUser = new User { Email = userDto.Email, PasswordHash = passwordHash };
                 var newUserId = await _userRepository.CreateAsync(newUser);
 
@@ -130,6 +137,10 @@ namespace my_safe_note.Controllers
             {
                 return BadRequest("updatedUser пустой");
             }
+            if (string.IsNullOrEmpty(changedUser.Email) || string.IsNullOrEmpty(changedUser.Password))
+            {
+                return BadRequest("Не определен Email или Password");
+            }
             var user = await _userRepository.GetByIdAsync(id);
             if (user == null)
             {
@@ -137,7 +148,9 @@ namespace my_safe_note.Controllers
             }
             // Обновляем данные пользователя
             user.Email = changedUser.Email;
-            var passwordHash = Services.HashPassword(changedUser.Password);
+            //var passwordHash = Services.HashPassword(user, changedUser.Password);
+            var passwordHash = _passwordHasher.HashPassword(user, changedUser.Password);
+            
             user.PasswordHash = passwordHash;
             await _userRepository.UpdateAsync(user);
             return Ok(user);
@@ -202,11 +215,21 @@ namespace my_safe_note.Controllers
                 return BadRequest("Password не определен.");
             }
 
-            var user = await _userRepository.GetUserByEmailAsync(email);
+            User user = await _userRepository.GetUserByEmailAsync(email);
             if (user == null)
             {
                 return NotFound($"User с Email: {email} не найден.");
             }
+            var passwordHash = user.PasswordHash;
+            //var passwordHash = _passwordHasher.HashPassword(user, password);
+            var passwordIsCorrect = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, password);
+            //var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, password);
+            if (passwordIsCorrect != PasswordVerificationResult.Success)
+            {
+                return Unauthorized("Не верный пароль.");
+            }
+
+            //return result == PasswordVerificationResult.Success;
 
             //// Проверка пароля
             //if (!VerifyPassword(userLoginData.PasswordHash, user.PasswordHash))

@@ -1,41 +1,65 @@
-import React from 'react';
-import axios from 'axios';
+import React from "react";
+import axios from "axios";
 //import { history, store } from '../store/store';
-import { validateEmail } from '../functions';
+import { validateEmail } from "../functions";
 //import { loginSaveStore } from '../actions/actions';
 
 const tokenKey = "accessToken";
 
-const signInApi = async function (email: string, password: string, setReqMessage: React.Dispatch<React.SetStateAction<string>>) {
+const signInApi = async function (
+  email: string,
+  password: string,
+  setReqMessage: React.Dispatch<React.SetStateAction<string>>
+) {
   if (email && password) {
-    console.log(password);
-    //const url = `api/note/userid/${userId}`;
-    const url = 'api/User/login'; 
-    const response = await fetch(url, {
-      method: "POST",
-      headers: { "Accept": "application/json", "Content-Type": "application/json" },
-      body: JSON.stringify({
+    const validEmail = validateEmail(email);
+    if (validEmail === true) {
+      console.log(password);
+      //const url = `api/note/userid/${userId}`;
+      const url = "api/User/login";
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
           email: email,
-          password: password
-      })
-  });
-  // если запрос прошел нормально
-  if (response.ok === true) {
-      // получаем данные
-      const loginData = await response.json();
+          password: password,
+        }),
+      });
+      if (response.ok === true) {
+        // получаем данные
+        const responseData = await response.json();
 
-      // сохраняем в хранилище sessionStorage токен доступа
-      //sessionStorage.setItem(tokenKey, loginData.access_token);
-      sessionStorage.setItem(tokenKey, loginData.accessToken);
-      return loginData;
+        // сохраняем в хранилище sessionStorage токен доступа
+        //sessionStorage.setItem(tokenKey, loginData.access_token);
+        //sessionStorage.setItem(tokenKey, loginData.accessToken);
+        var loginData = {
+          currentUser: email,
+          userId: responseData.userId,
+          jwtToken: responseData.accessToken 
+        }
+        localStorage.setItem('loginData', JSON.stringify(loginData));
+        //localStorage.setItem('loginData', loginData);
+        console.log(
+          "Аутентификация прошла успешно, loginData записан в LocalStorage"
+        );
+        return loginData;
+      } else if (response.status === 401) {
+        setReqMessage("Не верный логин или пароль!");
+      } else {
+        //console.log("Status: ", response.status);
+        console.log(`signInApi - Ошибка соединения:${response.statusText}`);
+        setReqMessage("Ошибка сервера");
+      }
+    } else {
+      setReqMessage("Email имеет не верный формат!");
+    }
+  } else {
+    setReqMessage("Заполните обязательные поля!");
   }
-  else  // если произошла ошибка, получаем код статуса
-      //console.log("Status: ", response.status);
-      console.log(`signInApi - Ошибка соединения:${response.statusText}`);
-  }
-}
-
-
+};
 
 // const signInApi = (email: string, password: string, setReqMessage: React.Dispatch<React.SetStateAction<string>>) => {
 //   if (email && password) {
@@ -43,7 +67,7 @@ const signInApi = async function (email: string, password: string, setReqMessage
 //     if (validEmail === true) {
 //       // const url = 'http://localhost:3000/login'; // dev
 //       // const url = '/login'; // prod
-//       const url = 'api/note/login'; 
+//       const url = 'api/note/login';
 //       axios
 //         .post(url, {
 //           //username: email,

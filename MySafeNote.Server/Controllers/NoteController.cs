@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.Linq;
 using MySafeNote.Server.Controllers;
 using MySafeNote.Server.Model;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace my_safe_note.Controllers
 {
@@ -19,11 +21,13 @@ namespace my_safe_note.Controllers
     public class NoteController : ControllerBase
     {
         private readonly ILogger<NoteController> _logger;
+        private readonly PasswordHasher<User> _passwordHasher;
         private readonly INoteRepository _noteRepository;
         private readonly IUserRepository _userRepository;
         public NoteController(ILogger<NoteController> logger, INoteRepository noteRepository, IUserRepository userRepository)
         {
             _logger = logger;
+            _passwordHasher = new PasswordHasher<User>();
             _noteRepository = noteRepository;
             _userRepository = userRepository;
         }
@@ -70,6 +74,7 @@ namespace my_safe_note.Controllers
 
         // GET: api/Note/userid/{id}
         [HttpGet("userid/{userId}")]
+        [Authorize] // Этот метод требует аутентификации
         public async Task<ActionResult<List<Note>>> GetNotesByUserIdAsync(int userId)
         {
             var notesDto = new List<NoteDtoGet>();
@@ -133,13 +138,17 @@ namespace my_safe_note.Controllers
                 var notePassword = noteDto.NotePassword;
                 var createDate = noteDto.CreateDate;
                 var notePasswordHash = string.Empty;
-                if (!string.IsNullOrEmpty(notePassword))
-                    notePasswordHash = Services.HashPassword(notePassword);
+                //if (!string.IsNullOrEmpty(notePassword))
+                //    notePasswordHash = Services.HashPassword(notePassword);
                 var userId = noteDto.UserId;
 
                 var user = await _userRepository.GetByIdAsync(userId);
                 if (user == null)
                     return BadRequest("$Пользователя с ИД: {userId} не существует.");
+
+                if (!string.IsNullOrEmpty(notePassword))
+                    //notePasswordHash = Services.HashPassword(user, notePassword);
+                    _passwordHasher.HashPassword(user, notePassword);
 
                 var newNote = new Note
                 {
@@ -178,6 +187,13 @@ namespace my_safe_note.Controllers
             {
                 return BadRequest($"Note с ID: {id} не найден.");
             }
+
+            var userId = changedNote.UserId;
+
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user == null)
+                return BadRequest("$Пользователя с ИД: {userId} не существует.");
+
             // Обновляем данные заметки
             //note.Number = changedNote.Number;
             note.Title = changedNote.Title;
@@ -186,7 +202,9 @@ namespace my_safe_note.Controllers
             //var notePasswordHash = string.Empty;
 
             if (!string.IsNullOrEmpty(changedNote.NotePassword))
-                note.NotePasswordHash = Services.HashPassword(changedNote.NotePassword);
+                //note.NotePasswordHash = Services.HashPassword(changedNote.NotePassword);
+                note.NotePasswordHash = _passwordHasher.HashPassword(user, changedNote.NotePassword);
+            
 
             await _noteRepository.UpdateAsync(note);
             return Ok(note);

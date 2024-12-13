@@ -23,8 +23,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import signUpApi from '../api/signup-api';
 import Copyright from '../components/copyright';
 import { StateContext } from "../state/notes-context";
-//import { ACTIONS, DispatchContext } from "../state/notes-context";
-import { DispatchContext } from "../state/notes-context";
+import { ACTIONS, DispatchContext } from "../state/notes-context";
 
 function SignUp() {
   //const classes = useStyles();
@@ -33,6 +32,12 @@ function SignUp() {
   // const [email, setEmailVal] = useState<string>('');
   // const [password, setPasswordVal] = useState<string>('');
   // const [passwordRpt, setPasswordRptVal] = useState<string>('');
+
+  //const notesState = useContext(StateContext);
+  // const currentUser = notesState.currentUser;
+  // const jwtToken = notesState.jwtToken;
+  // const noteRows = notesState.noteRows;
+  //const userId = notesState.userId;
 
   const [reqMessage, setReqMessage] = useState('');
   const [email, setEmailVal] = useState('');
@@ -51,16 +56,17 @@ function SignUp() {
 
   //const signUpHandler = () => {\
   const signUpHandler = async function (){
-    let data = await signUpApi(email, password, passwordRpt, setReqMessage);
-    if (data){
-      const loginData = {
-        currentUser: email,
-        jwtToken: data.accessToken 
-        //!!!добавить userId!
-      }
+    let loginData = await signUpApi(email, password, passwordRpt, setReqMessage);
+    if (loginData){
+      // const loginData = {
+      //   currentUser: email,
+      //   userId: data.userId,
+      //   jwtToken: data.accessToken 
+      //   //!!!добавить userId!
+      // }
      //store.dispatch(loginSaveStore(loginData));
-      dispatch({ type: "LOGIN_SAVE_STORE", payload: loginData });
-      dispatch({ type: "NEED_LOAD_DATA", payload: true });
+      dispatch({ type: ACTIONS.LOGIN_SAVE_STORE, payload: loginData });
+      dispatch({ type: ACTIONS.NEED_LOAD_DATA, payload: true });
       console.log("signUpHandler");
       console.log(loginData);
       const url = '/main';

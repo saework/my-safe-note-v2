@@ -43,15 +43,65 @@ import { DispatchContext } from "../state/notes-context";
   }
 };
 
+// const response = await fetch(url, {
+//   method: "POST",
+//   headers: {
+//     Accept: "application/json",
+//     "Content-Type": "application/json",
+//   },
+//   body: JSON.stringify({
+//     email: email,
+//     password: password,
+//   }),
+// });
+
 export const loadBDfromServer = async function (userId, setLoading){
   const url = `api/note/userid/${userId}`;
-  const response = await fetch(url);
-          console.log(response);
-          const data = await response.json();
-          //setNotes(data);
-          console.log("!!!");
-          console.log(data);
-          return data;
+
+    //const jwtAuthHeader = getLoginData('jwtAuthHeader');
+    const jwtToken = getLoginData('jwtToken');
+    //let result;
+    // if (!_.isEmpty(jwtAuthHeader)) {
+    //   console.log(`loadBDfromServer - jwtAuthHeader - ${JSON.stringify(jwtAuthHeader)}`);
+    if (!_.isEmpty(jwtToken)) {
+      console.log(`loadBDfromServer - jwtToken - ${JSON.stringify(jwtToken)}`);
+      // const config = {
+      //   headers: jwtAuthHeader,
+      // };
+      //const data = { currentUser };
+
+  //const response = await fetch(url);
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      "Accept": "application/json",
+      "Authorization": "Bearer " + jwtToken  // передача токена в заголовке
+  }
+    // headers: { jwtAuthHeader,
+    //   Accept: "application/json",
+    //   "Content-Type": "application/json",
+    // },
+    // body: JSON.stringify({
+    //   email: email,
+    //   password: password,
+    // }),
+  });
+
+  if (response.ok === true) {
+    //console.log(response);
+    const data = await response.json();
+    console.log('Получены данные с сервера');
+    //console.log(data);
+    return data;
+  }
+  else
+{
+  console.log(`Ошибка при получении данных с сервера - ${response.statusText}`);
+}
+    }
+    else {
+      console.log('sendBDtoServer - Не определен jwtAuthHeader!');
+    }
 };
 
 //export loadBDfromServer;

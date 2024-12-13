@@ -12,12 +12,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import signInApi from '../api/signin-api';
 import Copyright from '../components/copyright';
 import { StateContext } from "../state/notes-context";
-//import { ACTIONS, DispatchContext } from "../state/notes-context";
-import { DispatchContext } from "../state/notes-context";
+import { ACTIONS, DispatchContext } from "../state/notes-context";
+//import { DispatchContext } from "../state/notes-context";
 import '../style.scss';
 //import useStyles from '../configs/signstl-conf';
 
-function SignIn({ onLogin }) {
+//function SignIn({ onLogin }) {
+  function SignIn() {
 
   const dispatch = useContext(DispatchContext);
   //const classes = useStyles();
@@ -35,18 +36,18 @@ function SignIn({ onLogin }) {
 
      // Войти по логину и паролю
      const signInHandler = async function (){
-      let data = await signInApi(email, password, setReqMessage);
-      if (data){
-        const loginData = {
-          currentUser: email,
-          //jwtToken: jwt.jwtToken
-          //jwtToken: data.access_token 
-          jwtToken: data.accessToken 
-          //!!!добавить userId!
-        }
+      let loginData = await signInApi(email, password, setReqMessage);
+      if (loginData){
+        // const loginData = {
+        //   currentUser: email,
+        //   //jwtToken: jwt.jwtToken
+        //   //jwtToken: data.access_token 
+        //   userId: data.userId,
+        //   jwtToken: data.accessToken 
+        // }
        //store.dispatch(loginSaveStore(loginData));
-        dispatch({ type: "LOGIN_SAVE_STORE", payload: loginData });
-        dispatch({ type: "NEED_LOAD_DATA", payload: true });
+        dispatch({ type: ACTIONS.LOGIN_SAVE_STORE, payload: loginData });
+        dispatch({ type: ACTIONS.NEED_LOAD_DATA, payload: true });
         console.log("signInHandler");
         console.log(loginData);
         const url = '/main';

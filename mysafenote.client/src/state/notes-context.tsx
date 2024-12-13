@@ -10,6 +10,18 @@ import { IAction, IRootReducer, INoteRow, ILoginData } from '../interfaces';
 //   EXPORT_EDIT_USER: "EXPORT_EDIT_USER"
 // };
 
+export const ACTIONS = {
+  DRAW_ROWS: "DRAW_ROWS",
+  CHECK_ID_ROW: "CHECK_ID_ROW",
+  ADD_BD_ROW: "ADD_BD_ROW",
+  DEL_BD_ROW: "DEL_BD_ROW",
+  EDIT_BD_ROW: "EDIT_BD_ROW",
+  LOAD_BD: "LOAD_BD",
+  LOGIN_SAVE_STORE: "LOGIN_SAVE_STORE",
+  RESET_STORE: "RESET_STORE",
+  NEED_LOAD_DATA: "NEED_LOAD_DATA"
+};
+
 //const initialExportState = {  
   
 
@@ -23,6 +35,7 @@ import { IAction, IRootReducer, INoteRow, ILoginData } from '../interfaces';
 
 export const initialState: IRootReducer = {
   currentUser: '',
+  userId: 0,
   needLoadData: false,
   currentId: 0,
   //checkedId: 0,
@@ -80,26 +93,26 @@ export const initialState: IRootReducer = {
   //const reducer = (state: IRootReducer, action: IAction) => {
   const { payload, type } = action;
   switch (type) {
-    case 'DRAW_ROWS': {
+    case ACTIONS.DRAW_ROWS: {
       return { ...state, noteRows: payload };
     }
-    // case 'CHECK_ID_ROW': {
+    // case ACTIONS.CHECK_ID_ROW: {
     //   return { ...state, checkedId: payload };
     // }
-    case 'ADD_BD_ROW': {
+    case ACTIONS.ADD_BD_ROW: {
       return {
         ...state,
         currentId: state.currentId + 1,
         noteRows: [...state.noteRows, payload],
       };
     }
-    case 'DEL_BD_ROW': {
+    case ACTIONS.DEL_BD_ROW: {
       return {
         ...state,
         noteRows: [...state.noteRows.filter((item) => item.id !== payload)],
       };
     }
-    case 'EDIT_BD_ROW': {
+    case ACTIONS.EDIT_BD_ROW: {
       // Редактирование записи
       const editNoteRow: INoteRow = payload as INoteRow;
       //const { id, title, createDate, noteShortText, lastChangeDate, bdPeriod } = editNoteRow;
@@ -121,22 +134,22 @@ export const initialState: IRootReducer = {
         }),
       };
     }
-    case 'LOAD_BD': {
+    case ACTIONS.LOAD_BD: {
       //return payload;
       console.log("load_bd");
       console.log(payload);
       return { ...state, noteRows: payload };
       
     }
-    case 'LOGIN_SAVE_STORE': {
+    case ACTIONS.LOGIN_SAVE_STORE: {
       const loginData: ILoginData = payload as ILoginData;
-      return { ...state, currentUser: loginData.currentUser, jwtToken: loginData.jwtToken };
+      return { ...state, currentUser: loginData.currentUser, userId: loginData.userId, jwtToken: loginData.jwtToken };
     }
-    case 'RESET_STORE': {
+    case ACTIONS.RESET_STORE: {
       return initialState;
     }
     //!!!
-    case 'NEED_LOAD_DATA': {
+    case ACTIONS.NEED_LOAD_DATA: {
       return { ...state, needLoadData: payload };
     }
     //!!!

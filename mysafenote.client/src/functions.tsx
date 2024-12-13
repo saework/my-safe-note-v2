@@ -32,9 +32,10 @@ export const validateEmail = (email: string): boolean => {
 };
 export const getLoginData = (dataType: string): string | {} => {
   const loginDataJSON = localStorage.getItem('loginData') as string;
+  console.log(loginDataJSON);
   const loginData = JSON.parse(loginDataJSON);
   let res;
-  if (loginData) {
+   if (loginData) {
     if (dataType === 'currenUser') {
       res = loginData.currenUser;
     }

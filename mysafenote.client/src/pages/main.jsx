@@ -37,6 +37,7 @@ const notesState = useContext(StateContext);
 const currentUser = notesState.currentUser;
 const jwtToken = notesState.jwtToken;
 const noteRows = notesState.noteRows;
+const userId = notesState.userId;
 
 //     const [forecasts, setForecasts] = useState();
 //     const [notes, setNotes] = useState();
@@ -102,7 +103,7 @@ const noteRows = notesState.noteRows;
 //!!!
 const handlerLoadFromServer = async function (){
   //let data = await loadBDfromServer(currentUser, setLoading);
-  const userId = 2; //!!!убрать!!
+  //const userId = 2; //!!!убрать!!
   let data = await loadBDfromServer(userId, setLoading);
   dispatch({ type: "LOAD_BD", payload: data });
   console.log("handlerLoadFromServer");

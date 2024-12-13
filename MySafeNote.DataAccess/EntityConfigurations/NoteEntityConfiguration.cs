@@ -15,6 +15,7 @@ namespace MySafeNote.DataAccess.EntityConfigurations
             //builder.Property(r => r.Number).IsRequired();
             //builder.Property(r => r.CreateDate).IsRequired();
             //builder.Property(r => r.UserId).IsRequired();
+            builder.Property(r => r.Title).IsRequired();
 
             builder.HasOne(r => r.User)
                         .WithMany(t => t.Notes)

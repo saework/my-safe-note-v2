@@ -25,6 +25,7 @@ export interface IRootReducer {
   // noteRows: INoteRow[];
 
   currentUser: string;
+  userId: number;
   needLoadData: boolean; //!!!
   currentId: number;
   //checkedId: number;
@@ -42,6 +43,7 @@ export interface IStore {
 }
 export interface ILoginData {
   currentUser: string;
+  userId: number;
   jwtToken: string;
 }
 export type TActionPayload = number | INoteRow | INoteRows | ILoginData;
