@@ -12,8 +12,11 @@ import config from '../configs/config';
 //import {TIME_ZONE, DEFAULT_PERIOD}  from '../configs/config';
 //import { IRootReducer, IStore } from '../interfaces';
 import { StateContext } from "../state/notes-context";
-//import { ACTIONS, DispatchContext } from "../state/notes-context";
-import { DispatchContext } from "../state/notes-context";
+import { ACTIONS, DispatchContext } from "../state/notes-context";
+//import { DispatchContext } from "../state/notes-context";
+//import Button from '@mui/material/Button';
+import { Row, Col, Form, Button } from 'react-bootstrap';
+import { Link, useNavigate } from 'react-router-dom';
 //import '../style.scss';
 
 function Main(props) {
@@ -29,6 +32,7 @@ function Main(props) {
   const [formVisible, setFormVisible] = useState(false);
 
 //!!!
+const navigate = useNavigate();
 const dispatch = useContext(DispatchContext);
 
 //const [userUnfold, setUserUnfold] = useState(true);
@@ -105,11 +109,17 @@ const handlerLoadFromServer = async function (){
   //let data = await loadBDfromServer(currentUser, setLoading);
   //const userId = 2; //!!!убрать!!
   let data = await loadBDfromServer(userId, setLoading);
-  dispatch({ type: "LOAD_BD", payload: data });
+  dispatch({ type: ACTIONS.LOAD_BD, payload: data });
   console.log("handlerLoadFromServer");
   console.log(data);
 }
 
+const handleAddButtonClick = (e) => {
+  //e.preventDefault();
+  dispatch({ type: ACTIONS.CHECK_ID_ROW, payload: 0 });
+  const url = '/note';
+  navigate(url);
+}
 
 
   // const async handlerLoadFromServer = () => {
@@ -134,6 +144,22 @@ const handlerLoadFromServer = async function (){
           handlerSaveToServer={handlerSaveToServer}
           setFormVisible={setFormVisible}
         />
+        <Button onClick={handleAddButtonClick} id="buttonAdd" type="button" variant="success" size="lg" block className="main-form__button-add">
+          Добавить заметку
+        </Button>
+        {/* <Button
+                type="button"
+                id="buttonAdd"
+                className="main-form__button-add"
+                fullWidth
+                color="success"
+                variant="contained"
+                onClick={handleAddButtonClick}
+            >
+                Добавить заметку
+            </Button> */}
+
+
         {/* <MainForm
           bdPeriodVal={bdPeriodVal}
           setBdPeriodVal={setBdPeriodVal}

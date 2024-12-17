@@ -13,13 +13,13 @@ namespace MySafeNote.DataAccess.Data
             {
                 Id = 1,
                 Email = "test@test.ru",
-                PasswordHash = "111"
+                PasswordHash = ""
             },
             new User()
             {
                 Id = 2,
                 Email = "owner2@somemail.ru",
-                PasswordHash = "gdhajlghaslfsfasfa"
+                PasswordHash = ""
             }
         };
         public static IEnumerable<Note> Notes => new List<Note>()
@@ -29,11 +29,13 @@ namespace MySafeNote.DataAccess.Data
                 Id = 1,
                 // Number = 1,
                 Title = "Заметка 1 пользователя 1",
-                BodyLink = Guid.NewGuid(),
+                //BodyLink = Guid.NewGuid(),
+                Notebook = "Блокнот 1 пользователя 1",
                 NotePasswordHash = "",
                 CreateDate = DateTime.Now,
                 LastChangeDate = DateTime.Now,
-                NoteBody = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 },
+                //NoteBody = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 },
+                NoteBody = "<p>qqq1</p>",
                 UserId = 1
             },
             new Note()
@@ -41,11 +43,11 @@ namespace MySafeNote.DataAccess.Data
                 Id = 2,
                 // Number = 2,
                 Title = "Заметка 2 пользователя 1",
-                BodyLink = Guid.NewGuid(),
+                Notebook = "Блокнот 1 пользователя 2",
                 NotePasswordHash = "",
                 CreateDate = DateTime.Now,
                 LastChangeDate = DateTime.Now,
-                NoteBody = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 },
+                NoteBody = "<p>qqq2</p>",
                 UserId = 1
             },
             new Note()
@@ -53,11 +55,11 @@ namespace MySafeNote.DataAccess.Data
                 Id = 3,
                 // Number = 3,
                 Title = "Заметка 1 пользователя 2",
-                BodyLink = Guid.NewGuid(),
+                Notebook = "",
                 NotePasswordHash = "",
                 CreateDate = DateTime.Now,
                 LastChangeDate = DateTime.Now,
-                NoteBody = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 },
+                NoteBody = "",
                 UserId = 2
             },
             new Note()
@@ -65,11 +67,11 @@ namespace MySafeNote.DataAccess.Data
                 Id = 4,
                 // Number = 4,
                 Title = "Заметка 2 пользователя 2",
-                BodyLink = Guid.NewGuid(),
+                Notebook = "",
                 NotePasswordHash = "",
                 CreateDate = DateTime.Now,
                 LastChangeDate = DateTime.Now,
-                NoteBody = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 },
+                NoteBody = "",
                 UserId = 2
             }
         };

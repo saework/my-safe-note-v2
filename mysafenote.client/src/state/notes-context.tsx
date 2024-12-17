@@ -27,7 +27,7 @@ export const ACTIONS = {
 
 // export const initialState: IRootReducer = {
 //   currentUser: '',
-//   currentId: 0,
+//   currentNoteId: 0,
 //   checkedId: 0,
 //   jwtToken: '',
 //   noteRows: [],
@@ -37,7 +37,8 @@ export const initialState: IRootReducer = {
   currentUser: '',
   userId: 0,
   needLoadData: false,
-  currentId: 0,
+  currentNoteId: 0,
+  noteBody: '',
   //checkedId: 0,
   jwtToken: '',
   noteRows: [],
@@ -46,7 +47,7 @@ export const initialState: IRootReducer = {
 // export const initialState: IRootReducer = {
 //   currentUser: '',
 //   needLoadData: false,
-//   currentId: 0,
+//   currentNoteId: 0,
 //   //checkedId: 0,
 //   jwtToken: '',
 //   noteRows: [
@@ -96,13 +97,13 @@ export const initialState: IRootReducer = {
     case ACTIONS.DRAW_ROWS: {
       return { ...state, noteRows: payload };
     }
-    // case ACTIONS.CHECK_ID_ROW: {
-    //   return { ...state, checkedId: payload };
-    // }
+    case ACTIONS.CHECK_ID_ROW: {
+      return { ...state, checkedId: payload };
+    }
     case ACTIONS.ADD_BD_ROW: {
       return {
         ...state,
-        currentId: state.currentId + 1,
+        currentNoteId: state.currentNoteId + 1,
         noteRows: [...state.noteRows, payload],
       };
     }

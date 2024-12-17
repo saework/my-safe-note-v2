@@ -8,9 +8,11 @@ export interface INoteRow {
 
   id: number;
   title: string;
+  notebook: string;
   createDate: string;
   lastChangeDate: string;
   noteShortText: string;
+  //notePassword: string;
   //bdPeriod: string; //убрать
 }
 export interface INoteRows {
@@ -19,7 +21,7 @@ export interface INoteRows {
 export interface IRootReducer {
   // currentUser: string;
   // needLoadData: boolean; //!!!
-  // currentId: number;
+  // currentNoteId: number;
   // checkedId: number;
   // jwtToken: {};
   // noteRows: INoteRow[];
@@ -27,7 +29,8 @@ export interface IRootReducer {
   currentUser: string;
   userId: number;
   needLoadData: boolean; //!!!
-  currentId: number;
+  currentNoteId: number;
+  noteBody: string;
   //checkedId: number;
   jwtToken: {};
   noteRows: INoteRow[];

@@ -122,8 +122,90 @@ namespace my_safe_note.Controllers
             return Ok(note);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<int>> CreateNoteAsync([FromBody] NoteDtoCreate noteDto)
+        // Post: api/Note/notebody/{id}
+        [HttpPost("notebody/")]
+        public async Task<ActionResult<string>> GetNoteBodyByIdAsync([FromBody] NoteBodyDto noteDto)
+        {
+            if (noteDto == null)
+            {
+                return BadRequest("Некорректные данные.");
+            }
+            if (noteDto.Id == null)
+            {
+                return BadRequest("Не передан noteId.");
+            }
+            if (noteDto.UserId == null)
+            {
+                return BadRequest("Не передан userId.");
+            }
+            var noteId = noteDto.Id.Value;
+            var note = await _noteRepository.GetByIdAsync(noteId);
+            if (note == null)
+            {
+                return NotFound($"Note с ID: {noteId} не найден.");
+            }
+            var noteBody = note.NoteBody;
+            return Ok(noteBody);
+        }
+
+        //[HttpPost]
+        //public async Task<ActionResult<int>> CreateNoteAsync([FromBody] NoteDtoCreate noteDto)
+        //{
+        //    // Проверяем, что данные в данные валидны
+        //    if (noteDto == null)
+        //    {
+        //        return BadRequest("Некорректные данные.");
+        //    }
+        //    try
+        //    {
+        //        //var number = noteDto.Number;
+        //        var title = noteDto.Title;
+        //        //var bodyLink = noteDto.BodyLink;
+        //        var notebook = noteDto.Notebook;
+        //        var notePassword = noteDto.NotePassword;
+        //        var createDate = noteDto.CreateDate;
+        //        var notePasswordHash = string.Empty;  //!!!зашифровать!!
+        //        var noteBody = noteDto.NoteBody;
+        //        //if (!string.IsNullOrEmpty(notePassword))
+        //        //    notePasswordHash = Services.HashPassword(notePassword);
+        //        var userId = noteDto.UserId;
+
+        //        var user = await _userRepository.GetByIdAsync(userId);
+        //        if (user == null)
+        //            return BadRequest("$Пользователя с ИД: {userId} не существует.");
+
+        //        if (!string.IsNullOrEmpty(notePassword))
+        //            //notePasswordHash = Services.HashPassword(user, notePassword);
+        //            _passwordHasher.HashPassword(user, notePassword);
+
+        //        var newNote = new Note
+        //        {
+        //            //Number = number,
+        //            Title = title,
+        //            //BodyLink = bodyLink,
+        //            Notebook = notebook,
+        //            NotePasswordHash = notePasswordHash,
+        //            CreateDate = createDate,
+        //            LastChangeDate = createDate,
+        //            NoteBody = noteBody,
+        //            UserId = userId
+        //        };
+        //        var newNoteId = await _noteRepository.CreateAsync(newNote);
+        //        return Ok(newNoteId);
+        //        //return CreatedAtAction(nameof(GetNoteByIdAsync), new { id = newNoteId }, newNoteId);
+        //    }
+        //    catch (ArgumentException ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, $"Внутренняя ошибка сервера. {ex.Message}");
+        //    }
+        //}
+
+        [HttpPost("savenote/")]
+        public async Task<ActionResult<int>> CreateNoteAsync([FromBody] NoteDto noteDto)
         {
             // Проверяем, что данные в данные валидны
             if (noteDto == null)
@@ -132,36 +214,62 @@ namespace my_safe_note.Controllers
             }
             try
             {
-                //var number = noteDto.Number;
+                var noteId = noteDto.Id;
                 var title = noteDto.Title;
-                var bodyLink = noteDto.BodyLink;
-                var notePassword = noteDto.NotePassword;
+                var notebook = noteDto.Notebook;
                 var createDate = noteDto.CreateDate;
-                var notePasswordHash = string.Empty;
-                //if (!string.IsNullOrEmpty(notePassword))
-                //    notePasswordHash = Services.HashPassword(notePassword);
-                var userId = noteDto.UserId;
+                var changeDate = noteDto.LastChangeDate;
+                var noteBody = noteDto.NoteBody;
+                var notePassword = noteDto.NotePassword;
 
+                var notePasswordHash = notePassword;  //!!!зашифровать!!
+                //if (!string.IsNullOrEmpty(noteDto.NotePassword))
+                //    //шифрование пароля заметки
+
+                var userId = noteDto.UserId;
                 var user = await _userRepository.GetByIdAsync(userId);
+
                 if (user == null)
                     return BadRequest("$Пользователя с ИД: {userId} не существует.");
 
-                if (!string.IsNullOrEmpty(notePassword))
-                    //notePasswordHash = Services.HashPassword(user, notePassword);
-                    _passwordHasher.HashPassword(user, notePassword);
-
-                var newNote = new Note
+                if (noteId == 0) // Создаем новую заметку
                 {
-                    //Number = number,
-                    Title = title,
-                    BodyLink = bodyLink,
-                    NotePasswordHash = notePasswordHash,
-                    CreateDate = createDate,
-                    LastChangeDate = createDate,
-                    UserId = userId
-                };
-                var newNoteId = await _noteRepository.CreateAsync(newNote);
-                return Ok(newNoteId);
+                    var newNote = new Note
+                    {
+                        Title = title,
+                        Notebook = notebook,
+                        CreateDate = createDate,
+                        LastChangeDate = createDate,
+                        NoteBody = noteBody,
+                        NotePasswordHash = notePasswordHash,
+                        UserId = userId
+                    };
+                    var newNoteId = await _noteRepository.CreateAsync(newNote);
+                    return Ok(newNoteId);
+                }
+                else // Обновляем данные заметки
+                {
+                    var note = await _noteRepository.GetByIdAsync(noteId);
+                    if (note == null)
+                    {
+                        return BadRequest($"Note с ID: {noteId} не найден.");
+                    }
+
+                    note.Title = title;
+                    note.Notebook = notebook;
+                    note.LastChangeDate = createDate;
+                    note.NoteBody = noteBody;
+                    note.NotePasswordHash = notePasswordHash;
+
+                    //if (!string.IsNullOrEmpty(changedNote.NotePassword))
+                    //    //note.NotePasswordHash = Services.HashPassword(changedNote.NotePassword);
+                    //    note.NotePasswordHash = _passwordHasher.HashPassword(user, changedNote.NotePassword);
+
+
+                    await _noteRepository.UpdateAsync(note);
+                    return Ok(note.Id);
+                }
+                
                 //return CreatedAtAction(nameof(GetNoteByIdAsync), new { id = newNoteId }, newNoteId);
             }
             catch (ArgumentException ex)
@@ -197,8 +305,10 @@ namespace my_safe_note.Controllers
             // Обновляем данные заметки
             //note.Number = changedNote.Number;
             note.Title = changedNote.Title;
-            note.BodyLink = changedNote.BodyLink;
+            //note.BodyLink = changedNote.BodyLink;
+            note.Notebook = changedNote.Notebook;
             note.LastChangeDate = changedNote.LastChangeDate;
+            note.NoteBody = changedNote.NoteBody;
             //var notePasswordHash = string.Empty;
 
             if (!string.IsNullOrEmpty(changedNote.NotePassword))

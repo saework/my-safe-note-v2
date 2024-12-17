@@ -3,12 +3,13 @@ import React, { useState } from 'react';
 //import _ from 'lodash';
 //import { connect } from 'react-redux';
 import Main from './pages/main.jsx';
-import SignIn from './pages/sign-in';
-import SignUp from './pages/sign-up';
-import NewPass from './pages/new-pass';
+import SignIn from './pages/sign-in.jsx';
+import SignUp from './pages/sign-up.jsx';
+import NewPass from './pages/new-pass.tsx';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { createBrowserHistory } from 'history';
+//import { createBrowserHistory } from 'history';
 import { useAuth } from './hooks/useAuth';
+import Note from './pages/note.jsx';
 //import { history } from './store/store';
 //import { IStore } from './interfaces';
 
@@ -17,7 +18,7 @@ import { useAuth } from './hooks/useAuth';
 //   jwtToken: {};
 // }
 // type IState = { loggedIn: boolean };
-const history = createBrowserHistory();
+//const history = createBrowserHistory();
 
 function App(props) {
     //const { loggedIn, login, logout } = useAuth(); // Использование пользовательского хука для аутентификации
@@ -57,6 +58,7 @@ function App(props) {
                 <Route path="/login" element={<SignIn />} />
                 <Route path="/newpassword" element={<NewPass />} />
                 <Route path="/main" element={<Main /> } />
+                <Route path="/note" element={<Note /> } />
                 <Route path="/" element={loggedIn ? <Navigate to="/main" /> : <Navigate to="/login" />} />
             </Routes>
         </Router>

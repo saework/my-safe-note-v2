@@ -10,12 +10,12 @@ import { StateContext } from "./state/notes-context";
 //const dispatch = useContext(DispatchContext);
 //const notesState = useContext(StateContext);
 
-export const getCurrentId = (): number | undefined => {
-  //const { currentId } = store.getState().rootReducer;
+export const getcurrentNoteId = (): number | undefined => {
+  //const { currentNoteId } = store.getState().rootReducer;
   //dispatch({ type: ACTIONS.EXPORT_ADD_GROUP, payload: payload });
   const notesState = useContext(StateContext);
-  const currentId = notesState?.currentId;
-  return currentId;
+  const currentNoteId = notesState?.currentNoteId;
+  return currentNoteId;
 };
 export const getRowById = (NoteRowId: number): INoteRow => {
   //const { noteRows } = store.getState().rootReducer;
