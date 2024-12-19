@@ -17,6 +17,7 @@ import DeleteModal from './delete-modal';
 //import { history } from '../store/store';
 //import * as config from '../configs/config';
 import config from '../configs/config';
+import { loadNoteBodyFromServer, saveNoteToServer } from "../api/note-api";
 
 import { StateContext } from "../state/notes-context";
 import { ACTIONS, DispatchContext } from "../state/notes-context";
@@ -270,25 +271,56 @@ function MainInfo(props : IProps) {
     }
   };
 
-  const handleEditButtonClick = (NoteRowId : number) => {
-    props.checkIdNoteRow(NoteRowId);
-    const NoteRow = getRowById(NoteRowId);
-    props.setButtonAddName('Сохранить изменения');
-    props.setFormVisible(true);
-    if (props.titleRef.current !== null) {
-      props.titleRef.current.focus();
-    }
-    if (NoteRow) {
-      //const { createDate, title, noteShortText, lastChangeDate, bdPeriod } = NoteRow;
-      const { createDate, title, noteShortText, lastChangeDate } = NoteRow;
-      const createDateStr = moment(createDate, 'DD.MM.YYYY, H:mm').format('YYYY-MM-DD, H:mm');
-      const createDateVal = new Date(createDateStr);
-      props.settitleVal(title);
-      props.setStartDate(createDateVal);
-      props.setnoteShortTextVal(noteShortText);
-      props.setlastChangeDateVal(lastChangeDate);
-      //props.setBdPeriodVal(bdPeriod);
-    }
+  // const handleEditButtonClick = (NoteRowId : number) => {
+  //   props.checkIdNoteRow(NoteRowId);
+  //   const NoteRow = getRowById(NoteRowId);
+  //   props.setButtonAddName('Сохранить изменения');
+  //   props.setFormVisible(true);
+  //   if (props.titleRef.current !== null) {
+  //     props.titleRef.current.focus();
+  //   }
+  //   if (NoteRow) {
+  //     //const { createDate, title, noteShortText, lastChangeDate, bdPeriod } = NoteRow;
+  //     const { createDate, title, noteShortText, lastChangeDate } = NoteRow;
+  //     const createDateStr = moment(createDate, 'DD.MM.YYYY, H:mm').format('YYYY-MM-DD, H:mm');
+  //     const createDateVal = new Date(createDateStr);
+  //     props.settitleVal(title);
+  //     props.setStartDate(createDateVal);
+  //     props.setnoteShortTextVal(noteShortText);
+  //     props.setlastChangeDateVal(lastChangeDate);
+  //     //props.setBdPeriodVal(bdPeriod);
+  //   }
+
+  //   //console.log(displayData); //!!!
+  // };
+
+  //const handleEditButtonClick = (NoteRowId : number) => {
+    const handleEditButtonClick = async function (currentNoteId) {
+      //const userId = notesState.userId;
+    //const currentNoteId = notesState.currentNoteId;
+    dispatch?.({ type: ACTIONS.CHECK_ID_ROW, payload: currentNoteId });
+    //let noteBodyFromServer = await loadNoteBodyFromServer(userId, currentNoteId);
+    const url = '/note';
+    navigate(url);
+
+    // props.checkIdNoteRow(NoteRowId); 
+    // const NoteRow = getRowById(NoteRowId);
+    // props.setButtonAddName('Сохранить изменения');
+    // props.setFormVisible(true);
+    // if (props.titleRef.current !== null) {
+    //   props.titleRef.current.focus();
+    // }
+    // if (NoteRow) {
+    //   //const { createDate, title, noteShortText, lastChangeDate, bdPeriod } = NoteRow;
+    //   const { createDate, title, noteShortText, lastChangeDate } = NoteRow;
+    //   const createDateStr = moment(createDate, 'DD.MM.YYYY, H:mm').format('YYYY-MM-DD, H:mm');
+    //   const createDateVal = new Date(createDateStr);
+    //   props.settitleVal(title);
+    //   props.setStartDate(createDateVal);
+    //   props.setnoteShortTextVal(noteShortText);
+    //   props.setlastChangeDateVal(lastChangeDate);
+    //   //props.setBdPeriodVal(bdPeriod);
+    // }
 
     //console.log(displayData); //!!!
   };

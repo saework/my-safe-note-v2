@@ -4,7 +4,7 @@ namespace MySafeNote.Server.Model
 {
     public class NoteDto
     {
-        public int Id { get; set; }
+        public int NoteId { get; set; }
         public required string Title { get; set; }
         public string? Notebook { get; set; }
         public DateTime CreateDate { get; set; }

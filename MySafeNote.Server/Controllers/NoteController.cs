@@ -13,6 +13,7 @@ using MySafeNote.Server.Controllers;
 using MySafeNote.Server.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+//using Newtonsoft.Json;
 
 namespace my_safe_note.Controllers
 {
@@ -62,8 +63,12 @@ namespace my_safe_note.Controllers
                 {
                     Id = x.Id,
                     Title = x.Title,
+                    Notebook = x.Notebook,
                     CreateDate = x.CreateDate,
-                    LastChangeDate = x.LastChangeDate
+                    LastChangeDate = x.LastChangeDate,
+                    NoteBody = x.NoteBody,
+                    NotePasswordHash = x.NotePasswordHash,
+                    UserId = x.UserId
                 }).ToList();
             }
             return Ok(notesDto);
@@ -122,15 +127,19 @@ namespace my_safe_note.Controllers
             return Ok(note);
         }
 
+        //[HttpPost("login/")]
+        //public async Task<IActionResult> LoginUserByEmail(UserDto userLoginData)
+
         // Post: api/Note/notebody/{id}
         [HttpPost("notebody/")]
-        public async Task<ActionResult<string>> GetNoteBodyByIdAsync([FromBody] NoteBodyDto noteDto)
+        //public async Task<ActionResult<string>> GetNoteBodyByIdAsync([FromBody] NoteBodyDto noteDto)
+        public async Task<ActionResult<NoteDataWithBodyDto>> GetNoteBodyByIdAsync(NoteBodyDto noteDto)
         {
             if (noteDto == null)
             {
                 return BadRequest("Некорректные данные.");
             }
-            if (noteDto.Id == null)
+            if (noteDto.NoteId == null)
             {
                 return BadRequest("Не передан noteId.");
             }
@@ -138,14 +147,22 @@ namespace my_safe_note.Controllers
             {
                 return BadRequest("Не передан userId.");
             }
-            var noteId = noteDto.Id.Value;
+            var noteId = noteDto.NoteId.Value;
             var note = await _noteRepository.GetByIdAsync(noteId);
             if (note == null)
             {
                 return NotFound($"Note с ID: {noteId} не найден.");
             }
-            var noteBody = note.NoteBody;
-            return Ok(noteBody);
+
+            var noteData = new NoteDataWithBodyDto
+            {
+                Title = note.Title,
+                Notebook = note.Notebook,
+                CreateDate = note.CreateDate,
+                LastChangeDate = note.LastChangeDate,
+                NoteBody = note.NoteBody,
+            };
+            return Ok(noteData);
         }
 
         //[HttpPost]
@@ -207,6 +224,8 @@ namespace my_safe_note.Controllers
         [HttpPost("savenote/")]
         public async Task<ActionResult<int>> CreateNoteAsync([FromBody] NoteDto noteDto)
         {
+            //Console.WriteLine($"Received NoteDto: {JsonConvert.SerializeObject(noteDto)}");
+            Console.WriteLine($"Received NoteDto: {noteDto}");
             // Проверяем, что данные в данные валидны
             if (noteDto == null)
             {
@@ -214,7 +233,7 @@ namespace my_safe_note.Controllers
             }
             try
             {
-                var noteId = noteDto.Id;
+                var noteId = noteDto.NoteId;
                 var title = noteDto.Title;
                 var notebook = noteDto.Notebook;
                 var createDate = noteDto.CreateDate;
@@ -232,6 +251,7 @@ namespace my_safe_note.Controllers
                 if (user == null)
                     return BadRequest("$Пользователя с ИД: {userId} не существует.");
 
+                Console.WriteLine($"noteId: {noteId}");
                 if (noteId == 0) // Создаем новую заметку
                 {
                     var newNote = new Note

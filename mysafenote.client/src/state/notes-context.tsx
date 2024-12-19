@@ -97,8 +97,11 @@ export const initialState: IRootReducer = {
     case ACTIONS.DRAW_ROWS: {
       return { ...state, noteRows: payload };
     }
+    // case ACTIONS.CHECK_ID_ROW: {
+    //   return { ...state, checkedId: payload };
+    // }
     case ACTIONS.CHECK_ID_ROW: {
-      return { ...state, checkedId: payload };
+      return { ...state, currentNoteId: payload };
     }
     case ACTIONS.ADD_BD_ROW: {
       return {

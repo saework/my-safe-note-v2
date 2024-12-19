@@ -10,38 +10,38 @@ import { StateContext } from "../state/notes-context";
 //import { ACTIONS, DispatchContext } from "../state/notes-context";
 import { DispatchContext } from "../state/notes-context";
 
-// Отправить список задач пользователя на сервер
-//export const sendBDtoServer = (data: ISendData, setLoading: React.Dispatch<React.SetStateAction<string>>) => {
-  export const sendBDtoServer = (data, setLoading) => {
-  setLoading('save');
-  // const url = 'http://localhost:3000/home'; // dev
-  const url = '/home'; // prod
-  const jwtAuthHeader = getLoginData('jwtAuthHeader');
-  if (!_.isEmpty(jwtAuthHeader)) {
-    console.log(`sendBDtoServer - jwtAuthHeader - ${JSON.stringify(jwtAuthHeader)}`);
-    const config = {
-      headers: jwtAuthHeader,
-    };
-    axios
-      .post(url, { data }, config)
-      .then((response) => {
-        if (response.statusText === 'OK') {
-          const res = response.data;
-          console.log(`sendBDtoServer - response.data - ${res}`);
-          setLoading('');
-        }
-      })
-      .catch((error) => {
-        setLoading('');
-        console.log(`sendBDtoServer - Ошибка соединения:${error}`);
-      });
-  } else {
-    console.log('sendBDtoServer - Не определен jwtAuthHeader!');
-    // history.push({
-    //   pathname: '/login',
-    // });
-  }
-};
+// // Отправить список задач пользователя на сервер
+// //export const sendBDtoServer = (data: ISendData, setLoading: React.Dispatch<React.SetStateAction<string>>) => {
+//   export const sendBDtoServer = (data, setLoading) => {
+//   setLoading('save');
+//   // const url = 'http://localhost:3000/home'; // dev
+//   const url = '/home'; // prod
+//   const jwtAuthHeader = getLoginData('jwtAuthHeader');
+//   if (!_.isEmpty(jwtAuthHeader)) {
+//     console.log(`sendBDtoServer - jwtAuthHeader - ${JSON.stringify(jwtAuthHeader)}`);
+//     const config = {
+//       headers: jwtAuthHeader,
+//     };
+//     axios
+//       .post(url, { data }, config)
+//       .then((response) => {
+//         if (response.statusText === 'OK') {
+//           const res = response.data;
+//           console.log(`sendBDtoServer - response.data - ${res}`);
+//           setLoading('');
+//         }
+//       })
+//       .catch((error) => {
+//         setLoading('');
+//         console.log(`sendBDtoServer - Ошибка соединения:${error}`);
+//       });
+//   } else {
+//     console.log('sendBDtoServer - Не определен jwtAuthHeader!');
+//     // history.push({
+//     //   pathname: '/login',
+//     // });
+//   }
+// };
 
 // const response = await fetch(url, {
 //   method: "POST",

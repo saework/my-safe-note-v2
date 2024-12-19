@@ -5,6 +5,7 @@ import { StateContext } from "../state/notes-context";
 import { ACTIONS, DispatchContext } from "../state/notes-context";
 import { loadNoteBodyFromServer, saveNoteToServer } from "../api/note-api";
 import moment from "moment";
+import { Link, useNavigate } from 'react-router-dom';
 
 //var y = `<p>qqq</p>`;
 
@@ -15,34 +16,52 @@ const Note = () => {
   const [noteName, setNoteName] = useState("");
   const [notebookName, setNotebookName] = useState("");
 
-  //const navigate = useNavigate();
+  const [needLoadNoteBody, setNeedLoadNoteBody] = useState(true);
+
+  const navigate = useNavigate();
   const dispatch = useContext(DispatchContext);
   const notesState = useContext(StateContext);
+
   //const [userUnfold, setUserUnfold] = useState(true);
   //const [isModal, setModal] = useState(false);
 
   // const currentUser = notesState.currentUser;
   // const jwtToken = notesState.jwtToken;
   // const noteRows = notesState.noteRows;
-  const userId = notesState.userId;
-  const noteId = notesState.currentNoteId;
+  //const noteId = notesState.currentNoteId;
+
+  const userId = notesState.userId; 
   const currentNoteId = notesState.currentNoteId;
 
+  //const userId = 1; //!!!убрать!
+
   useEffect(() => {
-    if (noteId && userId != 0) {
+    
+    //const userId = notesState.userId;
+    //const currentNoteId = notesState.currentNoteId;
+    if (needLoadNoteBody)
+    {
+    console.log(notesState);
+    console.log(`UserId:${userId}`);
+    console.log(`currentNoteId:${currentNoteId}`);
+    if (currentNoteId && userId != 0) {
       handlerLoadNoteBodyFromServer();
+      setNeedLoadNoteBody(false);
       //dispatch({ type: "NEED_LOAD_DATA", payload: false });
     }
-    //}
+    }
   });
 
   const handlerLoadNoteBodyFromServer = async function () {
     //let data = await loadBDfromServer(currentUser, setLoading);
-    let noteBodyFromServer = await loadNoteBodyFromServer(userId, noteId, setLoading);
+    //let noteBodyFromServer = await loadNoteBodyFromServer(userId, currentNoteId, setLoading);
+    let noteDataFromServer = await loadNoteBodyFromServer(userId, currentNoteId);
     console.log("loadNoteBodyFromServer");
-    console.log(noteBodyFromServer);
-    if (noteBodyFromServer) {
-      setNoteBody(noteBodyFromServer);
+    console.log(noteDataFromServer);
+    if (noteDataFromServer) {
+      setNoteName(noteDataFromServer.noteName);
+      setNoteBody(noteDataFromServer.noteBody);
+      setNotebookName(noteDataFromServer.notebook);
     }
     // dispatch({ type: "LOAD_BD", payload: data });
   };
@@ -52,7 +71,9 @@ const Note = () => {
     console.log(noteBody);
     let note;
     let notePassword = ""; //!!! добавить обработку!
-    const date = moment().format("DD.MM.YYYY HH.mm.ss");
+    //const date = moment().format("DD.MM.YYYY HH.mm.ss");
+    const date = new Date();
+    console.log(`currentNoteId =${currentNoteId}`);
     if  (currentNoteId == 0){  //если новая заметка
     note = {
       noteId: currentNoteId,
@@ -66,9 +87,9 @@ const Note = () => {
     };
   } else {  //если редактирование заметки
     note = {
-      noteId,
+      noteId: currentNoteId,
       title: noteName,
-      createDate,
+      createDate: date, //!!!обработать!!
       lastChangeDate: date,
       notebook: notebookName,
       noteBody,
@@ -81,6 +102,15 @@ const Note = () => {
     let result = await saveNoteToServer(note);
     console.log(result);
   };
+
+  const handleExitNote = () => {
+      dispatch({ type: ACTIONS.CHECK_ID_ROW, payload: 0 });
+      dispatch({ type: "NEED_LOAD_DATA", payload: true });  //!!!можно  оптимизировать - обновить state вместо загрузи из бд!
+      const url = '/main';
+      navigate(url);
+  };
+
+  
 
   // const config = useMemo(
   // 	{
@@ -125,6 +155,10 @@ const Note = () => {
   const notebookChangeHandler = (e) => {
     setNotebookName(e.target.value);
   };
+  const onBlurHandle = (newNoteBody) => {
+    console.log(newNoteBody);
+    setNoteBody(newNoteBody)
+  };
 
   return (
     <div>
@@ -153,8 +187,13 @@ const Note = () => {
         value={noteBody}
         config={config}
         tabIndex={1} // tabIndex of textarea
-        onBlur={(newNoteBody) => setNoteBody(newNoteBody)} // preferred to use only this option to update the content for performance reasons
-        onChange={(newNoteBody) => {}}
+        //onBlur={(newNoteBody) => setNoteBody(newNoteBody)} // preferred to use only this option to update the content for performance reasons
+        onBlur={(newNoteBody) => onBlurHandle(newNoteBody)}
+        
+        //onChange={(newNoteBody) => {}}
+        //onChange={(newNoteBody) => onBlurHandle(newNoteBody)}
+
+        //  onChange={(newNoteBody) => setNoteBody(newNoteBody)}
       />
       {/* <button onClick={handleSave}>Save</button> */}
       <Button
@@ -167,6 +206,17 @@ const Note = () => {
         className="main-form__button-add"
       >
         Сохранить заметку
+      </Button>
+      <Button
+        onClick={handleExitNote}
+        id="buttonExitNote"
+        type="button"
+        variant="danger"
+        size="lg"
+        block
+        className="main-form__button-add"
+      >
+        Выйти из заметки
       </Button>
     </div>
   );
