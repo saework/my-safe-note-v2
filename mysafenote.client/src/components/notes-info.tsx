@@ -102,25 +102,27 @@ function MainInfo(props : IProps) {
     return [];
   };
 
-  const sortnoteRowsByData = (dataRows: INoteRow[], sortField: string, sortType: any) => {
-    const rowsAfterFormat = dataRows.map((NoteRow) => {
-      const createDate = NoteRow.createDate.replace(/(\d+).(\d+).(\d+)/, '$3.$2.$1');
-      return {
-        ...NoteRow,
-        createDate,
-      };
-    });
+  // const sortnoteRowsByData = (dataRows: INoteRow[], sortField: string, sortType: any) => {
+  //   const rowsAfterFormat = dataRows.map((NoteRow) => {
+  //     //const createDate = NoteRow.createDate.replace(/(\d+).(\d+).(\d+)/, '$3.$2.$1');
+  //     const createDate = NoteRow.createDate;
+  //     return {
+  //       ...NoteRow,
+  //       createDate,
+  //     };
+  //   });
 
-    const sortRowsAfterFormat = _.orderBy(rowsAfterFormat, sortField, sortType);
-    const resultRows = sortRowsAfterFormat.map((NoteRow) => {
-      const createDate = NoteRow.createDate.replace(/(\d+).(\d+).(\d+)/, '$3.$2.$1');
-      return {
-        ...NoteRow,
-        createDate,
-      };
-    });
-    return resultRows;
-  };
+  //   const sortRowsAfterFormat = _.orderBy(rowsAfterFormat, sortField, sortType);
+  //   const resultRows = sortRowsAfterFormat.map((NoteRow) => {
+  //     //const createDate = NoteRow.createDate.replace(/(\d+).(\d+).(\d+)/, '$3.$2.$1');
+  //     const createDate = NoteRow.createDate;
+  //     return {
+  //       ...NoteRow,
+  //       createDate,
+  //     };
+  //   });
+  //   return resultRows;
+  // };
 
   // useEffect(() => {
   //   if (needSave) {
@@ -152,12 +154,19 @@ function MainInfo(props : IProps) {
   const handleSortClick = (sortField) => {
     const sortType = sort === 'asc' ? 'desc' : 'asc';
 
+    // let orderednoteRows = datanoteRows;
+    // if (sortField !== 'createDate') {
+    //   orderednoteRows = _.orderBy(datanoteRows, sortField, sortType);
+    // } else {
+    //   orderednoteRows = sortnoteRowsByData(datanoteRows, sortField, sortType);
+    // }
+
+    //!!!
     let orderednoteRows = datanoteRows;
-    if (sortField !== 'createDate') {
       orderednoteRows = _.orderBy(datanoteRows, sortField, sortType);
-    } else {
-      orderednoteRows = sortnoteRowsByData(datanoteRows, sortField, sortType);
-    }
+    //!!!
+
+
     setDatanoteRows(orderednoteRows);
     setSort(sortType);
 
@@ -380,7 +389,7 @@ function MainInfo(props : IProps) {
                 {sortRowComm}
               </th>
               <th className="main-info__th-date" onClick={() => handleSortClick('createDate')}>
-                Время
+                Создано
                 {' '}
                 {sortRowDate}
               </th>
@@ -408,7 +417,8 @@ function MainInfo(props : IProps) {
                     {sort !== 'asc' && sortRowNum !== '' ? <td>{noteRows.length - (index + currentPage * pageSize)}</td> : <td>{index + 1 + currentPage * pageSize}</td>}
                     <td>{NoteRow.title}</td>
                     <td>{NoteRow.noteShortText}</td>
-                    <td>{NoteRow.createDate}</td>
+                    {/* <td>{NoteRow.createDate}</td> */}
+                    <td>{moment(NoteRow.createDate).format('DD.MM.YYYY HH:mm')}</td>
                     {/* <td>{NoteRow.bdPeriod}</td> */}
                     <td className="main-info__td-edit">
                       <div>
