@@ -131,3 +131,34 @@ console.log(noteData);
       console.log('saveNoteToServer - Не определен jwtAuthHeader!');
     }
 };
+
+
+export const deleteNoteFromServer = async function (noteId) {
+  const url = `api/note/${noteId}`; // URL для удаления заметки по ID
+  const jwtToken = getLoginData('jwtToken'); // Получаем токен аутентификации
+
+  if (!_.isEmpty(jwtToken)) {
+    console.log(`deleteNoteFromServer - jwtToken - ${JSON.stringify(jwtToken)}`);
+
+    const response = await fetch(url, {
+      method: "DELETE", // Указываем метод DELETE
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + jwtToken, // Передаем токен в заголовке
+      },
+    });
+
+    console.log(response);
+    if (response.ok) {
+      console.log('Заметка успешно удалена с сервера');
+      return true; // Возвращаем true, если удаление прошло успешно
+    } else {
+      console.log(`Ошибка при удалении заметки с сервера - ${response.statusText}`);
+      return false; // Возвращаем false в случае ошибки
+    }
+  } else {
+    console.log('deleteNoteFromServer - Не определен jwtAuthHeader!');
+    return false; // Возвращаем false, если токен не определен
+  }
+};

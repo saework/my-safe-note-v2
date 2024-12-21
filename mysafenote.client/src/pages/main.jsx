@@ -3,8 +3,8 @@ import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Container, Alert } from 'react-bootstrap';
 //import { connect } from 'react-redux';
 import '../style.scss';
-//import { sendBDtoServer, loadBDfromServer } from '../api/home-api';
-import { loadBDfromServer } from '../api/home-api';
+//import { sendBDtoServer, loadBDfromServer } from '../api/main-api';
+import { loadBDfromServer } from '../api/main-api';
 //import { history } from '../store/store';
 //import MainForm from '../components/main-form';
 import MainInfo from '../components/notes-info';
@@ -74,7 +74,7 @@ const userId = notesState.userId;
       if (needLoadData) {
          handlerLoadFromServer();
         //historyState.needLoadData = false;
-        dispatch({ type: "NEED_LOAD_DATA", payload: false });
+        dispatch({ type: ACTIONS.NEED_LOAD_DATA, payload: false });
       }
     //}
   });
@@ -91,16 +91,16 @@ const userId = notesState.userId;
     }
   };
 
-  // Сохранить список задач пользователя на сервер
-  const handlerSaveToServer = () => {
-    const data = {
-      //rootReducer,
-      noteRows, //!!!
-      currentUser,
-      jwtToken,
-    };
-    sendBDtoServer(data, setLoading);
-  };
+  // // Сохранить список задач пользователя на сервер
+  // const handlerSaveToServer = () => {
+  //   const data = {
+  //     //rootReducer,
+  //     noteRows, //!!!
+  //     currentUser,
+  //     jwtToken,
+  //   };
+  //   sendBDtoServer(data, setLoading);
+  // };
 
   // const handlerLoadFromServer = () => {
   //   loadBDfromServer(currentUser, setLoading);
@@ -142,7 +142,7 @@ const handleAddButtonClick = (e) => {
           setNoteShortTextVal={setNoteShortTextVal}
           setLastChangeDateVal={setLastChangeDateVal}
           titleRef={titleRef}
-          handlerSaveToServer={handlerSaveToServer}
+          //handlerSaveToServer={handlerSaveToServer}
           setFormVisible={setFormVisible}
         />
         <Button onClick={handleAddButtonClick} id="buttonAdd" type="button" variant="success" size="lg" block className="main-form__button-add">
@@ -202,7 +202,7 @@ export default Main;
 // import { Container, Alert } from 'react-bootstrap';
 // import { connect } from 'react-redux';
 // import '../style.scss';
-// import { sendBDtoServer, loadBDfromServer } from '../api/home-api';
+// import { sendBDtoServer, loadBDfromServer } from '../api/main-api';
 // import { history } from '../store/store';
 // import MainForm from '../components/main-form';
 // import MainInfo from '../components/main-info';

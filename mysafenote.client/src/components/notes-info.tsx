@@ -17,7 +17,7 @@ import DeleteModal from './delete-modal';
 //import { history } from '../store/store';
 //import * as config from '../configs/config';
 import config from '../configs/config';
-import { loadNoteBodyFromServer, saveNoteToServer } from "../api/note-api";
+import {deleteNoteFromServer, loadNoteBodyFromServer, saveNoteToServer } from "../api/note-api";
 
 import { StateContext } from "../state/notes-context";
 import { ACTIONS, DispatchContext } from "../state/notes-context";
@@ -34,7 +34,7 @@ interface IProps {
   setnoteShortTextVal: (noteShortTextVal: string) => void;
   setlastChangeDateVal: (lastChangeDateVal: string) => void;
   titleRef: any;
-  handlerSaveToServer: any;
+  //handlerSaveToServer: any;
   resetStore: () => void;
   setFormVisible: (formVisible: boolean) => void;
 }
@@ -68,6 +68,9 @@ function MainInfo(props : IProps) {
   const [currentPage, setCurrentPage] = useState(0);
   const [modalShow, setModalShow] = useState(false);
   const [delRowId, setDelRowId] = useState(0);
+
+  const [selectedRowId, setSelectedRowId] = useState(0);
+  
 
 
 
@@ -119,12 +122,12 @@ function MainInfo(props : IProps) {
     return resultRows;
   };
 
-  useEffect(() => {
-    if (needSave) {
-      props.handlerSaveToServer();
-      setNeedSave(false);
-    }
-  });
+  // useEffect(() => {
+  //   if (needSave) {
+  //     //props.handlerSaveToServer();
+  //     setNeedSave(false);
+  //   }
+  // });
   useEffect(() => {
     setDatanoteRows(noteRows);
   }, [noteRows]);
@@ -260,14 +263,23 @@ function MainInfo(props : IProps) {
 
   const handleDelButtonClick = (NoteRowId : number) => {
     setDelRowId(NoteRowId);
+    console.log(NoteRowId);
     setModalShow(true);
   };
-  const handleDeleteRow = () => {
+  //const handleDeleteRow = () => {
+    const handleDeleteRow = async function (){
     if (delRowId !== 0) {
       //props.delNoteRow(delRowId);
-      setNeedSave(true);
-      setDelRowId(0);
+      // setNeedSave(true);
+      // setDelRowId(0);
+      console.log("handleDeleteRow start");
+      var delResult = await deleteNoteFromServer(delRowId);
+      console.log(delResult);
+      //handlerLoadFromServer();
+      dispatch?.({ type: ACTIONS.NEED_LOAD_DATA, payload: true });
       setModalShow(false);
+      console.log("handleDeleteRow end");
+      navigate('/main');
     }
   };
 
@@ -386,7 +398,13 @@ function MainInfo(props : IProps) {
             {noteRows.length > 0 && (
               <>
                 {displayData.map((NoteRow, index) => (
-                  <tr key={NoteRow.id}>
+                  <tr 
+                    key={NoteRow.id}
+                    onDoubleClick={() => handleEditButtonClick(NoteRow.id)} 
+                    onClick={() => setSelectedRowId(NoteRow.id)} // Устанавливаем выделенную строку
+                    // style={{ backgroundColor: selectedRowId === NoteRow.id ? '#d3d3d3' : 'transparent' }}
+                    className={ selectedRowId === NoteRow.id ? "main-info__tr-selected" : "main-info__tr" }
+                  >
                     {sort !== 'asc' && sortRowNum !== '' ? <td>{noteRows.length - (index + currentPage * pageSize)}</td> : <td>{index + 1 + currentPage * pageSize}</td>}
                     <td>{NoteRow.title}</td>
                     <td>{NoteRow.noteShortText}</td>

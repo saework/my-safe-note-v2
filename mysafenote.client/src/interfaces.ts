@@ -49,7 +49,7 @@ export interface ILoginData {
   userId: number;
   jwtToken: string;
 }
-export type TActionPayload = number | INoteRow | INoteRows | ILoginData;
+export type TActionPayload = number | INoteRow | INoteRows | ILoginData | boolean;
 export interface IAction {
   type: string;
   payload: TActionPayload;

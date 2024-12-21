@@ -267,6 +267,10 @@ button.sign-in__button {
     margin: 24px 0 16px; /* 3 * 8px 0 2 * 8px */
 }
 
+tr.main-info__tr-selected td{
+  background-color: #28a74514;
+}
+
 @keyframes lds-dual-ring {
   0% {
     transform: rotate(0deg);
