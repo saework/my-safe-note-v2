@@ -13,6 +13,13 @@ using MySafeNote.Server.Controllers;
 using MySafeNote.Server.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Xceed.Words.NET;
+using DocumentFormat.OpenXml.Packaging;
+using HtmlToOpenXml;
+
+using System.IO;
+using System.Text;
+//using Xceed.Words.NET;
 //using Newtonsoft.Json;
 
 namespace my_safe_note.Controllers
@@ -130,7 +137,7 @@ namespace my_safe_note.Controllers
         //[HttpPost("login/")]
         //public async Task<IActionResult> LoginUserByEmail(UserDto userLoginData)
 
-        // Post: api/Note/notebody/{id}
+        // Post: api/Note/notebody/
         [HttpPost("notebody/")]
         //public async Task<ActionResult<string>> GetNoteBodyByIdAsync([FromBody] NoteBodyDto noteDto)
         public async Task<ActionResult<NoteDataWithBodyDto>> GetNoteBodyByIdAsync(NoteBodyDto noteDto)
@@ -221,6 +228,7 @@ namespace my_safe_note.Controllers
         //    }
         //}
 
+        //Post: api/Note/savenote
         [HttpPost("savenote/")]
         public async Task<ActionResult<int>> CreateNoteAsync([FromBody] NoteDto noteDto)
         {
@@ -347,6 +355,68 @@ namespace my_safe_note.Controllers
             var deletedId = await _noteRepository.RemoveAsync(id);
             return Ok(deletedId);
         }
+
+        //Post: api/Note/notedocx
+        [HttpPost("notedocx/")]
+        [Authorize]
+        public async Task<ActionResult> ConvertNoteBodyToDocxAsync([FromBody] int noteId) 
+        {
+            try
+            {
+                var note = await _noteRepository.GetByIdAsync(noteId);
+                if (note == null)
+                {
+                    return BadRequest($"Note с ID: {noteId} не найден.");
+                }
+                var htmlContent = note.NoteBody;
+                var noteName = note.Title;
+
+                if (htmlContent != null && noteName != null)
+                {
+                    string fileName = noteName + ".docx";
+                    // Путь к выходному файлу
+                    string filePath = Path.Combine(Path.GetTempPath(), fileName);
+
+                    // Создание документа DOCX
+                    using (var document = WordprocessingDocument.Create(filePath, DocumentFormat.OpenXml.WordprocessingDocumentType.Document))
+                    {
+                        // Добавление основного документа
+                        var mainPart = document.AddMainDocumentPart();
+                        mainPart.Document = new DocumentFormat.OpenXml.Wordprocessing.Document();
+                        var body = new DocumentFormat.OpenXml.Wordprocessing.Body();
+
+                        // Конвертация HTML в Open XML
+                        var converter = new HtmlConverter(mainPart);
+                        var paragraphs = converter.Parse(htmlContent);
+
+                        // Добавление параграфов в тело документа
+                        foreach (var paragraph in paragraphs)
+                        {
+                            body.Append(paragraph);
+                        }
+
+                        mainPart.Document.Append(body);
+                        mainPart.Document.Save();
+                    }
+
+                    // Чтение файла и возврат его в ответе
+                    var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
+                    var contentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+                    return File(fileBytes, contentType, fileName);
+                }
+                return BadRequest("Содержимое заметки пустое.");
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Внутренняя ошибка сервера. {ex.Message}");
+            }
+        }
+
+
     }
 }
 

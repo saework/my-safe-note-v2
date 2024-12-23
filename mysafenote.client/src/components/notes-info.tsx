@@ -184,7 +184,7 @@ function MainInfo(props : IProps) {
         setSortRowPeriod('');
         setSortRowNum('');
       }
-    }
+    } 
     if (sortField === 'noteShortText') {
       if (sortType === 'asc') {
         setSortRowName('');

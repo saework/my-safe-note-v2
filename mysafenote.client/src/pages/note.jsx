@@ -3,7 +3,7 @@ import JoditEditor from "jodit-react";
 import { Row, Col, Form, Button } from "react-bootstrap";
 import { StateContext } from "../state/notes-context";
 import { ACTIONS, DispatchContext } from "../state/notes-context";
-import { loadNoteBodyFromServer, saveNoteToServer } from "../api/note-api";
+import { loadNoteBodyFromServer, saveNoteToServer, loadNoteDocxFromServer } from "../api/note-api";
 import moment from "moment";
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -108,6 +108,11 @@ const Note = () => {
       dispatch({ type: "NEED_LOAD_DATA", payload: true });  //!!!можно  оптимизировать - обновить state вместо загрузи из бд!
       const url = '/main';
       navigate(url);
+  };
+
+  const handleLoadNoteDocxFromServer = async function () {
+    let result = await loadNoteDocxFromServer(currentNoteId, noteName);
+    console.log(`loadNoteDocxFromServer result = ${result}`);
   };
 
   
@@ -217,6 +222,17 @@ const Note = () => {
         className="main-form__button-add"
       >
         Выйти из заметки
+      </Button>
+      <Button
+        onClick={handleLoadNoteDocxFromServer}
+        id="buttonExitNote"
+        type="button"
+        variant="success"
+        size="lg"
+        block
+        className="main-form__button-add"
+      >
+        Скачать в формате docx
       </Button>
     </div>
   );
