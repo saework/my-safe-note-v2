@@ -19,6 +19,7 @@ using HtmlToOpenXml;
 
 using System.IO;
 using System.Text;
+using DocumentFormat.OpenXml.Spreadsheet;
 //using Xceed.Words.NET;
 //using Newtonsoft.Json;
 
@@ -62,6 +63,7 @@ namespace my_safe_note.Controllers
         [HttpGet(Name = "GetNote")]
         public async Task<ActionResult<List<Note>>> GetAllNotesAsync()
         {
+            _logger.LogInformation("GetAllNotesAsync");
             var notesDto = new List<NoteDtoGet>();
             var notes = await _noteRepository.GetAllAsync();
             if (notes.Any())
@@ -89,6 +91,7 @@ namespace my_safe_note.Controllers
         [Authorize] // Этот метод требует аутентификации
         public async Task<ActionResult<List<Note>>> GetNotesByUserIdAsync(int userId)
         {
+            _logger.LogInformation($"GetNotesByUserIdAsync userId = {userId}");
             var notesDto = new List<NoteDtoGet>();
             var notes = await _noteRepository.GetNotesByUserIdAsync(userId);
             if (notes.Any())

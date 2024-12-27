@@ -6,8 +6,9 @@ import { ACTIONS, DispatchContext } from "../state/notes-context";
 import { loadNoteBodyFromServer, saveNoteToServer, loadNoteDocxFromServer } from "../api/note-api";
 import moment from "moment";
 import { Link, useNavigate } from 'react-router-dom';
-
-//var y = `<p>qqq</p>`;
+import { encryptNote, decryptNote } from '../functions'; 
+import EncryptModal from '../components/encrypt-modal.tsx';
+import DecryptModal from '../components/dectypt-modal.tsx';
 
 const Note = () => {
   //const {noteId, userId} = props;
@@ -17,6 +18,13 @@ const Note = () => {
   const [notebookName, setNotebookName] = useState("");
 
   const [needLoadNoteBody, setNeedLoadNoteBody] = useState(true);
+
+  const [encryptModalShow, setEncryptModalShow] = useState(false);
+  const [decryptModalShow, setDecryptModalShow] = useState(false);
+  //const [password, setPassword] = useState('');
+  const [encryptedNote, setEncryptedNote] = useState('');
+  const [decryptedNote, setDecryptedNote] = useState('');
+  const [error, setError] = useState('');
 
   const navigate = useNavigate();
   const dispatch = useContext(DispatchContext);
@@ -30,13 +38,13 @@ const Note = () => {
   // const noteRows = notesState.noteRows;
   //const noteId = notesState.currentNoteId;
 
-  const userId = notesState.userId; 
+  const userId = notesState.userId;
   const currentNoteId = notesState.currentNoteId;
 
   //const userId = 1; //!!!убрать!
 
   useEffect(() => {
-    
+
     //const userId = notesState.userId;
     //const currentNoteId = notesState.currentNoteId;
     if (needLoadNoteBody)
@@ -115,7 +123,55 @@ const Note = () => {
     console.log(`loadNoteDocxFromServer result = ${result}`);
   };
 
-  
+
+  // const handleDelButtonClick = (NoteRowId : number) => {
+  //   setDelRowId(NoteRowId);
+  //   console.log(NoteRowId);
+  //   setModalShow(true);
+  // };
+
+
+      // Функция для шифрования заметки
+      const handleEncrypt = (password) => {
+        const encryptedBody = encryptNote(noteBody, password);
+        console.log(encryptedBody);
+        setNoteBody(encryptedBody);
+        setEncryptModalShow(false);
+
+        // setEncryptedNote(encryptedBody);
+        // setDecryptedNote(''); // Сбросить расшифрованную заметку
+        // setEncryptModalShow(false);
+
+        // try {
+        //     const encrypted = encryptNote(note, password);
+        //     setEncryptedNote(encrypted);
+        //     setDecryptedNote(''); // Сбросить расшифрованную заметку
+        //     setError(''); // Сбросить ошибку
+        // } catch (error) {
+        //     setError(error.message);
+        // }
+    };
+
+    // Функция для дешифрования заметки
+    const handleDecrypt = (password) => {
+      const decryptedBody = decryptNote(noteBody, password);
+      console.log(decryptedBody);
+      setNoteBody(decryptedBody);
+      setDecryptModalShow(false);
+
+      // const decryptedBody = decryptNote(encryptedNote, password);
+      // setDecryptedNote(decryptedBody);
+      // setEncryptedNote(''); // Сбросить расшифрованную заметку
+      // setDecryptModalShow(false);
+
+        // try {
+        //     const originalNote = decryptNote(encryptedNote, password);
+        //     setDecryptedNote(originalNote);
+        //     setError(''); // Сбросить ошибку
+        // } catch (error) {
+        //     setError(error.message);
+        // }
+    };
 
   // const config = useMemo(
   // 	{
@@ -187,6 +243,16 @@ const Note = () => {
           onChange={notebookChangeHandler}
         />
       </div>
+      <EncryptModal
+          modalShow={encryptModalShow}
+          handleCloseModal={() => setEncryptModalShow(false)}
+          handleEncrypt={handleEncrypt}
+        />
+      <DecryptModal
+          modalShow={decryptModalShow}
+          handleCloseModal={() => setDecryptModalShow(false)}
+          handleDecrypt={handleDecrypt}
+        />
       <JoditEditor
         ref={editor}
         value={noteBody}
@@ -194,7 +260,7 @@ const Note = () => {
         tabIndex={1} // tabIndex of textarea
         //onBlur={(newNoteBody) => setNoteBody(newNoteBody)} // preferred to use only this option to update the content for performance reasons
         onBlur={(newNoteBody) => onBlurHandle(newNoteBody)}
-        
+
         //onChange={(newNoteBody) => {}}
         //onChange={(newNoteBody) => onBlurHandle(newNoteBody)}
 
@@ -234,6 +300,34 @@ const Note = () => {
       >
         Скачать в формате docx
       </Button>
+      <div>
+      <Button
+        // onClick={handleEncrypt}
+        //onClick={setEncrypteModalShow(true)}
+        onClick={() => setEncryptModalShow(true)}
+        
+        id="buttonExitNote"
+        type="button"
+        variant="success"
+        size="lg"
+        block
+        className="main-form__button-add"
+      >
+        Зашифровать заметку
+      </Button>
+      <Button
+        onClick={() => setDecryptModalShow(true)}
+        id="buttonExitNote"
+        type="button"
+        variant="success"
+        size="lg"
+        block
+        className="main-form__button-add"
+      >
+        Расшифровать заметку
+      </Button>
+
+      </div>
     </div>
   );
 };

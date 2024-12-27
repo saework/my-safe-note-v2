@@ -4,6 +4,7 @@ import React, { useContext } from 'react';
 //import { store } from './store/store';
 import { INoteRow } from './interfaces';
 import { StateContext } from "./state/notes-context";
+import CryptoJS from 'crypto-js';
 //import { ACTIONS, DispatchContext } from "../state/notes-context";
 //import { DispatchContext } from "./state/notes-context";
 
@@ -50,4 +51,25 @@ export const getLoginData = (dataType: string): string | {} => {
     }
   }
   return res;
+};
+
+// Функция для шифрования заметки
+export const encryptNote = (note: string, password: string): string => {
+  if (!note || !password) {
+      throw new Error('Пожалуйста, введите заметку и пароль.');
+  }
+  return CryptoJS.AES.encrypt(note, password).toString();
+};
+
+// Функция для дешифрования заметки
+export const decryptNote = (encryptedNote: string, password: string): string => {
+  if (!encryptedNote || !password) {
+      throw new Error('Пожалуйста, введите зашифрованную заметку и пароль.');
+  }
+  const bytes = CryptoJS.AES.decrypt(encryptedNote, password);
+  const originalNote = bytes.toString(CryptoJS.enc.Utf8);
+  if (!originalNote) {
+      throw new Error('Неверный пароль или зашифрованная заметка.');
+  }
+  return originalNote;
 };
