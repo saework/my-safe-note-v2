@@ -101,7 +101,8 @@ namespace my_safe_note.Controllers
                     Id = x.Id,
                     Title = x.Title,
                     CreateDate = x.CreateDate,
-                    LastChangeDate = x.LastChangeDate
+                    LastChangeDate = x.LastChangeDate,
+                    NotePasswordHash = x.NotePasswordHash
                 }).ToList();
             }
             return Ok(notesDto);
@@ -171,6 +172,7 @@ namespace my_safe_note.Controllers
                 CreateDate = note.CreateDate,
                 LastChangeDate = note.LastChangeDate,
                 NoteBody = note.NoteBody,
+                NotePasswordHash = note.NotePasswordHash
             };
             return Ok(noteData);
         }
@@ -235,8 +237,9 @@ namespace my_safe_note.Controllers
         [HttpPost("savenote/")]
         public async Task<ActionResult<int>> CreateNoteAsync([FromBody] NoteDto noteDto)
         {
+            _logger.LogInformation("CreateNoteAsync. Start");
             //Console.WriteLine($"Received NoteDto: {JsonConvert.SerializeObject(noteDto)}");
-            Console.WriteLine($"Received NoteDto: {noteDto}");
+            //Console.WriteLine($"Received NoteDto: {noteDto}");
             // Проверяем, что данные в данные валидны
             if (noteDto == null)
             {
@@ -250,9 +253,9 @@ namespace my_safe_note.Controllers
                 var createDate = noteDto.CreateDate;
                 var changeDate = noteDto.LastChangeDate;
                 var noteBody = noteDto.NoteBody;
-                var notePassword = noteDto.NotePassword;
+                var notePasswordHash = noteDto.NotePasswordHash;
 
-                var notePasswordHash = notePassword;  //!!!зашифровать!!
+                //var notePasswordHash = notePassword;  //!!!зашифровать!!
                 //if (!string.IsNullOrEmpty(noteDto.NotePassword))
                 //    //шифрование пароля заметки
 
@@ -276,6 +279,7 @@ namespace my_safe_note.Controllers
                         UserId = userId
                     };
                     var newNoteId = await _noteRepository.CreateAsync(newNote);
+                    _logger.LogInformation("CreateNoteAsync. Create success");
                     return Ok(newNoteId);
                 }
                 else // Обновляем данные заметки
@@ -298,6 +302,7 @@ namespace my_safe_note.Controllers
 
 
                     await _noteRepository.UpdateAsync(note);
+                    _logger.LogInformation("CreateNoteAsync. Update success");
                     return Ok(note.Id);
                 }
                 
@@ -341,11 +346,12 @@ namespace my_safe_note.Controllers
             note.LastChangeDate = changedNote.LastChangeDate;
             note.NoteBody = changedNote.NoteBody;
             //var notePasswordHash = string.Empty;
+            var notePasswordHash = changedNote.NotePasswordHash;
 
-            if (!string.IsNullOrEmpty(changedNote.NotePassword))
-                //note.NotePasswordHash = Services.HashPassword(changedNote.NotePassword);
-                note.NotePasswordHash = _passwordHasher.HashPassword(user, changedNote.NotePassword);
-            
+            //if (!string.IsNullOrEmpty(changedNote.NotePasswordHash))
+            //    //note.NotePasswordHash = Services.HashPassword(changedNote.NotePassword);
+            //    note.NotePasswordHash = _passwordHasher.HashPassword(user, changedNote.NotePasswordHash);
+
 
             await _noteRepository.UpdateAsync(note);
             return Ok(note);

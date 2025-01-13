@@ -22,6 +22,9 @@ const Note = () => {
   const [encryptModalShow, setEncryptModalShow] = useState(false);
   const [decryptModalShow, setDecryptModalShow] = useState(false);
   //const [password, setPassword] = useState('');
+
+  const [notePasswordHash, setNotePasswordHash] = useState('');
+
   const [encryptedNote, setEncryptedNote] = useState('');
   const [decryptedNote, setDecryptedNote] = useState('');
   const [error, setError] = useState('');
@@ -70,15 +73,17 @@ const Note = () => {
       setNoteName(noteDataFromServer.noteName);
       setNoteBody(noteDataFromServer.noteBody);
       setNotebookName(noteDataFromServer.notebook);
+      setNotePasswordHash(noteDataFromServer.notePasswordHash);
     }
     // dispatch({ type: "LOAD_BD", payload: data });
   };
 
   //const handleSaveNoteBodyToServer = () => {
   const handleSaveNoteToServer = async function () {
+    console.log("handleSaveNoteToServer");
     console.log(noteBody);
     let note;
-    let notePassword = ""; //!!! добавить обработку!
+    //let notePassword = ""; //!!! добавить обработку!
     //const date = moment().format("DD.MM.YYYY HH.mm.ss");
     const date = new Date();
     console.log(`currentNoteId =${currentNoteId}`);
@@ -89,8 +94,8 @@ const Note = () => {
       createDate: date,
       lastChangeDate: date,
       notebook: notebookName,
-      noteBody,
-      notePassword,
+      noteBody: noteBody,
+      notePasswordHash: notePasswordHash,
       userId,
     };
   } else {  //если редактирование заметки
@@ -100,13 +105,14 @@ const Note = () => {
       createDate: date, //!!!обработать!!
       lastChangeDate: date,
       notebook: notebookName,
-      noteBody,
-      notePassword,
+      noteBody: noteBody,
+      notePasswordHash: notePasswordHash,
       userId
     };
   }
     //let result = await saveNoteBodyToServer(userId, currentNoteId, content, setLoading);
     //let result = await saveNoteToServer(note, setLoading);
+    console.log(note);
     let result = await saveNoteToServer(note);
     console.log(result);
   };
@@ -132,11 +138,32 @@ const Note = () => {
 
 
       // Функция для шифрования заметки
-      const handleEncrypt = (password) => {
-        const encryptedBody = encryptNote(noteBody, password);
+      //const handleEncrypt = async (password) => {
+        //const encryptedBody = encryptNote(noteBody, password);
+      const handleEncrypt = async (password, notePasswordHash) => {
+      //const encryptedBody = encryptNote(noteBody, notePasswordHash);
+      const encryptedBody = encryptNote(noteBody, password);
         console.log(encryptedBody);
         setNoteBody(encryptedBody);
+        //console.log(`handleEncrypt noteBody = ${noteBody}`);
         setEncryptModalShow(false);
+        //handleSaveNoteToServer();
+        const date = new Date();
+        //var notePasswordHash = password; //!!! обработать!! 
+        setNotePasswordHash(notePasswordHash);
+        var note = {
+          noteId: currentNoteId,
+          title: noteName,
+          createDate: date,
+          lastChangeDate: date, //!!! обработать!! 
+          notebook: notebookName,
+          noteBody: encryptedBody,
+          notePasswordHash: notePasswordHash,
+          userId
+        };
+
+        let result = await saveNoteToServer(note);
+        console.log(result);
 
         // setEncryptedNote(encryptedBody);
         // setDecryptedNote(''); // Сбросить расшифрованную заметку
@@ -152,26 +179,66 @@ const Note = () => {
         // }
     };
 
-    // Функция для дешифрования заметки
-    const handleDecrypt = (password) => {
-      const decryptedBody = decryptNote(noteBody, password);
-      console.log(decryptedBody);
-      setNoteBody(decryptedBody);
-      setDecryptModalShow(false);
+    //!!!
+    const handleDecrypt = (password, notePasswordHash) => {
+      console.log("Зашифрованная заметка:", noteBody);
+      console.log("Введенный пароль:", password);
+      console.log("Хеш пароля:", notePasswordHash);
+  
+      try {
+        //noteBody = "U2FsdGVkX18SUC6B4figL6jypnTd2uhJ4U3TY7NP6Bo="; //!!!убрать!!
+          const decryptedBody = decryptNote(noteBody, password);
+          console.log("Расшифрованная заметка:", decryptedBody);
+          setNoteBody(decryptedBody);
+          setNotePasswordHash(notePasswordHash);
+          setDecryptModalShow(false);
+          handleSaveNoteToServer();
+      } catch (error) {
+          console.error("Ошибка при расшифровке:", error);
+          alert("Ошибка при расшифровке: " + error.message);
+      }
+  };
+  //!!!
 
-      // const decryptedBody = decryptNote(encryptedNote, password);
-      // setDecryptedNote(decryptedBody);
-      // setEncryptedNote(''); // Сбросить расшифрованную заметку
-      // setDecryptModalShow(false);
+    // // Функция для дешифрования заметки
+    // const handleDecrypt = (password, notePasswordHash) => {
+    // //  const handleDecrypt = (notePasswordHash) => {
+    //   const decryptedBody = decryptNote(noteBody, password);
+    //   //const decryptedBody = decryptNote(noteBody, notePasswordHash);
+    //   console.log(decryptedBody);
+    //   setNoteBody(decryptedBody);
+    //   setNotePasswordHash(notePasswordHash);
+    //   //setNotePasswordHash(notePasswordHash);
+    //   setDecryptModalShow(false);
+    //   handleSaveNoteToServer();
 
-        // try {
-        //     const originalNote = decryptNote(encryptedNote, password);
-        //     setDecryptedNote(originalNote);
-        //     setError(''); // Сбросить ошибку
-        // } catch (error) {
-        //     setError(error.message);
-        // }
-    };
+    //   // const decryptedBody = decryptNote(encryptedNote, password);
+    //   // setDecryptedNote(decryptedBody);
+    //   // setEncryptedNote(''); // Сбросить расшифрованную заметку
+    //   // setDecryptModalShow(false);
+
+    //     // try {
+    //     //     const originalNote = decryptNote(encryptedNote, password);
+    //     //     setDecryptedNote(originalNote);
+    //     //     setError(''); // Сбросить ошибку
+    //     // } catch (error) {
+    //     //     setError(error.message);
+    //     // }
+    // };
+
+
+    //     // Функция для дешифрования заметки
+    // const handleDecrypt = (password) => {
+    //   const decryptedBody = decryptNote(noteBody, password);
+    //   //const decryptedBody = decryptNote(noteBody, notePasswordHash);
+    //   console.log(decryptedBody);
+    //   setNoteBody(decryptedBody);
+    //   setNotePasswordHash(password);
+    //   //setNotePasswordHash(notePasswordHash);
+    //   setDecryptModalShow(false);
+    //   handleSaveNoteToServer();
+    // };
+
 
   // const config = useMemo(
   // 	{
@@ -250,6 +317,7 @@ const Note = () => {
         />
       <DecryptModal
           modalShow={decryptModalShow}
+          notePasswordHash={notePasswordHash}
           handleCloseModal={() => setDecryptModalShow(false)}
           handleDecrypt={handleDecrypt}
         />

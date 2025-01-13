@@ -12,7 +12,7 @@ export interface INoteRow {
   createDate: string;
   lastChangeDate: string;
   noteShortText: string;
-  //notePassword: string;
+  noteHashPassword: string;
   //bdPeriod: string; //убрать
 }
 export interface INoteRows {

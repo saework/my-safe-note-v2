@@ -8,7 +8,7 @@
         public DateTime CreateDate { get; set; }
         public DateTime LastChangeDate { get; set; }
         public string? NoteBody { get; set; }
-        //public string? NotePassword { get; set; }
+        public string? NotePasswordHash { get; set; }
        // public int UserId { get; set; }
     }
 }

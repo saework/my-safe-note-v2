@@ -66,6 +66,10 @@ export const decryptNote = (encryptedNote: string, password: string): string => 
   if (!encryptedNote || !password) {
       throw new Error('Пожалуйста, введите зашифрованную заметку и пароль.');
   }
+  console.log(`decryptNote`);
+  console.log(encryptedNote);
+  console.log(password);
+
   const bytes = CryptoJS.AES.decrypt(encryptedNote, password);
   const originalNote = bytes.toString(CryptoJS.enc.Utf8);
   if (!originalNote) {

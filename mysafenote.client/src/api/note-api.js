@@ -44,7 +44,7 @@ export const loadNoteBodyFromServer = async function (userId, noteId) {
         lastChangeDate: responseData.lastChangeDate,
         notebook: responseData.notebook,
         noteBody: responseData.noteBody,
-        //notePassword: noteData.notePassword,
+        notePasswordHash: responseData.notePasswordHash,
         //userId: noteData.userId,
       };
       console.log(responseData);
@@ -97,7 +97,7 @@ export const saveNoteToServer = async function (noteData) {
         lastChangeDate: noteData.lastChangeDate,
         notebook: noteData.notebook,
         noteBody: noteData.noteBody,
-        notePassword: noteData.notePassword,
+        notePasswordHash: noteData.notePasswordHash,
         userId: noteData.userId,
       }),
 

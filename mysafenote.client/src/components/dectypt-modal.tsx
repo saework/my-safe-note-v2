@@ -1,31 +1,44 @@
 //import React from 'react';
 import React, { useState } from "react";
 import { Modal, Button } from 'react-bootstrap';
+import bcrypt from 'bcryptjs';
 import '../style.scss';
 
 interface IProps {
   //handleDeleteRow: () => void;
-  handleDecrypt: (password: string) => void
+  notePasswordHash: string; // Храненый хеш пароля
+  //handleDecrypt: (password: string) => void
+  handleDecrypt: (password: string, notePasswordHash: string) => void
   handleCloseModal: () => void;
   modalShow: boolean;
 }
 
 function DecryptModal(props: IProps) {
   //const { modalShow, handleCloseModal, handleDeleteRow } = props;
-  const {modalShow, handleCloseModal, handleDecrypt } = props;
+  const {modalShow, notePasswordHash, handleCloseModal, handleDecrypt } = props;
   const [password, setPassword] = useState<string>('');
   //const [passwordTrue, setPasswordTrue] = useState<string>('');
 
-  const handleDecryptClick = () => {
+  const handleDecryptClick = async () => {
+       console.log(`notePasswordHash - ${notePasswordHash}`);
+       
+        // Проверяем введенный пароль с хешем
+        const isMatch = await bcrypt.compare(password, notePasswordHash);
+        if (isMatch) {
+          handleDecrypt(password, notePasswordHash); // Если пароли совпадают, вызываем handleDecrypt
+        } else {
+          alert("Неверный пароль!");
+        }
 
-    //setPasswordTrue("123"); //!!! сделать обработку!!
-    let passwordTrue = "123";
-    console.log(password);
-    if (password === passwordTrue) {
-      handleDecrypt(password);
-    } else {
-      alert("Не верный пароль!");
-    }
+
+    // let passwordTrue = "123";
+    // console.log(password);
+    // if (password === passwordTrue) {
+    //   handleDecrypt(password);
+    // } else {
+    //   alert("Не верный пароль!");
+    // }
+
   };
 
   return (

@@ -7,7 +7,7 @@ namespace MySafeNote.WebHost.Model
     {
         public required string Title { get; set; }
         public string? Notebook { get; set; }
-        public string? NotePassword { get; set; }
+        public string? NotePasswordHash { get; set; }
         public DateTime CreateDate { get; set; }
         public string? NoteBody { get; set; }
         public int UserId { get; set; }
