@@ -4,7 +4,7 @@ import { Container, Alert } from 'react-bootstrap';
 //import { connect } from 'react-redux';
 import '../style.scss';
 //import { sendBDtoServer, loadBDfromServer } from '../api/main-api';
-import { loadBDfromServer } from '../api/main-api';
+import { loadBDfromServer, exportNotesFromServer, importNotesToServer } from '../api/main-api';
 //import { history } from '../store/store';
 //import MainForm from '../components/main-form';
 import MainInfo from '../components/notes-info';
@@ -31,6 +31,8 @@ function Main(props) {
   const [noteShortTextVal, setNoteShortTextVal] = useState('');
   const [lastChangeDateVal, setLastChangeDateVal] = useState(TIME_ZONE);
   const [formVisible, setFormVisible] = useState(false);
+
+  const [file, setFile] = useState(null);
 
 //!!!
 const navigate = useNavigate();
@@ -122,6 +124,32 @@ const handleAddButtonClick = (e) => {
   navigate(url);
 }
 
+const handlerExportNotesFromServer = async function (){
+  console.log("handlerExportNotesFromServer");
+  //console.log(data);
+  await exportNotesFromServer(userId);
+}
+
+const handlerImportNotesToServer = async function (){
+  console.log("handlerImportNotesToServer");
+
+  if (!file) {
+    alert('Пожалуйста, выберите zip-файл для загрузки.');
+    return;
+  }
+  //await importNotesToServer(userId, file);
+  var result = await importNotesToServer(userId, file);
+  console.log(result);
+  if (result === true)
+  {
+    handlerLoadFromServer();
+  }
+}
+
+const handleFileChange = (event) => {
+  setFile(event.target.files[0]);
+};
+
 
   // const async handlerLoadFromServer = () => {
   //   let data = await loadBDfromServer(currentUser, setLoading);
@@ -148,36 +176,15 @@ const handleAddButtonClick = (e) => {
         <Button onClick={handleAddButtonClick} id="buttonAdd" type="button" variant="success" size="lg" block className="main-form__button-add">
           Добавить заметку
         </Button>
-        {/* <Button
-                type="button"
-                id="buttonAdd"
-                className="main-form__button-add"
-                fullWidth
-                color="success"
-                variant="contained"
-                onClick={handleAddButtonClick}
-            >
-                Добавить заметку
-            </Button> */}
 
+        <Button onClick={handlerExportNotesFromServer} id="buttonExportNotes" type="button" variant="success" size="lg" block className="main-form__button-add">
+          Выгрузить заметки
+        </Button>
+        <div>
+            <input type="file" accept=".zip" onChange={handleFileChange} />
+            <button onClick={handlerImportNotesToServer}>Загрузить заметки</button>
+        </div>
 
-        {/* <MainForm
-          bdPeriodVal={bdPeriodVal}
-          setBdPeriodVal={setBdPeriodVal}
-          buttonAddName={buttonAddName}
-          setButtonAddName={setButtonAddName}
-          startDate={startDate}
-          setStartDate={setStartDate}
-          titleVal={titleVal}
-          settitleVal={settitleVal}
-          noteShortTextVal={noteShortTextVal}
-          setnoteShortTextVal={setnoteShortTextVal}
-          lastChangeDateVal={lastChangeDateVal}
-          setlastChangeDateVal={setlastChangeDateVal}
-          titleRef={titleRef}
-          formVisible={formVisible}
-          setFormVisible={setFormVisible}
-        /> */}
         <Alert className="message__alert_center" variant="light" id="mainLabel">
           {handlerLoading()}
         </Alert>
