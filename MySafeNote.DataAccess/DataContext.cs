@@ -8,6 +8,7 @@ namespace MySafeNote.DataAccess
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Note> Notes { get; set; }
+        public DbSet<Notebook> Notebooks { get; set; }
 
         public DataContext(DbContextOptions<DataContext> options)
             : base(options)
@@ -19,6 +20,7 @@ namespace MySafeNote.DataAccess
         {
             modelBuilder.ApplyConfiguration(new UserEntityConfiguration());
             modelBuilder.ApplyConfiguration(new NoteEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new NotebookEntityConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

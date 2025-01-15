@@ -7,7 +7,7 @@ import '../style.scss';
 import { loadBDfromServer, exportNotesFromServer, importNotesToServer } from '../api/main-api';
 //import { history } from '../store/store';
 //import MainForm from '../components/main-form';
-import MainInfo from '../components/notes-info';
+import NotesInfo from '../components/notes-info';
 //import * as config from '../configs/config';
 import config from '../configs/config';
 //import {TIME_ZONE, DEFAULT_PERIOD}  from '../configs/config';
@@ -16,7 +16,7 @@ import { StateContext } from "../state/notes-context";
 import { ACTIONS, DispatchContext } from "../state/notes-context";
 //import { DispatchContext } from "../state/notes-context";
 //import Button from '@mui/material/Button';
-import { Row, Col, Form, Button } from 'react-bootstrap';
+import { Row, Col, Form, Button, Table } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 //import '../style.scss';
 
@@ -150,6 +150,7 @@ const handleFileChange = (event) => {
   setFile(event.target.files[0]);
 };
 
+let notebooks = ["Блокнот 1", "Блокнот 2", "Блокнот 3", "Блокнот 4", "Блокнот 5", "Блокнот 5", "Блокнот 7", "Блокнот 8"]
 
   // const async handlerLoadFromServer = () => {
   //   let data = await loadBDfromServer(currentUser, setLoading);
@@ -160,9 +161,10 @@ const handleFileChange = (event) => {
   //!!!
 
   return (
+    // <div className="main-form__container">
     <div>
       <Container>
-        <MainInfo
+        <NotesInfo
           // setBdPeriodVal={setBdPeriodVal}
           setButtonAddName={setButtonAddName}
           setStartDate={setStartDate}

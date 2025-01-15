@@ -271,6 +271,20 @@ tr.main-info__tr-selected td{
   background-color: #28a74514;
 }
 
+.main-form__container{
+  display: flex;
+  // justify-content: space-around;
+  justify-content: start;
+  // flex-direction: row;
+}
+.main-form__notesinfo-container{
+  width: 100%;
+}
+.main-form__notebooks-container{
+  margin-right: 40px;
+  min-width: 150px;
+}
+
 @keyframes lds-dual-ring {
   0% {
     transform: rotate(0deg);

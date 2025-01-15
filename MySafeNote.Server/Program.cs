@@ -56,6 +56,7 @@ namespace MySafeNote
             // Регистрация репозиториев
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<INoteRepository, NoteRepository>();
+            builder.Services.AddScoped<INotebookRepository, NotebookRepository>();
 
             //// Установка статических файлов для SPA
             //builder.Services.AddSpaStaticFiles(configuration =>

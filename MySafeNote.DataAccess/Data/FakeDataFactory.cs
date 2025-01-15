@@ -22,6 +22,27 @@ namespace MySafeNote.DataAccess.Data
                 PasswordHash = ""
             }
         };
+        public static IEnumerable<Notebook> Notebooks => new List<Notebook>()
+        {
+            new Notebook()
+            {
+                Id = 1,
+                Name = "Блокнот 1",
+                UserId = 1
+            },
+            new Notebook()
+            {
+                Id = 2,
+                Name = "Блокнот 2",
+                UserId = 1
+            },
+            new Notebook()
+            {
+                Id = 3,
+                Name = "Блокнот 1_2",
+                UserId = 2
+            },
+        };
         public static IEnumerable<Note> Notes => new List<Note>()
         {
             new Note()

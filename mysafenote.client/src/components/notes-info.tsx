@@ -39,7 +39,7 @@ interface IProps {
   setFormVisible: (formVisible: boolean) => void;
 }
 
-function MainInfo(props : IProps) {
+function NotesInfo(props : IProps) {
   //const { noteRows } = props;
   //!!!
   const dispatch = useContext(DispatchContext);
@@ -346,6 +346,8 @@ function MainInfo(props : IProps) {
     //console.log(displayData); //!!!
   };
 
+  let notebooks = ["Блокнот 1", "Блокнот 2", "Блокнот 3", "Блокнот 4", "Блокнот 5", "Блокнот 5", "Блокнот 7", "Блокнот 8"];
+
   return (
     <Row md={1} className="main-page__bd-info">
       <Col>
@@ -370,6 +372,30 @@ function MainInfo(props : IProps) {
           handleDeleteRow={handleDeleteRow}
         />
         <TableSearch onSearch={searchHandler} />
+            <div className="main-form__container">
+              <div className="main-form__notebooks-container">
+                <Table responsive="sm">
+                  <thead>
+                    <tr>
+                      <th className="main-info__th-num">
+                        Блокноты
+                      </th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                    {notebooks.length > 0 && (
+                      <>
+                        {notebooks.map((notebookName, index) => (
+                          <tr key={notebookName}>
+                          <td>{notebookName}</td>
+                          </tr>
+                        ))}
+                      </>
+                      )}
+                    </tbody>
+                </Table>
+              </div>
+            <div className="main-form__notesinfo-container">
         <Table responsive="sm">
           <thead>
             <tr>
@@ -466,9 +492,11 @@ function MainInfo(props : IProps) {
             forcePage={currentPage}
           />
         )}
+            </div>
+            </div>
       </Col>
     </Row>
   );
 }
-export default MainInfo;
+export default NotesInfo;
 
