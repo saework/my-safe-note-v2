@@ -42,24 +42,6 @@ namespace my_safe_note.Controllers
             _userRepository = userRepository;
         }
 
-        //// GET: api/Note
-        //[HttpGet]
-        //public async Task<ActionResult<List<Note>>> GetAllNotesAsync()
-        //{
-        //    var notes = await _noteRepository.GetAllAsync();
-        //    return Ok(notes);
-        //}
-
-
-        //// GET: api/Note
-        //[HttpGet(Name = "GetNote")]
-        //public async Task<ActionResult<List<Note>>> GetAllNotesAsync()
-        //{
-        //    var notes = await _noteRepository.GetAllAsync();
-        //    return Ok(notes);
-        //}
-
-        //!!!
         // GET: api/Note
         [HttpGet(Name = "GetNote")]
         public async Task<ActionResult<List<Note>>> GetAllNotesAsync()
@@ -87,7 +69,7 @@ namespace my_safe_note.Controllers
         // DELETE api/User/email/{email}
         //[HttpDelete("email/{email}")]
 
-        // GET: api/Note/userid/{id}
+        // GET: api/Note/userid/{userId}
         [HttpGet("userid/{userId}")]
         [Authorize] // Этот метод требует аутентификации
         public async Task<ActionResult<List<Note>>> GetNotesByUserIdAsync(int userId)
@@ -108,24 +90,6 @@ namespace my_safe_note.Controllers
             }
             return Ok(notesDto);
         }
-        //!!!
-
-        //        private static readonly string[] Summaries = new[]
-        //{
-        //                    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        //                };
-
-        //        [HttpGet(Name = "GetNote")]
-        //        public IEnumerable<WeatherForecast> Get()
-        //        {
-        //            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        //            {
-        //                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-        //                TemperatureC = Random.Shared.Next(-20, 55),
-        //                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-        //            })
-        //            .ToArray();
-        //        }
 
         // GET api/Note/5
         [HttpGet("{id}")]
@@ -177,62 +141,6 @@ namespace my_safe_note.Controllers
             };
             return Ok(noteData);
         }
-
-        //[HttpPost]
-        //public async Task<ActionResult<int>> CreateNoteAsync([FromBody] NoteDtoCreate noteDto)
-        //{
-        //    // Проверяем, что данные в данные валидны
-        //    if (noteDto == null)
-        //    {
-        //        return BadRequest("Некорректные данные.");
-        //    }
-        //    try
-        //    {
-        //        //var number = noteDto.Number;
-        //        var title = noteDto.Title;
-        //        //var bodyLink = noteDto.BodyLink;
-        //        var notebook = noteDto.Notebook;
-        //        var notePassword = noteDto.NotePassword;
-        //        var createDate = noteDto.CreateDate;
-        //        var notePasswordHash = string.Empty;  //!!!зашифровать!!
-        //        var noteBody = noteDto.NoteBody;
-        //        //if (!string.IsNullOrEmpty(notePassword))
-        //        //    notePasswordHash = Services.HashPassword(notePassword);
-        //        var userId = noteDto.UserId;
-
-        //        var user = await _userRepository.GetByIdAsync(userId);
-        //        if (user == null)
-        //            return BadRequest("$Пользователя с ИД: {userId} не существует.");
-
-        //        if (!string.IsNullOrEmpty(notePassword))
-        //            //notePasswordHash = Services.HashPassword(user, notePassword);
-        //            _passwordHasher.HashPassword(user, notePassword);
-
-        //        var newNote = new Note
-        //        {
-        //            //Number = number,
-        //            Title = title,
-        //            //BodyLink = bodyLink,
-        //            Notebook = notebook,
-        //            NotePasswordHash = notePasswordHash,
-        //            CreateDate = createDate,
-        //            LastChangeDate = createDate,
-        //            NoteBody = noteBody,
-        //            UserId = userId
-        //        };
-        //        var newNoteId = await _noteRepository.CreateAsync(newNote);
-        //        return Ok(newNoteId);
-        //        //return CreatedAtAction(nameof(GetNoteByIdAsync), new { id = newNoteId }, newNoteId);
-        //    }
-        //    catch (ArgumentException ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, $"Внутренняя ошибка сервера. {ex.Message}");
-        //    }
-        //}
 
         //Post: api/Note/savenote
         [HttpPost("savenote/")]

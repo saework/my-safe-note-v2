@@ -16,30 +16,31 @@ namespace MySafeNote.DataAccess.Repositories
         {
             _userRepository = userRepository;
         }
-        //public async Task<List<Note>> GetAllNotesByUserEmailAsync(string email)
-        //{
-        //    var notes = new List<Note>();
-        //    var userId = await _userRepository.GetUserIdByEmailAsync(email);
-        //    if (userId != 0)
-        //        notes = await DbSet.Where(x => x.UserId == userId).ToListAsync();
-        //    return notes;
-        //}
 
-        //public async Task<int> DeleteAllNotesByUserEmailAsync(string email)
-        //{
-        //    var notesToDelete = await GetAllNotesByUserEmailAsync(email);
-        //    if (notesToDelete.Any())
-        //    {
-        //        DbSet.RemoveRange(notesToDelete);
-        //        return await Context.SaveChangesAsync(); // Возвращаем количество удалённых записей
-        //    }
-        //    return 0; // Если заметок не было, возвращаем 0
-        //}
+        public async Task<List<Notebook>> GetNotebooksByUserIdAsync(int userId)
+        {
+            var notebooks = await DbSet.Where(x => x.UserId == userId).ToListAsync();
+            return notebooks;
+        }
 
-        //public async Task<List<Note>> GetNotesByUserIdAsync(int userId)
-        //{
-        //    var notes = await DbSet.Where(x => x.UserId == userId).ToListAsync();
-        //    return notes;
-        //}
+        public async Task<List<Notebook>> GetAllNotebooksByUserEmailAsync(string email)
+        {
+            var notebooks = new List<Notebook>();
+            var userId = await _userRepository.GetUserIdByEmailAsync(email);
+            if (userId != 0)
+                notebooks = await DbSet.Where(x => x.UserId == userId).ToListAsync();
+            return notebooks;
+        }
+
+        public async Task<int> DeleteAllNotebooksByUserEmailAsync(string email)
+        {
+            var notebooksToDelete = await GetAllNotebooksByUserEmailAsync(email);
+            if (notebooksToDelete.Any())
+            {
+                DbSet.RemoveRange(notebooksToDelete);
+                return await Context.SaveChangesAsync(); // Возвращаем количество удалённых записей
+            }
+            return 0; // Если блокнотов не было, возвращаем 0
+        }
     }
 }

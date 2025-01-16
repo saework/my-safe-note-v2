@@ -12,6 +12,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using MySafeNote.Server.Model;
 using Microsoft.AspNetCore.Identity;
+using MySafeNote.Server.Controllers.my_safe_note.Controllers;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace my_safe_note.Controllers
 {
@@ -19,14 +21,19 @@ namespace my_safe_note.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+        private readonly ILogger<UserController> _logger;
         private readonly PasswordHasher<User> _passwordHasher;
         private readonly IUserRepository _userRepository;
         private readonly INoteRepository _noteRepository;
-        public UserController(IUserRepository userRepository, INoteRepository noteRepository)
+        private readonly INotebookRepository _notebookRepository;
+        public UserController(ILogger<UserController> logger, IUserRepository userRepository, INoteRepository noteRepository, INotebookRepository notebookRepository)
         {
+            _logger = logger;
             _passwordHasher = new PasswordHasher<User>();
             _userRepository = userRepository;
             _noteRepository = noteRepository;
+            _notebookRepository = notebookRepository;
+
         }
 
         // GET: api/User
@@ -99,36 +106,6 @@ namespace my_safe_note.Controllers
             }
         }
 
-        //[HttpPost]
-        //public async Task<ActionResult<int>> CreateUserAsync([FromBody] UserDto userDto)
-        //{
-        //    // Проверяем, что данные в данные валидны
-        //    if (userDto == null || string.IsNullOrEmpty(userDto.Email) || string.IsNullOrEmpty(userDto.Password))
-        //    {
-        //        return BadRequest("Некорректные данные.");
-        //    }
-        //    var userExists = await _userRepository.CheckUserExists(userDto.Email.Trim());
-        //    if (userExists)
-        //    {
-        //        return NotFound($"User с Email: {userDto.Email} уже создан.");
-        //    }
-        //    try
-        //    {
-        //        var passwordHash = Services.HashPassword(userDto.Password);
-        //        var newUser = new User { Email = userDto.Email, PasswordHash = passwordHash };
-        //        var newUserId = await _userRepository.CreateAsync(newUser);
-        //        return CreatedAtAction(nameof(GetUserByIdAsync), new { id = newUserId }, newUserId);
-        //    }
-        //    catch (ArgumentException ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, $"Внутренняя ошибка сервера. {ex.Message}");
-        //    }
-        //}
-
         // PUT api/User/5
         [HttpPut("{id}")]
         public async Task<ActionResult<User>> ChangeUserByIdAsync(int id, [FromBody] UserDto changedUser)
@@ -174,8 +151,13 @@ namespace my_safe_note.Controllers
                 return NotFound($"User с Email: {email} не найден.");
             }
             var deleteUserNotes = await _noteRepository.DeleteAllNotesByUserEmailAsync(email);
+            _logger.LogInformation("deleteUserNotes = {deleteUserNotes}", deleteUserNotes);
+            var deleteUserNotebooks = await _notebookRepository.DeleteAllNotebooksByUserEmailAsync(email);
+            _logger.LogInformation("deleteUserNotebooks = {deleteUserNotebooks}", deleteUserNotebooks);
             var deletedId = await _userRepository.RemoveAsync(user.Id);
-            if (deleteUserNotes == 0 || deletedId == 0)
+
+            //if (deleteUserNotes == 0 || deletedId == 0)
+            if (deletedId == 0)
                 return Ok(0);
             else
                 return Ok(deletedId);
