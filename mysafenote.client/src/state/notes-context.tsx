@@ -19,7 +19,8 @@ export const ACTIONS = {
   LOAD_BD: "LOAD_BD",
   LOGIN_SAVE_STORE: "LOGIN_SAVE_STORE",
   RESET_STORE: "RESET_STORE",
-  NEED_LOAD_DATA: "NEED_LOAD_DATA"
+  NEED_LOAD_DATA: "NEED_LOAD_DATA",
+  LOAD_NOTEBOOKS: "LOAD_NOTEBOOKS",
 };
 
 //const initialExportState = {  
@@ -42,6 +43,7 @@ export const initialState: IRootReducer = {
   //checkedId: 0,
   jwtToken: '',
   noteRows: [],
+  notebooks:[],
 };
 
 // export const initialState: IRootReducer = {
@@ -143,8 +145,13 @@ export const initialState: IRootReducer = {
       console.log("load_bd");
       console.log(payload);
       return { ...state, noteRows: payload };
-      
-    }
+    } 
+    case ACTIONS.LOAD_NOTEBOOKS: {
+      //return payload;
+      console.log("LOAD_NOTEBOOKS");
+      console.log(payload);
+      return { ...state, notebooks: payload };
+    } 
     case ACTIONS.LOGIN_SAVE_STORE: {
       const loginData: ILoginData = payload as ILoginData;
       return { ...state, currentUser: loginData.currentUser, userId: loginData.userId, jwtToken: loginData.jwtToken };

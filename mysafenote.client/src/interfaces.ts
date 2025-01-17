@@ -34,6 +34,7 @@ export interface IRootReducer {
   //checkedId: number;
   jwtToken: {};
   noteRows: INoteRow[];
+  notebooks: INotebook[];
 
 }
 export interface IRouter {
@@ -62,4 +63,8 @@ export interface ISendData {
   rootReducer: IRootReducer
   currentUser: string;
   jwtToken: {};
+}
+export interface INotebook {
+  id: number;
+  name: string;
 }

@@ -3,7 +3,7 @@ import JoditEditor from "jodit-react";
 import { Row, Col, Form, Button } from "react-bootstrap";
 import { StateContext } from "../state/notes-context";
 import { ACTIONS, DispatchContext } from "../state/notes-context";
-import { loadNoteBodyFromServer, saveNoteToServer, loadNoteDocxFromServer } from "../api/note-api";
+import { loadNoteBodyFromServer, saveNoteToServer, saveNotebookToServer, loadNoteDocxFromServer } from "../api/note-api";
 import moment from "moment";
 import { Link, useNavigate } from 'react-router-dom';
 import { encryptNote, decryptNote } from '../functions'; 
@@ -64,7 +64,7 @@ const Note = () => {
   });
 
   const handlerLoadNoteBodyFromServer = async function () {
-    //let data = await loadBDfromServer(currentUser, setLoading);
+    //let data = await loadNotesDataFromServer(currentUser, setLoading);
     //let noteBodyFromServer = await loadNoteBodyFromServer(userId, currentNoteId, setLoading);
     let noteDataFromServer = await loadNoteBodyFromServer(userId, currentNoteId);
     console.log("loadNoteBodyFromServer");
@@ -113,8 +113,19 @@ const Note = () => {
     //let result = await saveNoteBodyToServer(userId, currentNoteId, content, setLoading);
     //let result = await saveNoteToServer(note, setLoading);
     console.log(note);
-    let result = await saveNoteToServer(note);
-    console.log(result);
+    let saveNoteResult = await saveNoteToServer(note);
+    console.log(saveNoteResult);
+
+    //!!!
+    // notebookData = {
+    //   notebookId: currentNotebookId,
+    //   notebookName: notebookName,
+    //   userId
+    // };
+
+    // let saveNotebookResult = await saveNotebookToServer(notebook);
+    // console.log(saveNotebookResult);
+    //!!!
   };
 
   const handleExitNote = () => {

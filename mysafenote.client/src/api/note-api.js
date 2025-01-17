@@ -129,6 +129,45 @@ export const saveNoteToServer = async function (noteData) {
   }
 };
 
+export const saveNotebookToServer = async function (notebookData) {
+  //const url = `api/note/notebody/${noteId}`;
+  //const url = `api/note/notebody`;
+  const url = `api/notebook/savenotebook`;
+  const jwtToken = getLoginData("jwtToken");
+  if (!_.isEmpty(jwtToken)) {
+    console.log(`saveNotebookToServer - jwtToken - ${JSON.stringify(jwtToken)}`);
+    console.log(notebookData);
+    //console.log(noteDto);
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        notebookId: notebookData.notebookId,
+        notebookName: notebookData.notebookName,
+        userId: notebookData.userId,
+      }),
+    });
+    console.log(response);
+    if (response.ok === true) {
+      //console.log(response);
+      //const noteBody = await response.json();
+      console.log("Блокнот сохранен на сервер");
+      //console.log(data);
+      return true;
+    } else {
+      console.log(
+        `Ошибка при сохранении блокнота на сервер - ${response.statusText}`
+      );
+    }
+  } else {
+    console.log("saveNotebookToServer - Не определен jwtAuthHeader!");
+  }
+};
+
+
 export const deleteNoteFromServer = async function (noteId) {
   const url = `api/note/${noteId}`; // URL для удаления заметки по ID
   const jwtToken = getLoginData("jwtToken"); // Получаем токен аутентификации

@@ -17,7 +17,7 @@ import DeleteModal from './delete-modal';
 //import { history } from '../store/store';
 //import * as config from '../configs/config';
 import config from '../configs/config';
-import {deleteNoteFromServer, loadNoteBodyFromServer, saveNoteToServer } from "../api/note-api";
+import {deleteNoteFromServer, saveNotebookToServer, loadNoteBodyFromServer, saveNoteToServer } from "../api/note-api";
 
 import { StateContext } from "../state/notes-context";
 import { ACTIONS, DispatchContext } from "../state/notes-context";
@@ -37,10 +37,11 @@ interface IProps {
   //handlerSaveToServer: any;
   resetStore: () => void;
   setFormVisible: (formVisible: boolean) => void;
+  //userId: number
 }
 
 function NotesInfo(props : IProps) {
-  //const { noteRows } = props;
+  //const { userId } = props;
   //!!!
   const dispatch = useContext(DispatchContext);
   const notesState = useContext(StateContext);
@@ -49,6 +50,8 @@ function NotesInfo(props : IProps) {
   //const currentUser = notesState.currentUser;
   //const jwtToken = notesState.jwtToken;
   const noteRows = notesState.noteRows;
+  const notebooks = notesState.notebooks;
+  const userId = notesState.userId;
   //console.log(noteRows);
   //!!!
 
@@ -292,6 +295,21 @@ function NotesInfo(props : IProps) {
     }
   };
 
+  const handleAddNotebookButtonClick = async function (){
+    
+    var notebookName = "блокнот 1";  //!!! обработать - добавить модальное окно ввода имени!!
+
+    var notebookData = {
+      notebookName: notebookName,
+      userId
+    };
+    console.log("saveNotebookResult");
+    let saveNotebookResult = await saveNotebookToServer(notebookData);
+    
+    //console.log(saveNotebookResult);
+
+  }
+
   // const handleEditButtonClick = (NoteRowId : number) => {
   //   props.checkIdNoteRow(NoteRowId);
   //   const NoteRow = getRowById(NoteRowId);
@@ -346,7 +364,7 @@ function NotesInfo(props : IProps) {
     //console.log(displayData); //!!!
   };
 
-  let notebooks = ["Блокнот 1", "Блокнот 2", "Блокнот 3", "Блокнот 4", "Блокнот 5", "Блокнот 5", "Блокнот 7", "Блокнот 8"];
+  //let notebooks = ["Блокнот 1", "Блокнот 2", "Блокнот 3", "Блокнот 4", "Блокнот 5", "Блокнот 5", "Блокнот 7", "Блокнот 8"];
 
   return (
     <Row md={1} className="main-page__bd-info">
@@ -374,6 +392,9 @@ function NotesInfo(props : IProps) {
         <TableSearch onSearch={searchHandler} />
             <div className="main-form__container">
               <div className="main-form__notebooks-container">
+                <Button onClick={handleAddNotebookButtonClick} id="buttonAdd" type="button" variant="success" size="sm" className="main-form__button-add">
+                  Добавить блокнот
+                </Button>
                 <Table responsive="sm">
                   <thead>
                     <tr>
@@ -385,9 +406,9 @@ function NotesInfo(props : IProps) {
                       <tbody>
                     {notebooks.length > 0 && (
                       <>
-                        {notebooks.map((notebookName, index) => (
-                          <tr key={notebookName}>
-                          <td>{notebookName}</td>
+                        {notebooks.map((notebook, index) => (
+                          <tr key={notebook.id}>
+                          <td>{notebook.name}</td>
                           </tr>
                         ))}
                       </>

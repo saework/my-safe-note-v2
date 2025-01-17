@@ -3,8 +3,7 @@ import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Container, Alert } from 'react-bootstrap';
 //import { connect } from 'react-redux';
 import '../style.scss';
-//import { sendBDtoServer, loadBDfromServer } from '../api/main-api';
-import { loadBDfromServer, exportNotesFromServer, importNotesToServer } from '../api/main-api';
+import { loadNotesDataFromServer, loadNotebooksDataFromServer, exportNotesFromServer, importNotesToServer } from '../api/main-api';
 //import { history } from '../store/store';
 //import MainForm from '../components/main-form';
 import NotesInfo from '../components/notes-info';
@@ -105,16 +104,20 @@ const userId = notesState.userId;
   // };
 
   // const handlerLoadFromServer = () => {
-  //   loadBDfromServer(currentUser, setLoading);
+  //   loadNotesDataFromServer(currentUser, setLoading);
   // };
 //!!!
 const handlerLoadFromServer = async function (){
-  //let data = await loadBDfromServer(currentUser, setLoading);
+  //let data = await loadNotesDataFromServer(currentUser, setLoading);
   //const userId = 2; //!!!убрать!!
-  let data = await loadBDfromServer(userId, setLoading);
-  dispatch({ type: ACTIONS.LOAD_BD, payload: data });
+  //let notesData = await loadNotesDataFromServer(userId, setLoading);
+  let notesData = await loadNotesDataFromServer(userId, setLoading);
+  let notebooksData = await loadNotebooksDataFromServer(userId, setLoading);
+  dispatch({ type: ACTIONS.LOAD_BD, payload: notesData });
+  dispatch({ type: ACTIONS.LOAD_NOTEBOOKS, payload: notebooksData });
   console.log("handlerLoadFromServer");
-  console.log(data);
+  console.log(notesData);
+  console.log(notebooksData);
 }
 
 const handleAddButtonClick = (e) => {
@@ -150,10 +153,10 @@ const handleFileChange = (event) => {
   setFile(event.target.files[0]);
 };
 
-let notebooks = ["Блокнот 1", "Блокнот 2", "Блокнот 3", "Блокнот 4", "Блокнот 5", "Блокнот 5", "Блокнот 7", "Блокнот 8"]
+//let notebooks = ["Блокнот 1", "Блокнот 2", "Блокнот 3", "Блокнот 4", "Блокнот 5", "Блокнот 5", "Блокнот 7", "Блокнот 8"]
 
   // const async handlerLoadFromServer = () => {
-  //   let data = await loadBDfromServer(currentUser, setLoading);
+  //   let data = await loadNotesDataFromServer(currentUser, setLoading);
   //   dispatch({ type: "LOAD_BD", payload: data });
   //   console.log("handlerLoadFromServer");
   //   console.log(data);
