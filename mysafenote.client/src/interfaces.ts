@@ -8,7 +8,8 @@ export interface INoteRow {
 
   id: number;
   title: string;
-  notebook: string;
+  notebookName: string;
+  notebookId: number;
   createDate: string;
   lastChangeDate: string;
   noteShortText: string;

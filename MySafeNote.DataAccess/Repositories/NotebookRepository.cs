@@ -23,6 +23,19 @@ namespace MySafeNote.DataAccess.Repositories
             return notebooks;
         }
 
+        public async Task<string> GetNotebookNameByIdAsync(int? notebookId)
+        {
+            //string notebookName = null;
+            var notebookName = string.Empty;
+            if (notebookId != null)
+            {
+                var notebook = await DbSet.Where(x => x.Id == notebookId).FirstOrDefaultAsync();
+                if (notebook == null)
+                    notebookName = notebook.Name;
+            }
+            return notebookName;
+        }
+
         public async Task<List<Notebook>> GetAllNotebooksByUserEmailAsync(string email)
         {
             var notebooks = new List<Notebook>();

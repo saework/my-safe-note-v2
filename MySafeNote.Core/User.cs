@@ -10,5 +10,6 @@ namespace MySafeNote.Core
         public string PasswordHash { get; set; }
         //public int UserRoleId { get; set; }
         public List<Note> Notes { get; set; }
+        public List<Notebook> Notebooks { get; set; }
     }
 }

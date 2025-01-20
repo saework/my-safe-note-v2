@@ -16,14 +16,14 @@ namespace MySafeNote.Server.Controllers
         {
             private readonly ILogger<NotebookController> _logger;
             //private readonly INoteRepository _noteRepository;
-            //private readonly IUserRepository _userRepository;
+            private readonly IUserRepository _userRepository;
             private readonly INotebookRepository _notebookRepository;
             //public NotebookController(ILogger<NotebookController> logger, INoteRepository noteRepository, IUserRepository userRepository, INotebookRepository notebookRepository)
-            public NotebookController(ILogger<NotebookController> logger, INotebookRepository notebookRepository)
+            public NotebookController(ILogger<NotebookController> logger, INotebookRepository notebookRepository, IUserRepository userRepository)
             {
                 _logger = logger;
                 //_noteRepository = noteRepository;
-                //_userRepository = userRepository;
+                _userRepository = userRepository;
                 _notebookRepository = notebookRepository;
             }
 
@@ -40,73 +40,49 @@ namespace MySafeNote.Server.Controllers
             //!!!
             //Post: api/Note/savenote
             [HttpPost("savenotebook/")]
-            public async Task<ActionResult<int>> CreateNotebookAsync([FromBody] NoteDto noteDto)
+            public async Task<ActionResult<int>> CreateNotebookAsync([FromBody] Notebook notebookDto)
             {
                 _logger.LogInformation("CreateNotebookAsync. Start");
                 // Проверяем, что данные в данные валидны
-                if (noteDto == null)
+                if (notebookDto == null)
                 {
                     return BadRequest("Некорректные данные.");
                 }
                 try
                 {
-                    var noteId = noteDto.NoteId;
-                    var title = noteDto.Title;
-                    var notebook = noteDto.Notebook;
-                    var createDate = noteDto.CreateDate;
-                    var changeDate = noteDto.LastChangeDate;
-                    var noteBody = noteDto.NoteBody;
-                    var notePasswordHash = noteDto.NotePasswordHash;
+                    var notebookId = notebookDto.Id;
+                    var name = notebookDto.Name;
 
-                    //var notePasswordHash = notePassword;  //!!!зашифровать!!
-                    //if (!string.IsNullOrEmpty(noteDto.NotePassword))
-                    //    //шифрование пароля заметки
-
-                    var userId = noteDto.UserId;
+                    var userId = notebookDto.UserId;
                     var user = await _userRepository.GetByIdAsync(userId);
 
                     if (user == null)
                         return BadRequest("$Пользователя с ИД: {userId} не существует.");
 
-                    Console.WriteLine($"noteId: {noteId}");
-                    if (noteId == 0) // Создаем новую заметку
+                    if (notebookId == 0) // Создаем новый блокнот
                     {
-                        var newNote = new Note
+                        var newNotebook = new Notebook
                         {
-                            Title = title,
-                            Notebook = notebook,
-                            CreateDate = createDate,
-                            LastChangeDate = createDate,
-                            NoteBody = noteBody,
-                            NotePasswordHash = notePasswordHash,
+                            Name = name,
                             UserId = userId
                         };
-                        var newNoteId = await _noteRepository.CreateAsync(newNote);
-                        _logger.LogInformation("CreateNoteAsync. Create success");
-                        return Ok(newNoteId);
+                        var newNotebookId = await _notebookRepository.CreateAsync(newNotebook);
+                        _logger.LogInformation("CreateNotebookAsync. Create success");
+                        return Ok(newNotebookId);
                     }
                     else // Обновляем данные заметки
                     {
-                        var note = await _noteRepository.GetByIdAsync(noteId);
-                        if (note == null)
+                        var notebook = await _notebookRepository.GetByIdAsync(notebookId);
+                        if (notebook == null)
                         {
-                            return BadRequest($"Note с ID: {noteId} не найден.");
+                            return BadRequest($"Note с ID: {notebookId} не найден.");
                         }
 
-                        note.Title = title;
-                        note.Notebook = notebook;
-                        note.LastChangeDate = createDate;
-                        note.NoteBody = noteBody;
-                        note.NotePasswordHash = notePasswordHash;
+                        notebook.Name = name;
 
-                        //if (!string.IsNullOrEmpty(changedNote.NotePassword))
-                        //    //note.NotePasswordHash = Services.HashPassword(changedNote.NotePassword);
-                        //    note.NotePasswordHash = _passwordHasher.HashPassword(user, changedNote.NotePassword);
-
-
-                        await _noteRepository.UpdateAsync(note);
-                        _logger.LogInformation("CreateNoteAsync. Update success");
-                        return Ok(note.Id);
+                        await _notebookRepository.UpdateAsync(notebook);
+                        _logger.LogInformation("CreateNotebookAsync. Update success");
+                        return Ok(notebook.Id);
                     }
 
                     //return CreatedAtAction(nameof(GetNoteByIdAsync), new { id = newNoteId }, newNoteId);

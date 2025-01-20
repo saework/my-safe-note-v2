@@ -16,6 +16,7 @@ const Note = () => {
   const [noteBody, setNoteBody] = useState("");
   const [noteName, setNoteName] = useState("");
   const [notebookName, setNotebookName] = useState("");
+  const [notebookId, setNotebookId] = useState("");
 
   const [needLoadNoteBody, setNeedLoadNoteBody] = useState(true);
 
@@ -72,7 +73,8 @@ const Note = () => {
     if (noteDataFromServer) {
       setNoteName(noteDataFromServer.noteName);
       setNoteBody(noteDataFromServer.noteBody);
-      setNotebookName(noteDataFromServer.notebook);
+      setNotebookName(noteDataFromServer.notebookName);
+      setNotebookId(noteDataFromServer.notebookId);
       setNotePasswordHash(noteDataFromServer.notePasswordHash);
     }
     // dispatch({ type: "LOAD_BD", payload: data });
@@ -93,7 +95,7 @@ const Note = () => {
       title: noteName,
       createDate: date,
       lastChangeDate: date,
-      notebook: notebookName,
+      notebookId: notebookId,
       noteBody: noteBody,
       notePasswordHash: notePasswordHash,
       userId,
@@ -104,7 +106,7 @@ const Note = () => {
       title: noteName,
       createDate: date, //!!!обработать!!
       lastChangeDate: date,
-      notebook: notebookName,
+      notebookId: notebookId,
       noteBody: noteBody,
       notePasswordHash: notePasswordHash,
       userId
@@ -167,7 +169,7 @@ const Note = () => {
           title: noteName,
           createDate: date,
           lastChangeDate: date, //!!! обработать!! 
-          notebook: notebookName,
+          notebookId: notebookId,
           noteBody: encryptedBody,
           notePasswordHash: notePasswordHash,
           userId
@@ -318,7 +320,8 @@ const Note = () => {
           placeholder=""
           aria-describedby="findText"
           value={notebookName}
-          onChange={notebookChangeHandler}
+          // onChange={notebookChangeHandler}  //!!!обработать!!
+          readonly
         />
       </div>
       <EncryptModal

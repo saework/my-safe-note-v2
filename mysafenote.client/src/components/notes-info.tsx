@@ -298,9 +298,11 @@ function NotesInfo(props : IProps) {
   const handleAddNotebookButtonClick = async function (){
     
     var notebookName = "блокнот 1";  //!!! обработать - добавить модальное окно ввода имени!!
-
+    var notebookId = 0; //!!! обработать !!
+    
     var notebookData = {
-      notebookName: notebookName,
+      id: notebookId,
+      name: notebookName,
       userId
     };
     console.log("saveNotebookResult");

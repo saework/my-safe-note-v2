@@ -17,6 +17,9 @@ namespace MySafeNote.DataAccess.EntityConfigurations
             builder.HasKey(r => r.Id);
             builder.HasIndex(r => r.Name);
             builder.Property(r => r.Name).IsRequired().HasMaxLength(256);
+            builder.HasOne(r => r.User)
+            .WithMany(t => t.Notebooks)
+            .HasForeignKey(r => r.UserId);
         }
     }
 }

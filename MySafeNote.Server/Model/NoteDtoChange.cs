@@ -9,7 +9,8 @@ namespace MySafeNote.WebHost.Model
         //public int Number { get; set; }
         public required string Title { get; set; }
         //public Guid BodyLink { get; set; }
-        public string? Notebook { get; set; }
+        public int? NotebookId { get; set; }
+        public string? NotebookName { get; set; }
         public string? NotePasswordHash { get; set; }
         public DateTime LastChangeDate { get; set; }
         public string? NoteBody { get; set; }

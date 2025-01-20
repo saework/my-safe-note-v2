@@ -34,36 +34,66 @@ namespace my_safe_note.Controllers
         private readonly PasswordHasher<User> _passwordHasher;
         private readonly INoteRepository _noteRepository;
         private readonly IUserRepository _userRepository;
-        public NoteController(ILogger<NoteController> logger, INoteRepository noteRepository, IUserRepository userRepository)
+        private readonly INotebookRepository _notebookRepository;
+        public NoteController(ILogger<NoteController> logger, INoteRepository noteRepository, IUserRepository userRepository, INotebookRepository notebookRepository)
         {
             _logger = logger;
             _passwordHasher = new PasswordHasher<User>();
             _noteRepository = noteRepository;
             _userRepository = userRepository;
+            _notebookRepository = notebookRepository;
         }
 
         // GET: api/Note
         [HttpGet(Name = "GetNote")]
         public async Task<ActionResult<List<Note>>> GetAllNotesAsync()
         {
+
+            //_logger.LogInformation("GetAllNotesAsync");
+            //var notesDto = new List<NoteDtoGet>();
+            //var notes = await _noteRepository.GetAllAsync();
+            //if (notes.Any())
+            //{
+            //    //var notebookName = _notebookRepository.GetNotebookNameByIdAsync();
+            //    notesDto = notes.Select(x => new NoteDtoGet
+            //    {
+            //        Id = x.Id,
+            //        Title = x.Title,
+            //        NotebookId = x.NotebookId,
+            //        CreateDate = x.CreateDate,
+            //        LastChangeDate = x.LastChangeDate,
+            //        NoteBody = x.NoteBody,
+            //        NotePasswordHash = x.NotePasswordHash,
+            //        UserId = x.UserId
+            //    }).ToList();
+            //}
+            //return Ok(notesDto);
+
             _logger.LogInformation("GetAllNotesAsync");
             var notesDto = new List<NoteDtoGet>();
             var notes = await _noteRepository.GetAllAsync();
             if (notes.Any())
             {
-                notesDto = notes.Select(x => new NoteDtoGet
+                foreach (var note in notes)
                 {
-                    Id = x.Id,
-                    Title = x.Title,
-                    Notebook = x.Notebook,
-                    CreateDate = x.CreateDate,
-                    LastChangeDate = x.LastChangeDate,
-                    NoteBody = x.NoteBody,
-                    NotePasswordHash = x.NotePasswordHash,
-                    UserId = x.UserId
-                }).ToList();
+                    var notebookName = await _notebookRepository.GetNotebookNameByIdAsync(note.Id);
+                    var noteDto = new NoteDtoGet
+                    {
+                        Id = note.Id,
+                        Title = note.Title,
+                        NotebookId = note.NotebookId,
+                        NotebookName = notebookName,
+                        CreateDate = note.CreateDate,
+                        LastChangeDate = note.LastChangeDate,
+                        NoteBody = note.NoteBody,
+                        NotePasswordHash = note.NotePasswordHash,
+                        UserId = note.UserId
+                    };
+                    notesDto.Add(noteDto);
+                }
             }
             return Ok(notesDto);
+
         }
 
         // DELETE api/User/email/{email}
@@ -74,21 +104,46 @@ namespace my_safe_note.Controllers
         [Authorize] // Этот метод требует аутентификации
         public async Task<ActionResult<List<Note>>> GetNotesByUserIdAsync(int userId)
         {
+
+            //_logger.LogInformation($"GetNotesByUserIdAsync userId = {userId}");
+            //var notesDto = new List<NoteDtoGet>();
+            //var notes = await _noteRepository.GetNotesByUserIdAsync(userId);
+            //if (notes.Any())
+            //{
+            //    notesDto = notes.Select(x => new NoteDtoGet
+            //    {
+            //        Id = x.Id,
+            //        Title = x.Title,
+            //        CreateDate = x.CreateDate,
+            //        LastChangeDate = x.LastChangeDate,
+            //        NotePasswordHash = x.NotePasswordHash
+            //    }).ToList();
+            //}
+            //return Ok(notesDto);
+
             _logger.LogInformation($"GetNotesByUserIdAsync userId = {userId}");
             var notesDto = new List<NoteDtoGet>();
             var notes = await _noteRepository.GetNotesByUserIdAsync(userId);
             if (notes.Any())
             {
-                notesDto = notes.Select(x => new NoteDtoGet
+                foreach (var note in notes)
                 {
-                    Id = x.Id,
-                    Title = x.Title,
-                    CreateDate = x.CreateDate,
-                    LastChangeDate = x.LastChangeDate,
-                    NotePasswordHash = x.NotePasswordHash
-                }).ToList();
+                    var notebookName = await _notebookRepository.GetNotebookNameByIdAsync(note.Id);
+                    var noteDto = new NoteDtoGet
+                    {
+                        Id = note.Id,
+                        Title = note.Title,
+                        NotebookId = note.NotebookId,
+                        NotebookName = notebookName,
+                        CreateDate = note.CreateDate,
+                        LastChangeDate = note.LastChangeDate,
+                        NotePasswordHash = note.NotePasswordHash
+                    };
+                    notesDto.Add(noteDto);
+                }
             }
             return Ok(notesDto);
+
         }
 
         // GET api/Note/5
@@ -129,11 +184,14 @@ namespace my_safe_note.Controllers
             {
                 return NotFound($"Note с ID: {noteId} не найден.");
             }
-
+            var notebookId = note.NotebookId;
+            var notebookName = await _notebookRepository.GetNotebookNameByIdAsync(notebookId);
+            
             var noteData = new NoteDataWithBodyDto
             {
                 Title = note.Title,
-                Notebook = note.Notebook,
+                NotebookId = notebookId,
+                NotebookName = notebookName,
                 CreateDate = note.CreateDate,
                 LastChangeDate = note.LastChangeDate,
                 NoteBody = note.NoteBody,
@@ -158,7 +216,7 @@ namespace my_safe_note.Controllers
             {
                 var noteId = noteDto.NoteId;
                 var title = noteDto.Title;
-                var notebook = noteDto.Notebook;
+                var notebookId = noteDto.NotebookId;
                 var createDate = noteDto.CreateDate;
                 var changeDate = noteDto.LastChangeDate;
                 var noteBody = noteDto.NoteBody;
@@ -180,7 +238,7 @@ namespace my_safe_note.Controllers
                     var newNote = new Note
                     {
                         Title = title,
-                        Notebook = notebook,
+                        NotebookId = notebookId,
                         CreateDate = createDate,
                         LastChangeDate = createDate,
                         NoteBody = noteBody,
@@ -200,7 +258,7 @@ namespace my_safe_note.Controllers
                     }
 
                     note.Title = title;
-                    note.Notebook = notebook;
+                    note.NotebookId = notebookId;
                     note.LastChangeDate = createDate;
                     note.NoteBody = noteBody;
                     note.NotePasswordHash = notePasswordHash;
@@ -251,7 +309,7 @@ namespace my_safe_note.Controllers
             //note.Number = changedNote.Number;
             note.Title = changedNote.Title;
             //note.BodyLink = changedNote.BodyLink;
-            note.Notebook = changedNote.Notebook;
+            note.NotebookId = changedNote.NotebookId;
             note.LastChangeDate = changedNote.LastChangeDate;
             note.NoteBody = changedNote.NoteBody;
             //var notePasswordHash = string.Empty;
@@ -432,13 +490,13 @@ namespace my_safe_note.Controllers
                     // Используем имя файла без расширения в качестве заголовка заметки
                     var noteTitle = Path.GetFileNameWithoutExtension(htmlFile);
 
-                    var notebook = "111"; //!!!Обработать!!
+                    var notebookId = 1; //!!!Обработать!!
 
                     // Создаем новую заметку
                     var newNote = new Note
                     {
                         Title = noteTitle,
-                        Notebook = notebook,
+                        NotebookId = notebookId,
                         CreateDate = DateTime.UtcNow,
                         LastChangeDate = DateTime.UtcNow,
                         NoteBody = noteContent,
