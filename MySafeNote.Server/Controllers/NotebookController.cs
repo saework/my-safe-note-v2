@@ -64,7 +64,8 @@ namespace MySafeNote.Server.Controllers
                         var newNotebook = new Notebook
                         {
                             Name = name,
-                            UserId = userId
+                            UserId = userId,
+                            //User = user
                         };
                         var newNotebookId = await _notebookRepository.CreateAsync(newNotebook);
                         _logger.LogInformation("CreateNotebookAsync. Create success");

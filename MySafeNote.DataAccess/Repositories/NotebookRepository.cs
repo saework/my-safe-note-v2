@@ -30,7 +30,7 @@ namespace MySafeNote.DataAccess.Repositories
             if (notebookId != null)
             {
                 var notebook = await DbSet.Where(x => x.Id == notebookId).FirstOrDefaultAsync();
-                if (notebook == null)
+                if (notebook != null)
                     notebookName = notebook.Name;
             }
             return notebookName;

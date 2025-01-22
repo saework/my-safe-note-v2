@@ -12,6 +12,6 @@ namespace MySafeNote.Core.Abstractions
         Task<int> DeleteAllNotebooksByUserEmailAsync(string email);
         Task<List<Notebook>> GetNotebooksByUserIdAsync(int userId);
         Task<string> GetNotebookNameByIdAsync(int? notebookId);
-        
+        //Task<Notebook> GetByIdAsync(int? notebookId);
     }
 }

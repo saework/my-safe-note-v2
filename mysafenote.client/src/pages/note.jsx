@@ -86,6 +86,10 @@ const Note = () => {
     console.log(noteBody);
     let note;
     //let notePassword = ""; //!!! добавить обработку!
+
+    //var qqq = null; //!!! обработать, убрать!!
+    var qqq = 1; //!!! обработать, убрать!!
+
     //const date = moment().format("DD.MM.YYYY HH.mm.ss");
     const date = new Date();
     console.log(`currentNoteId =${currentNoteId}`);
@@ -95,7 +99,8 @@ const Note = () => {
       title: noteName,
       createDate: date,
       lastChangeDate: date,
-      notebookId: notebookId,
+      //notebookId: notebookId,
+      notebookId: qqq,
       noteBody: noteBody,
       notePasswordHash: notePasswordHash,
       userId,
