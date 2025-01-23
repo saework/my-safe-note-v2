@@ -21,6 +21,7 @@ export const ACTIONS = {
   RESET_STORE: "RESET_STORE",
   NEED_LOAD_DATA: "NEED_LOAD_DATA",
   LOAD_NOTEBOOKS: "LOAD_NOTEBOOKS",
+  ADD_NOTEBOOK: "ADD_NOTEBOOK"
 };
 
 //const initialExportState = {  
@@ -151,6 +152,13 @@ export const initialState: IRootReducer = {
       console.log("LOAD_NOTEBOOKS");
       console.log(payload);
       return { ...state, notebooks: payload };
+    }
+    case ACTIONS.ADD_NOTEBOOK: {
+      return {
+        ...state,
+        //currentNotebookId: state.currentNotebookId + 1,
+        notebooks: [...state.notebooks, payload],
+      };
     } 
     case ACTIONS.LOGIN_SAVE_STORE: {
       const loginData: ILoginData = payload as ILoginData;

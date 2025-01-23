@@ -6,10 +6,11 @@ interface IProps {
   handleDeleteRow: () => void;
   handleCloseModal: () => void;
   modalShow: boolean;
+  deleteObjectName: string;
 }
 
 function DeleteModal(props: IProps) {
-  const { modalShow, handleCloseModal, handleDeleteRow } = props;
+  const { modalShow, deleteObjectName, handleCloseModal, handleDeleteRow } = props;
 
   return (
     <Modal show={modalShow} onHide={handleCloseModal} backdrop="static" keyboard={false} aria-labelledby="contained-modal-title-vcenter" centered>
@@ -17,7 +18,7 @@ function DeleteModal(props: IProps) {
         <Modal.Title id="contained-modal-title-vcenter">Удаление</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p>Вы действительно хотите удалить уведомление?</p>
+        <p>Вы действительно хотите удалить {deleteObjectName}?</p>
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={handleDeleteRow}>Да</Button>

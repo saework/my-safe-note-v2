@@ -135,6 +135,7 @@ export const saveNotebookToServer = async function (notebookData) {
   //const url = `api/note/notebody`;
   const url = `api/notebook/savenotebook`;
   const jwtToken = getLoginData("jwtToken");
+  let result = false;
   if (!_.isEmpty(jwtToken)) {
     console.log(`saveNotebookToServer - jwtToken - ${JSON.stringify(jwtToken)}`);
     console.log(notebookData);
@@ -157,7 +158,7 @@ export const saveNotebookToServer = async function (notebookData) {
       //const noteBody = await response.json();
       console.log("Блокнот сохранен на сервер");
       //console.log(data);
-      return true;
+      result = true;
     } else {
       console.log(
         `Ошибка при сохранении блокнота на сервер - ${response.statusText}`
@@ -166,6 +167,7 @@ export const saveNotebookToServer = async function (notebookData) {
   } else {
     console.log("saveNotebookToServer - Не определен jwtAuthHeader!");
   }
+  return result;
 };
 
 

@@ -51,7 +51,12 @@ export interface ILoginData {
   userId: number;
   jwtToken: string;
 }
-export type TActionPayload = number | INoteRow | INoteRows | ILoginData | boolean;
+export interface INotebookData {
+  id: number;
+  name: string;
+  userId: number;
+}
+export type TActionPayload = number | INoteRow | INoteRows | ILoginData | boolean | INotebookData;
 export interface IAction {
   type: string;
   payload: TActionPayload;

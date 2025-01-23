@@ -8,7 +8,7 @@ import moment from "moment";
 import { Link, useNavigate } from 'react-router-dom';
 import { encryptNote, decryptNote } from '../functions'; 
 import EncryptModal from '../components/encrypt-modal.tsx';
-import DecryptModal from '../components/dectypt-modal.tsx';
+import DecryptModal from '../components/decrypt-modal.tsx';
 
 const Note = () => {
   //const {noteId, userId} = props;

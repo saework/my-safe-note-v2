@@ -14,6 +14,10 @@ import { getRowById } from '../functions';
 import { INoteRow, IStore } from '../interfaces';
 import TableSearch from './table-search';
 import DeleteModal from './delete-modal';
+
+import CreateNotebookModal from './createNotebook-modal';
+import EditNotebookModal from './editNotebook-modal';
+
 //import { history } from '../store/store';
 //import * as config from '../configs/config';
 import config from '../configs/config';
@@ -70,6 +74,10 @@ function NotesInfo(props : IProps) {
   const [pageCount, setPageCount] = useState(Math.ceil(noteRows.length / pageSize));
   const [currentPage, setCurrentPage] = useState(0);
   const [modalShow, setModalShow] = useState(false);
+  const [notebookModalShow, setNotebookModalShow] = useState(false);
+  const [notebookEditModalShow, setNotebookEditModalShow] = useState(false);
+  
+  
   const [delRowId, setDelRowId] = useState(0);
 
   const [selectedRowId, setSelectedRowId] = useState(0);
@@ -296,17 +304,17 @@ function NotesInfo(props : IProps) {
   };
 
   const handleAddNotebookButtonClick = async function (){
+    setNotebookModalShow(true);
+    // var notebookName = "блокнот 1";  //!!! обработать - добавить модальное окно ввода имени!!
+    // var notebookId = 0; //!!! обработать !!
     
-    var notebookName = "блокнот 1";  //!!! обработать - добавить модальное окно ввода имени!!
-    var notebookId = 0; //!!! обработать !!
-    
-    var notebookData = {
-      id: notebookId,
-      name: notebookName,
-      userId
-    };
-    console.log("saveNotebookResult");
-    let saveNotebookResult = await saveNotebookToServer(notebookData);
+    // var notebookData = {
+    //   id: notebookId,
+    //   name: notebookName,
+    //   userId
+    // };
+    // console.log("saveNotebookResult");
+    // let saveNotebookResult = await saveNotebookToServer(notebookData);
     
     //console.log(saveNotebookResult);
 
@@ -366,13 +374,33 @@ function NotesInfo(props : IProps) {
     //console.log(displayData); //!!!
   };
 
+  const handleEditNotebookButtonClick = () => {
+    setNotebookEditModalShow(true);
+  }
+
   //let notebooks = ["Блокнот 1", "Блокнот 2", "Блокнот 3", "Блокнот 4", "Блокнот 5", "Блокнот 5", "Блокнот 7", "Блокнот 8"];
+
+  let currentNotebookId = 1; //!!! обработать!!
+  let currentNotebookName = "блокнот 1" //!!! обработать!!
 
   return (
     <Row md={1} className="main-page__bd-info">
       <Col>
+      <CreateNotebookModal
+          userId = {userId}
+          notebookModalShow={notebookModalShow}
+          handleNotebookCloseModal={() => setNotebookModalShow(false)}
+       />
+      <EditNotebookModal
+          userId = {userId}
+          currentNotebookId = {currentNotebookId}
+          currentNotebookName = {currentNotebookName}
+          notebookEditModalShow={notebookEditModalShow}
+          handleNotebookEditCloseModal={() => setNotebookEditModalShow(false)}
+       />
+
         <div className="main-info__capt-container">
-          <div className="main-info__page-capt">Мои уведомления</div>
+          <div className="main-info__page-capt">Мои заметки</div>
           <div>
             <Button
               id="buttonExit"
@@ -390,6 +418,7 @@ function NotesInfo(props : IProps) {
           modalShow={modalShow}
           handleCloseModal={() => setModalShow(false)}
           handleDeleteRow={handleDeleteRow}
+          deleteObjectName={"заметку"}
         />
         <TableSearch onSearch={searchHandler} />
             <div className="main-form__container">
@@ -410,7 +439,16 @@ function NotesInfo(props : IProps) {
                       <>
                         {notebooks.map((notebook, index) => (
                           <tr key={notebook.id}>
-                          <td>{notebook.name}</td>
+                          <td>
+                            {notebook.name}
+                          </td>
+                          <td className="main-info__td-edit">
+                            <div>
+                              <button id="editNotebook-button" type="button" className="manual__button" onClick={() => handleEditNotebookButtonClick()} onKeyDown={() => handleEditNotebookButtonClick()}>
+                                <img className="main-info__edit" src="images/edit.svg" alt="edit" />
+                              </button>
+                            </div>
+                          </td>
                           </tr>
                         ))}
                       </>
