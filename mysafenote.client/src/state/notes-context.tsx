@@ -1,6 +1,9 @@
 import React, { useReducer, createContext } from "react";
 import { IAction, IRootReducer, INoteRow, ILoginData } from '../interfaces';
+import config from '../configs/config';
 
+  const allnoteFilterName = config.ALLNOTES_FILTER_NAME;
+  const withoutnotebookFilterName = config.WITHOUTNOTEBOOK_FILTER_NAME;
 // export const ACTIONS = {
 //   EXPORT_ADD_GROUP: "EXPORT_ADD_GROUP",
 //   EXPORT_DEL_GROUP: "EXPORT_DEL_GROUP",
@@ -13,6 +16,8 @@ import { IAction, IRootReducer, INoteRow, ILoginData } from '../interfaces';
 export const ACTIONS = {
   DRAW_ROWS: "DRAW_ROWS",
   CHECK_ID_ROW: "CHECK_ID_ROW",
+  CHECK_NOTEBOOK_ID: "CHECK_NOTEBOOK_ID",
+  CHECK_NOTEBOOK_NAME: "CHECK_NOTEBOOK_NAME",
   ADD_BD_ROW: "ADD_BD_ROW",
   DEL_BD_ROW: "DEL_BD_ROW",
   EDIT_BD_ROW: "EDIT_BD_ROW",
@@ -40,6 +45,8 @@ export const initialState: IRootReducer = {
   userId: 0,
   needLoadData: false,
   currentNoteId: 0,
+  currentNotebookId: 0,
+  currentNotebookName: allnoteFilterName,
   noteBody: '',
   //checkedId: 0,
   jwtToken: '',
@@ -105,6 +112,12 @@ export const initialState: IRootReducer = {
     // }
     case ACTIONS.CHECK_ID_ROW: {
       return { ...state, currentNoteId: payload };
+    }
+    case ACTIONS.CHECK_NOTEBOOK_ID: {
+      return { ...state, currentNotebookId: payload };
+    }
+    case ACTIONS.CHECK_NOTEBOOK_NAME: {
+      return { ...state, currentNotebookName: payload };
     }
     case ACTIONS.ADD_BD_ROW: {
       return {

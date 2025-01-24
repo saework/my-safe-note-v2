@@ -37,6 +37,9 @@ function Main(props) {
 const navigate = useNavigate();
 const dispatch = useContext(DispatchContext);
 
+//const allnoteFilterName = config.ALLNOTES_FILTER_NAME;
+//const withoutnotebookFilterName = config.WITHOUTNOTEBOOK_FILTER_NAME;
+
 //const [userUnfold, setUserUnfold] = useState(true);
 const [isModal, setModal] = useState(false);
 const notesState = useContext(StateContext);
@@ -76,6 +79,20 @@ const userId = notesState.userId;
          handlerLoadFromServer();
         //historyState.needLoadData = false;
         dispatch({ type: ACTIONS.NEED_LOAD_DATA, payload: false });
+
+        // const allNotesRow = {
+        //   id: 0,
+        //   name: "Все заметки",
+        //   userId: userId
+        // }
+        // dispatch({ type: ACTIONS.ADD_NOTEBOOK, payload: allNotesRow });
+
+        // const notesWithoutNotebookRow = {
+        //   id: -1,
+        //   name: "Заметки без блокнота",
+        //   userId: userId
+        // }
+        // dispatch({ type: ACTIONS.ADD_NOTEBOOK, payload: notesWithoutNotebookRow });
       }
     //}
   });

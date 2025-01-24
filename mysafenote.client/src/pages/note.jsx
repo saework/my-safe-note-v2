@@ -44,6 +44,7 @@ const Note = () => {
 
   const userId = notesState.userId;
   const currentNoteId = notesState.currentNoteId;
+  const currentNotebookId = notesState.currentNotebookId;
 
   //const userId = 1; //!!!убрать!
 
@@ -88,19 +89,23 @@ const Note = () => {
     //let notePassword = ""; //!!! добавить обработку!
 
     //var qqq = null; //!!! обработать, убрать!!
-    var qqq = 1; //!!! обработать, убрать!!
+    //var qqq = 1; //!!! обработать, убрать!!
 
     //const date = moment().format("DD.MM.YYYY HH.mm.ss");
     const date = new Date();
+
     console.log(`currentNoteId =${currentNoteId}`);
+    console.log(currentNotebookId);
+
     if  (currentNoteId == 0){  //если новая заметка
     note = {
       noteId: currentNoteId,
       title: noteName,
       createDate: date,
       lastChangeDate: date,
+      notebookId: currentNotebookId,
       //notebookId: notebookId,
-      notebookId: qqq,
+      //notebookId: qqq,
       noteBody: noteBody,
       notePasswordHash: notePasswordHash,
       userId,
@@ -111,7 +116,8 @@ const Note = () => {
       title: noteName,
       createDate: date, //!!!обработать!!
       lastChangeDate: date,
-      notebookId: notebookId,
+      //notebookId: notebookId,
+      notebookId: currentNotebookId,
       noteBody: noteBody,
       notePasswordHash: notePasswordHash,
       userId

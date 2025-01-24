@@ -322,6 +322,9 @@ namespace my_safe_note.Controllers
                     return BadRequest($"Пользователя с ИД: {userId} не существует.");
 
                 // Получаем блокнот
+                if (notebookId == 0)
+                    notebookId = null;
+
                 Notebook? notebook = null;
                 if (notebookId != null)
                 { 

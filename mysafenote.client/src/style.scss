@@ -282,7 +282,17 @@ tr.main-info__tr-selected td{
 }
 .main-form__notebooks-container{
   margin-right: 40px;
-  min-width: 150px;
+  min-width: 250px;
+}
+.main-info-notebook__th{
+
+}
+.main-info-notebook__td-edit{
+
+}
+
+.main-info-notebook__td{
+width: 90%;
 }
 
 @keyframes lds-dual-ring {

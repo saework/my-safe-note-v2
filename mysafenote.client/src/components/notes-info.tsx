@@ -46,6 +46,12 @@ interface IProps {
 }
 
 function NotesInfo(props : IProps) {
+
+  // const ALLNOTES = "Все заметки";
+  // const NOTESWITHOUTNOTEBOOK = "Заметки без блокнота";
+  // const ALLNOTES = "Все";
+  // const NOTESWITHOUTNOTEBOOK = "Без блокнота";
+
   //const { userId } = props;
   //!!!
   const dispatch = useContext(DispatchContext);
@@ -61,6 +67,9 @@ function NotesInfo(props : IProps) {
   //!!!
 
   const pageSize = config.PAGINATION_ROW_COUNT;
+  const allnoteFilterName = config.ALLNOTES_FILTER_NAME;
+  const withoutnotebookFilterName = config.WITHOUTNOTEBOOK_FILTER_NAME;
+
   const [needSave, setNeedSave] = useState<boolean>(false);
   const [datanoteRows, setDatanoteRows] = useState<INoteRow[]>(noteRows);
   const [filteredData, setFilteredData] = useState<INoteRow[]>(noteRows);
@@ -83,7 +92,7 @@ function NotesInfo(props : IProps) {
   const [selectedRowId, setSelectedRowId] = useState(0);
   //const [selectedNotebookId, setSelectedNotebookId] = useState(0);
   const [currentNotebookId, setCurrentNotebookId] = useState(0);
-  const [currentNotebookName, setCurrentNotebookName] = useState("");
+  const [currentNotebookName, setCurrentNotebookName] = useState(allnoteFilterName);
   
 
   const getFilteredData = () => {
@@ -378,6 +387,12 @@ function NotesInfo(props : IProps) {
   const handleEditNotebookButtonClick = () => {
     setNotebookEditModalShow(true);
   }
+  const handleCheckNotebook = (notebookId, notebookName) => {
+    setCurrentNotebookId(notebookId);
+    setCurrentNotebookName(notebookName);
+    dispatch?.({ type: ACTIONS.CHECK_NOTEBOOK_ID, payload: notebookId });
+    dispatch?.({ type: ACTIONS.CHECK_NOTEBOOK_NAME, payload: notebookName });
+  }
 
   //let notebooks = ["Блокнот 1", "Блокнот 2", "Блокнот 3", "Блокнот 4", "Блокнот 5", "Блокнот 5", "Блокнот 7", "Блокнот 8"];
 
@@ -430,27 +445,42 @@ function NotesInfo(props : IProps) {
                 <Table responsive="sm">
                   <thead>
                     <tr>
-                      <th className="main-info__th-num">
-                        Блокноты
+                      <th className="main-info-notebook__th">
+                        {/* Блокноты */}
                       </th>
                       </tr>
                       </thead>
                       <tbody>
+                      <tr onClick={() => {handleCheckNotebook(0, allnoteFilterName)}}
+                        // <tr onClick={() => {setCurrentNotebookId(0)
+                        //     setCurrentNotebookName(allnoteFilterName)}}
+                            className={ currentNotebookName === allnoteFilterName ? "main-info__tr-selected" : "main-info__tr" }
+                        >
+                          <td>{allnoteFilterName}</td>
+                        </tr>
+                        <tr onClick={() => {handleCheckNotebook(0, withoutnotebookFilterName)}}
+                        // <tr  onClick={() => {setCurrentNotebookId(0)
+                        //     setCurrentNotebookName(withoutnotebookFilterName)}}
+                            className={ currentNotebookName === withoutnotebookFilterName ? "main-info__tr-selected" : "main-info__tr" }
+                        >
+                          <td>{withoutnotebookFilterName}</td>
+                        </tr>
                     {notebooks.length > 0 && (
                       <>
                         {notebooks.map((notebook, index) => (
                           <tr key={notebook.id}
                           onDoubleClick={() => handleEditNotebookButtonClick()} 
-                          onClick={() => {setCurrentNotebookId(notebook.id)
-                            setCurrentNotebookName(notebook.name)
+                          // onClick={() => {setCurrentNotebookId(notebook.id)
+                          //   setCurrentNotebookName(notebook.name)
+                          onClick={() => {handleCheckNotebook(notebook.id, notebook.name)
                           }} // Устанавливаем выделенную строку
 
                           className={ currentNotebookId === notebook.id ? "main-info__tr-selected" : "main-info__tr" }
                           >
-                          <td>
+                          <td className="main-info-notebook__td">
                             {notebook.name}
                           </td>
-                          <td className="main-info__td-edit">
+                          <td className="main-info-notebook__td-edit">
                             <div>
                               <button id="editNotebook-button" type="button" className="manual__button" onClick={() => handleEditNotebookButtonClick()} onKeyDown={() => handleEditNotebookButtonClick()}>
                                 <img className="main-info__edit" src="images/edit.svg" alt="edit" />

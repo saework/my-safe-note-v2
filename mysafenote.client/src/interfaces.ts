@@ -31,6 +31,8 @@ export interface IRootReducer {
   userId: number;
   needLoadData: boolean; //!!!
   currentNoteId: number;
+  currentNotebookId: number;
+  currentNotebookName: string;
   noteBody: string;
   //checkedId: number;
   jwtToken: {};
