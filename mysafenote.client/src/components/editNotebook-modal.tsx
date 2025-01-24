@@ -1,7 +1,7 @@
 //import React from 'react';
 import React, { useState, useEffect, useContext } from "react";
 import { Modal, Button } from "react-bootstrap";
-import { saveNotebookToServer } from "../api/note-api";
+import { saveNotebookToServer, deleteNotebookFromServer } from "../api/notebook-api";
 import { ACTIONS, DispatchContext } from "../state/notes-context";
 import { StateContext } from "../state/notes-context";
 import DeleteModal from "./delete-modal";
@@ -18,6 +18,8 @@ interface IProps {
 function EditNotebookModal(props: IProps) {
   const dispatch = useContext(DispatchContext);
   //const notesState = useContext(StateContext);
+  
+
 
   const {
     notebookEditModalShow,
@@ -33,6 +35,9 @@ function EditNotebookModal(props: IProps) {
   useEffect(() => {
     setNotebookName(currentNotebookName);
   }, [currentNotebookName]);
+
+  console.log(currentNotebookId);
+  console.log(currentNotebookName);
 
   const handleEditNotebookClick = async () => {
     //var notebookName = "блокнот 1";  //!!! обработать - добавить модальное окно ввода имени!!
@@ -65,7 +70,13 @@ function EditNotebookModal(props: IProps) {
   const handleDeleteNotebook = async () => {
 
     //удаление заметки
-
+    let deleteResult = await deleteNotebookFromServer(currentNotebookId);
+    console.log(`deleteNotebookFromServer result = ${deleteResult}`);
+    if (deleteResult === true) {
+      if (dispatch != null) {
+        dispatch({ type: ACTIONS.NEED_LOAD_DATA, payload: true });
+      }
+    }
     setDeleteModalShow(false);
     handleNotebookEditCloseModal();
   };

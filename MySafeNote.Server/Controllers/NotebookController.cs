@@ -27,7 +27,7 @@ namespace MySafeNote.Server.Controllers
                 _notebookRepository = notebookRepository;
             }
 
-            // GET: api/Notebook/userid/{userId}
+            // GET: api/notebook/userid/{userId}
             [HttpGet("userid/{userId}")]
             //[Authorize]
             public async Task<ActionResult<List<Notebook>>> GetNotebooksByUserIdAsync(int userId)
@@ -38,7 +38,7 @@ namespace MySafeNote.Server.Controllers
             }
 
             //!!!
-            //Post: api/Note/savenote
+            //Post: api/notebook/savenotebook
             [HttpPost("savenotebook/")]
             public async Task<ActionResult<int>> CreateNotebookAsync([FromBody] Notebook notebookDto)
             {
@@ -99,6 +99,13 @@ namespace MySafeNote.Server.Controllers
             }
             //!!!
 
+            // DELETE api/notebook/5
+            [HttpDelete("{id}")]
+            public async Task<ActionResult<int>> DeleteNotebookByIdAsync(int id)
+            {
+                var deletedId = await _notebookRepository.RemoveAsync(id);
+                return Ok(deletedId);
+            }
         }
     }
 }

@@ -1,7 +1,7 @@
 //import React from 'react';
 import React, { useState, useContext } from "react";
 import { Modal, Button } from 'react-bootstrap';
-import { saveNotebookToServer } from "../api/note-api";
+import { saveNotebookToServer } from "../api/notebook-api";
 import { StateContext } from "../state/notes-context";
 import { ACTIONS, DispatchContext } from "../state/notes-context";
 import '../style.scss';

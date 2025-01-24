@@ -21,7 +21,8 @@ import EditNotebookModal from './editNotebook-modal';
 //import { history } from '../store/store';
 //import * as config from '../configs/config';
 import config from '../configs/config';
-import {deleteNoteFromServer, saveNotebookToServer, loadNoteBodyFromServer, saveNoteToServer } from "../api/note-api";
+import { deleteNoteFromServer, loadNoteBodyFromServer, saveNoteToServer } from "../api/note-api";
+//import { saveNotebookToServer } from "../api/notebook-api";
 
 import { StateContext } from "../state/notes-context";
 import { ACTIONS, DispatchContext } from "../state/notes-context";
@@ -77,13 +78,13 @@ function NotesInfo(props : IProps) {
   const [notebookModalShow, setNotebookModalShow] = useState(false);
   const [notebookEditModalShow, setNotebookEditModalShow] = useState(false);
   
-  
   const [delRowId, setDelRowId] = useState(0);
 
   const [selectedRowId, setSelectedRowId] = useState(0);
+  //const [selectedNotebookId, setSelectedNotebookId] = useState(0);
+  const [currentNotebookId, setCurrentNotebookId] = useState(0);
+  const [currentNotebookName, setCurrentNotebookName] = useState("");
   
-
-
 
   const getFilteredData = () => {
     if (!search) {
@@ -380,8 +381,8 @@ function NotesInfo(props : IProps) {
 
   //let notebooks = ["Блокнот 1", "Блокнот 2", "Блокнот 3", "Блокнот 4", "Блокнот 5", "Блокнот 5", "Блокнот 7", "Блокнот 8"];
 
-  let currentNotebookId = 1; //!!! обработать!!
-  let currentNotebookName = "блокнот 1" //!!! обработать!!
+  //let currentNotebookId = 1; //!!! обработать!!
+  //let currentNotebookName = "блокнот 1" //!!! обработать!!
 
   return (
     <Row md={1} className="main-page__bd-info">
@@ -438,7 +439,14 @@ function NotesInfo(props : IProps) {
                     {notebooks.length > 0 && (
                       <>
                         {notebooks.map((notebook, index) => (
-                          <tr key={notebook.id}>
+                          <tr key={notebook.id}
+                          onDoubleClick={() => handleEditNotebookButtonClick()} 
+                          onClick={() => {setCurrentNotebookId(notebook.id)
+                            setCurrentNotebookName(notebook.name)
+                          }} // Устанавливаем выделенную строку
+
+                          className={ currentNotebookId === notebook.id ? "main-info__tr-selected" : "main-info__tr" }
+                          >
                           <td>
                             {notebook.name}
                           </td>

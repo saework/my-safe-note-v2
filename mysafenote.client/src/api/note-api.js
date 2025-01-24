@@ -170,6 +170,40 @@ export const saveNotebookToServer = async function (notebookData) {
   return result;
 };
 
+export const deleteNotebookFromServer = async function (notebookId) {
+  const url = `api/notebook/${notebookId}`;
+  const jwtToken = getLoginData("jwtToken"); // Получаем токен аутентификации
+
+  if (!_.isEmpty(jwtToken)) {
+    console.log(
+      `deleteNotebookFromServer - jwtToken - ${JSON.stringify(jwtToken)}`
+    );
+
+    const response = await fetch(url, {
+      method: "DELETE", // Указываем метод DELETE
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + jwtToken, // Передаем токен в заголовке
+      },
+    });
+
+    console.log(response);
+    if (response.ok) {
+      console.log("Блокнот успешно удален с сервера");
+      return true; // Возвращаем true, если удаление прошло успешно
+    } else {
+      console.log(
+        `Ошибка при удалении блокнота с сервера - ${response.statusText}`
+      );
+      return false; // Возвращаем false в случае ошибки
+    }
+  } else {
+    console.log("deleteNotebookFromServer - Не определен jwtAuthHeader!");
+    return false; // Возвращаем false, если токен не определен
+  }
+};
+
 
 export const deleteNoteFromServer = async function (noteId) {
   const url = `api/note/${noteId}`; // URL для удаления заметки по ID
