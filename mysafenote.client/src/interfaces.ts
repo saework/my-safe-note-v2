@@ -58,7 +58,7 @@ export interface INotebookData {
   name: string;
   userId: number;
 }
-export type TActionPayload = number | INoteRow | INoteRows | ILoginData | boolean | INotebookData;
+export type TActionPayload = number | INoteRow | INoteRows | ILoginData | boolean | INotebookData| string;
 export interface IAction {
   type: string;
   payload: TActionPayload;

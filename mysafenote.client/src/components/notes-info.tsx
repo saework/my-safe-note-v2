@@ -93,32 +93,80 @@ function NotesInfo(props : IProps) {
   //const [selectedNotebookId, setSelectedNotebookId] = useState(0);
   const [currentNotebookId, setCurrentNotebookId] = useState(0);
   const [currentNotebookName, setCurrentNotebookName] = useState(allnoteFilterName);
-  
 
-  const getFilteredData = () => {
-    if (!search) {
-      return datanoteRows;
+
+  const getFinalFilteredData = () => {
+    let filteredNotes = datanoteRows;
+
+    // Фильтрация по currentNotebookName
+    if (currentNotebookName === allnoteFilterName) {
+      // Без дополнительной фильтрации
+    } else if (currentNotebookName === withoutnotebookFilterName) {
+      // Выводим заметки, у которых поле notebookId = 0 или null
+      filteredNotes = filteredNotes.filter(note => note.notebookId === 0 || note.notebookId === null);
+    } else if (currentNotebookName) {
+      // Выводим заметки только те, у которых notebookId = выбранному значению
+      filteredNotes = filteredNotes.filter(note => note.notebookId === currentNotebookId);
     }
-    return datanoteRows.filter(
-      (item) =>
-        item.title.toLowerCase().includes(search.toLowerCase())
-        || item.noteShortText.toLowerCase().includes(search.toLowerCase())
-        || item.createDate.toLowerCase().includes(search.toLowerCase())
-        //|| item.bdPeriod.toLowerCase().includes(search.toLowerCase())
-    );
+
+    // // Поиск
+    // if (search) {
+    //   filteredNotes = filteredNotes.filter(
+    //     (item) =>
+    //       item.title.toLowerCase().includes(search.toLowerCase()) ||
+    //       item.noteShortText.toLowerCase().includes(search.toLowerCase()) ||
+    //       item.createDate.toLowerCase().includes(search.toLowerCase())
+    //   );
+    // }
+
+  // Поиск
+  if (search) {
+    filteredNotes = filteredNotes.filter((item) => {
+      const titleMatch = item.title && item.title.toLowerCase().includes(search.toLowerCase());
+      const shortTextMatch = item.noteShortText && item.noteShortText.toLowerCase().includes(search.toLowerCase());
+      const createDateMatch = item.createDate && item.createDate.toLowerCase().includes(search.toLowerCase());
+      return titleMatch || shortTextMatch || createDateMatch;
+    });
+  }
+
+    // Сортировка
+    filteredNotes = _.orderBy(filteredNotes, 'title', sort); // Замените 'title' на нужное поле для сортировки
+
+    return filteredNotes;
   };
+
+  useEffect(() => {
+    setDatanoteRows(noteRows);
+  }, [noteRows]);
+
+  // useEffect(() => {
+  //   const finalFilteredData = getFinalFilteredData();
+  //   setFilteredData(finalFilteredData);
+  //   setDisplayData(getDisplayData(currentPage, finalFilteredData));
+  // }, [search, currentNotebookName, datanoteRows, sort, currentPage]);
+
+  // const getPageCount = () => {
+  //   return Math.ceil(filteredData.length / pageSize);
+  // };
 
   const getPageCount = () => {
-    if (!search) {
-      return Math.ceil(noteRows.length / pageSize);
-    }
     return Math.ceil(filteredData.length / pageSize);
   };
+  
+  useEffect(() => {
+    const finalFilteredData = getFinalFilteredData();
+    setFilteredData(finalFilteredData);
+    setCurrentPage(0); // Сброс текущей страницы при изменении фильтров
+  }, [search, currentNotebookName, datanoteRows, sort]);
+  
+  useEffect(() => {
+    setPageCount(getPageCount());
+    setDisplayData(getDisplayData(currentPage, filteredData));
+  }, [filteredData, currentPage]);
 
-  const getDisplayData = (currPage: number) => {
-    if (filteredData && filteredData.length > 0) {
-      return _.chunk(filteredData, pageSize)[currPage];
-      //return _chunk(filteredData, pageSize)[currPage];
+  const getDisplayData = (currPage: number, data: INoteRow[]) => {
+    if (data && data.length > 0) {
+      return _.chunk(data, pageSize)[currPage] || [];
     }
     return [];
   };
@@ -151,26 +199,27 @@ function NotesInfo(props : IProps) {
   //     setNeedSave(false);
   //   }
   // });
-  useEffect(() => {
-    setDatanoteRows(noteRows);
-  }, [noteRows]);
 
-  useEffect(() => {
-    setFilteredData(getFilteredData());
-  }, [search]);
+  // useEffect(() => {
+  //   setDatanoteRows(noteRows);
+  // }, [noteRows]);
 
-  useEffect(() => {
-    setFilteredData(getFilteredData());
-  }, [currentPage]);
+  // useEffect(() => {
+  //   setFilteredData(getFilteredData());
+  // }, [search]);
 
-  useEffect(() => {
-    setFilteredData(getFilteredData());
-  }, [datanoteRows]);
+  // useEffect(() => {
+  //   setFilteredData(getFilteredData());
+  // }, [currentPage]);
 
-  useEffect(() => {
-    setPageCount(getPageCount());
-    setDisplayData(getDisplayData(currentPage));
-  }, [filteredData]);
+  // useEffect(() => {
+  //   setFilteredData(getFilteredData());
+  // }, [datanoteRows]);
+
+  // useEffect(() => {
+  //   setPageCount(getPageCount());
+  //   setDisplayData(getDisplayData(currentPage));
+  // }, [filteredData]);
 
   const handleSortClick = (sortField) => {
     const sortType = sort === 'asc' ? 'desc' : 'asc';
@@ -268,9 +317,9 @@ function NotesInfo(props : IProps) {
     }
   };
 
-  const pageChangeHandler = ({ selected } : any) => {
+  const pageChangeHandler = ({ selected }: any) => {
     setCurrentPage(selected);
-    setDisplayData(getDisplayData(selected));
+    setDisplayData(getDisplayData(selected, filteredData));
   };
 
   const searchHandler = (searchText : string) => {
@@ -387,7 +436,8 @@ function NotesInfo(props : IProps) {
   const handleEditNotebookButtonClick = () => {
     setNotebookEditModalShow(true);
   }
-  const handleCheckNotebook = (notebookId, notebookName) => {
+  //const handleCheckNotebook = (notebookId, notebookName) => {
+    const handleCheckNotebook = (notebookId: number, notebookName: string) => {
     setCurrentNotebookId(notebookId);
     setCurrentNotebookName(notebookName);
     dispatch?.({ type: ACTIONS.CHECK_NOTEBOOK_ID, payload: notebookId });
@@ -572,7 +622,8 @@ function NotesInfo(props : IProps) {
             )}
           </tbody>
         </Table>
-        {noteRows.length > pageSize && (
+        {/* {noteRows.length > pageSize && ( */}
+        {pageCount > 1 && ( // Условие для отображения пагинации
           <ReactPaginate
             breakLabel="..."
             nextLabel=">"
