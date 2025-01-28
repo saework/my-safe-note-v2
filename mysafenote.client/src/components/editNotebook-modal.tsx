@@ -40,9 +40,6 @@ function EditNotebookModal(props: IProps) {
   console.log(currentNotebookName);
 
   const handleEditNotebookClick = async () => {
-    //var notebookName = "блокнот 1";  //!!! обработать - добавить модальное окно ввода имени!!
-    //let notebookId = 0;
-
     let notebookData = {
       id: currentNotebookId,
       name: notebookName,

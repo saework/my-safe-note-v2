@@ -23,6 +23,7 @@ using System.Text;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.EntityFrameworkCore;
 using MySafeNote.DataAccess;
+using System.Globalization;
 //using Xceed.Words.NET;
 //using Newtonsoft.Json;
 
@@ -167,9 +168,6 @@ namespace my_safe_note.Controllers
             return Ok(note);
         }
 
-        //[HttpPost("login/")]
-        //public async Task<IActionResult> LoginUserByEmail(UserDto userLoginData)
-
         // Post: api/Note/notebody/
         [HttpPost("notebody/")]
         //public async Task<ActionResult<string>> GetNoteBodyByIdAsync([FromBody] NoteBodyDto noteDto)
@@ -209,91 +207,6 @@ namespace my_safe_note.Controllers
             return Ok(noteData);
         }
 
-        ////Post: api/Note/savenote
-        //[HttpPost("savenote/")]
-        //public async Task<ActionResult<int>> CreateNoteAsync([FromBody] NoteDto noteDto)
-        //{
-        //    _logger.LogInformation("CreateNoteAsync. Start");
-        //    //Console.WriteLine($"Received NoteDto: {JsonConvert.SerializeObject(noteDto)}");
-        //    //Console.WriteLine($"Received NoteDto: {noteDto}");
-        //    // Проверяем, что данные в данные валидны
-        //    if (noteDto == null)
-        //    {
-        //        return BadRequest("Некорректные данные.");
-        //    }
-        //    try
-        //    {
-        //        var noteId = noteDto.NoteId;
-        //        var title = noteDto.Title;
-        //        var notebookId = noteDto.NotebookId;
-        //        var createDate = noteDto.CreateDate;
-        //        var changeDate = noteDto.LastChangeDate;
-        //        var noteBody = noteDto.NoteBody;
-        //        var notePasswordHash = noteDto.NotePasswordHash;
-
-        //        //var notePasswordHash = notePassword;  //!!!зашифровать!!
-        //        //if (!string.IsNullOrEmpty(noteDto.NotePassword))
-        //        //    //шифрование пароля заметки
-
-        //        var userId = noteDto.UserId;
-        //        var user = await _userRepository.GetByIdAsync(userId);
-
-        //        if (user == null)
-        //            return BadRequest("$Пользователя с ИД: {userId} не существует.");
-
-        //        Console.WriteLine($"noteId: {noteId}");
-        //        if (noteId == 0) // Создаем новую заметку
-        //        {
-        //            var newNote = new Note
-        //            {
-        //                Title = title,
-        //                NotebookId = notebookId,
-        //                CreateDate = createDate,
-        //                LastChangeDate = createDate,
-        //                NoteBody = noteBody,
-        //                NotePasswordHash = notePasswordHash,
-        //                UserId = userId
-        //            };
-        //            var newNoteId = await _noteRepository.CreateAsync(newNote);
-        //            _logger.LogInformation("CreateNoteAsync. Create success");
-        //            return Ok(newNoteId);
-        //        }
-        //        else // Обновляем данные заметки
-        //        {
-        //            var note = await _noteRepository.GetByIdAsync(noteId);
-        //            if (note == null)
-        //            {
-        //                return BadRequest($"Note с ID: {noteId} не найден.");
-        //            }
-
-        //            note.Title = title;
-        //            note.NotebookId = notebookId;
-        //            note.LastChangeDate = createDate;
-        //            note.NoteBody = noteBody;
-        //            note.NotePasswordHash = notePasswordHash;
-
-        //            //if (!string.IsNullOrEmpty(changedNote.NotePassword))
-        //            //    //note.NotePasswordHash = Services.HashPassword(changedNote.NotePassword);
-        //            //    note.NotePasswordHash = _passwordHasher.HashPassword(user, changedNote.NotePassword);
-
-
-        //            await _noteRepository.UpdateAsync(note);
-        //            _logger.LogInformation("CreateNoteAsync. Update success");
-        //            return Ok(note.Id);
-        //        }
-
-        //        //return CreatedAtAction(nameof(GetNoteByIdAsync), new { id = newNoteId }, newNoteId);
-        //    }
-        //    catch (ArgumentException ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, $"Внутренняя ошибка сервера. {ex.Message}");
-        //    }
-        //}
-
         [HttpPost("savenote/")]
         public async Task<ActionResult<int>> CreateNoteAsync([FromBody] NoteDto noteDto)
         {
@@ -312,6 +225,8 @@ namespace my_safe_note.Controllers
                 var notebookId = noteDto.NotebookId;
                 var createDate = noteDto.CreateDate;
                 var changeDate = noteDto.LastChangeDate;
+                //var createDate = DateTime.Parse(noteDto.CreateDate); // Преобразуем строку в DateTime
+                //var changeDate = DateTime.Parse(noteDto.LastChangeDate); // Преобразуем строку в DateTime
                 var noteBody = noteDto.NoteBody;
                 var notePasswordHash = noteDto.NotePasswordHash;
                 var userId = noteDto.UserId;
@@ -363,7 +278,7 @@ namespace my_safe_note.Controllers
                     note.Title = title;
                     note.NotebookId = notebookId;
                     //note.Notebook = notebook; // Устанавливаем навигационное свойство
-                    note.LastChangeDate = createDate;
+                    note.LastChangeDate = changeDate;
                     note.NoteBody = noteBody;
                     note.NotePasswordHash = notePasswordHash;
                     note.UserId = userId;
@@ -408,19 +323,11 @@ namespace my_safe_note.Controllers
                 return BadRequest("$Пользователя с ИД: {userId} не существует.");
 
             // Обновляем данные заметки
-            //note.Number = changedNote.Number;
             note.Title = changedNote.Title;
-            //note.BodyLink = changedNote.BodyLink;
             note.NotebookId = changedNote.NotebookId;
             note.LastChangeDate = changedNote.LastChangeDate;
             note.NoteBody = changedNote.NoteBody;
-            //var notePasswordHash = string.Empty;
             var notePasswordHash = changedNote.NotePasswordHash;
-
-            //if (!string.IsNullOrEmpty(changedNote.NotePasswordHash))
-            //    //note.NotePasswordHash = Services.HashPassword(changedNote.NotePassword);
-            //    note.NotePasswordHash = _passwordHasher.HashPassword(user, changedNote.NotePasswordHash);
-
 
             await _noteRepository.UpdateAsync(note);
             return Ok(note);
@@ -494,6 +401,67 @@ namespace my_safe_note.Controllers
             }
         }
 
+        //// POST: api/Note/export
+        //[HttpPost("export/{userId}")]
+        ////[Authorize]
+        //public async Task<ActionResult> ExportUserNotesToHtmlAsync(int userId)
+        //{
+        //    _logger.LogInformation($"Экспорт заметок для пользователя с ID: {userId}");
+
+        //    // Получаем заметки для пользователя
+        //    var notes = await _noteRepository.GetNotesByUserIdAsync(userId);
+        //    if (notes == null || !notes.Any())
+        //    {
+        //        return NotFound($"Заметки не найдены для пользователя с ID: {userId}");
+        //    }
+
+        //    // Создаем временную директорию для хранения HTML-файлов
+        //    var tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+        //    Directory.CreateDirectory(tempDir);
+        //    var zipFilePath = string.Empty;
+        //    try
+        //    {
+        //        // Создаем HTML-файлы для каждой заметки
+        //        foreach (var note in notes)
+        //        {
+        //            var notebookIdString = (note.NotebookId != null && note.NotebookId != 0) ? note.NotebookId.ToString() : string.Empty;
+        //            var fileName = $"{note.Title}__{notebookIdString}.html";
+        //            var filePath = Path.Combine(tempDir, fileName);
+        //            var htmlContent = note.NoteBody ?? "<p>Нет содержимого</p>"; // Резервный вариант, если NoteBody равно null
+
+        //            await System.IO.File.WriteAllTextAsync(filePath, htmlContent, Encoding.UTF8);
+        //        }
+
+        //        // Создаем zip-файл
+        //        zipFilePath = Path.Combine(Path.GetTempPath(), $"UserNotes_{userId}.zip");
+        //        ZipFile.CreateFromDirectory(tempDir, zipFilePath);
+
+        //        // Читаем zip-файл и возвращаем его клиенту
+        //        var zipBytes = await System.IO.File.ReadAllBytesAsync(zipFilePath);
+        //        var contentType = "application/zip";
+        //        var zipFileName = $"UserNotes_{userId}.zip";
+
+        //        return File(zipBytes, contentType, zipFileName);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "Произошла ошибка при экспорте заметок.");
+        //        return StatusCode(500, "Внутренняя ошибка сервера при экспорте заметок.");
+        //    }
+        //    finally
+        //    {
+        //        // Удаляем временные файлы
+        //        if (Directory.Exists(tempDir))
+        //        {
+        //            Directory.Delete(tempDir, true);
+        //        }
+        //        if (System.IO.File.Exists(zipFilePath))
+        //        {
+        //            System.IO.File.Delete(zipFilePath);
+        //        }
+        //    }
+        //}
+
         // POST: api/Note/export
         [HttpPost("export/{userId}")]
         //[Authorize]
@@ -501,34 +469,32 @@ namespace my_safe_note.Controllers
         {
             _logger.LogInformation($"Экспорт заметок для пользователя с ID: {userId}");
 
-            // Получаем заметки для пользователя
             var notes = await _noteRepository.GetNotesByUserIdAsync(userId);
             if (notes == null || !notes.Any())
             {
                 return NotFound($"Заметки не найдены для пользователя с ID: {userId}");
             }
 
-            // Создаем временную директорию для хранения HTML-файлов
             var tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
             Directory.CreateDirectory(tempDir);
             var zipFilePath = string.Empty;
             try
             {
-                // Создаем HTML-файлы для каждой заметки
                 foreach (var note in notes)
                 {
-                    var fileName = $"{note.Title}.html";
+                    var notebookIdString = (note.NotebookId != null && note.NotebookId != 0) ? note.NotebookId.ToString() : string.Empty;
+                    var createDateString = note.CreateDate.ToString("yyyyMMdd_HHmmss");
+                    var lastChangeDateString = note.LastChangeDate.ToString("yyyyMMdd_HHmmss");
+                    var fileName = $"{note.Title}__{createDateString}__{lastChangeDateString}__{notebookIdString}.html";
                     var filePath = Path.Combine(tempDir, fileName);
-                    var htmlContent = note.NoteBody ?? "<p>Нет содержимого</p>"; // Резервный вариант, если NoteBody равно null
+                    var htmlContent = note.NoteBody ?? "<p>Нет содержимого</p>";
 
                     await System.IO.File.WriteAllTextAsync(filePath, htmlContent, Encoding.UTF8);
                 }
 
-                // Создаем zip-файл
                 zipFilePath = Path.Combine(Path.GetTempPath(), $"UserNotes_{userId}.zip");
                 ZipFile.CreateFromDirectory(tempDir, zipFilePath);
 
-                // Читаем zip-файл и возвращаем его клиенту
                 var zipBytes = await System.IO.File.ReadAllBytesAsync(zipFilePath);
                 var contentType = "application/zip";
                 var zipFileName = $"UserNotes_{userId}.zip";
@@ -542,7 +508,6 @@ namespace my_safe_note.Controllers
             }
             finally
             {
-                // Удаляем временные файлы
                 if (Directory.Exists(tempDir))
                 {
                     Directory.Delete(tempDir, true);
@@ -553,6 +518,80 @@ namespace my_safe_note.Controllers
                 }
             }
         }
+
+
+        //// POST: api/Note/import/{userId}
+        //[HttpPost("import/{userId}")]
+        ////[Authorize]
+        //public async Task<ActionResult> UploadNotesFromZipAsync(int userId, IFormFile file)
+        //{
+        //    if (file == null || file.Length == 0)
+        //    {
+        //        return BadRequest("Файл не выбран или пуст.");
+        //    }
+
+        //    if (Path.GetExtension(file.FileName) != ".zip")
+        //    {
+        //        return BadRequest("Пожалуйста, загрузите zip-файл.");
+        //    }
+
+        //    var tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+        //    Directory.CreateDirectory(tempDir);
+
+        //    try
+        //    {
+        //        // Сохраняем zip-файл во временной директории
+        //        var zipFilePath = Path.Combine(tempDir, file.FileName);
+        //        using (var stream = new FileStream(zipFilePath, FileMode.Create))
+        //        {
+        //            await file.CopyToAsync(stream);
+        //        }
+
+        //        // Распаковываем zip-файл
+        //        ZipFile.ExtractToDirectory(zipFilePath, tempDir);
+
+        //        // Обрабатываем все HTML-файлы в распакованной директории
+        //        var htmlFiles = Directory.GetFiles(tempDir, "*.html");
+        //        foreach (var htmlFile in htmlFiles)
+        //        {
+        //            var noteContent = await System.IO.File.ReadAllTextAsync(htmlFile);
+        //            // Используем имя файла без расширения в качестве заголовка заметки
+        //            var noteTitle = Path.GetFileNameWithoutExtension(htmlFile);
+
+        //            var notebookId = 1; //!!!Обработать!!
+
+        //            // Создаем новую заметку
+        //            var newNote = new Note
+        //            {
+        //                Title = noteTitle,
+        //                NotebookId = notebookId,
+        //                CreateDate = DateTime.UtcNow,
+        //                LastChangeDate = DateTime.UtcNow,
+        //                NoteBody = noteContent,
+        //                NotePasswordHash = string.Empty,
+        //                UserId = userId
+        //            };
+
+        //            // Сохраняем заметку в базе данных
+        //            await _noteRepository.CreateAsync(newNote);
+        //        }
+
+        //        return Ok("Заметки успешно загружены.");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, "Ошибка при загрузке заметок из zip-файла.");
+        //        return StatusCode(500, "Внутренняя ошибка сервера при загрузке заметок.");
+        //    }
+        //    finally
+        //    {
+        //        // Удаляем временные файлы и директории
+        //        if (Directory.Exists(tempDir))
+        //        {
+        //            Directory.Delete(tempDir, true);
+        //        }
+        //    }
+        //}
 
         // POST: api/Note/import/{userId}
         [HttpPost("import/{userId}")]
@@ -574,33 +613,38 @@ namespace my_safe_note.Controllers
 
             try
             {
-                // Сохраняем zip-файл во временной директории
                 var zipFilePath = Path.Combine(tempDir, file.FileName);
                 using (var stream = new FileStream(zipFilePath, FileMode.Create))
                 {
                     await file.CopyToAsync(stream);
                 }
 
-                // Распаковываем zip-файл
                 ZipFile.ExtractToDirectory(zipFilePath, tempDir);
 
-                // Обрабатываем все HTML-файлы в распакованной директории
                 var htmlFiles = Directory.GetFiles(tempDir, "*.html");
                 foreach (var htmlFile in htmlFiles)
                 {
                     var noteContent = await System.IO.File.ReadAllTextAsync(htmlFile);
-                    // Используем имя файла без расширения в качестве заголовка заметки
-                    var noteTitle = Path.GetFileNameWithoutExtension(htmlFile);
+                    var fileName = Path.GetFileNameWithoutExtension(htmlFile);
+                    var parts = fileName.Split("__");
 
-                    var notebookId = 1; //!!!Обработать!!
+                    if (parts.Length < 3)
+                    {
+                        _logger.LogWarning($"Имя файла '{fileName}' не соответствует ожидаемому формату.");
+                        continue; // Пропускаем файл, если формат неверный
+                    }
 
-                    // Создаем новую заметку
+                    var noteTitle = parts[0];
+                    var createDate = DateTime.ParseExact(parts[1], "yyyyMMdd_HHmmss", CultureInfo.InvariantCulture);
+                    var lastChangeDate = DateTime.ParseExact(parts[2], "yyyyMMdd_HHmmss", CultureInfo.InvariantCulture);
+                    var notebookId = parts.Length > 3 && int.TryParse(parts[3], out var id) ? id : (int?)null;
+
                     var newNote = new Note
                     {
                         Title = noteTitle,
                         NotebookId = notebookId,
-                        CreateDate = DateTime.UtcNow,
-                        LastChangeDate = DateTime.UtcNow,
+                        CreateDate = createDate,
+                        LastChangeDate = lastChangeDate,
                         NoteBody = noteContent,
                         NotePasswordHash = string.Empty,
                         UserId = userId

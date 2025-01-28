@@ -8,7 +8,8 @@ import ReactPaginate from 'react-paginate';
 import { Row, Col, Table} from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import { useNavigate } from 'react-router-dom';
-import moment from 'moment';
+//import moment from 'moment';
+import moment from 'moment-timezone';
 //import { delNoteRow, checkIdNoteRow, resetStore } from '../actions/actions';
 import { getRowById } from '../functions';
 import { INoteRow, IStore } from '../interfaces';
@@ -37,7 +38,7 @@ interface IProps {
   setStartDate: (startDate: Date) => void;
   settitleVal: (titleVal: string) => void;
   setnoteShortTextVal: (noteShortTextVal: string) => void;
-  setlastChangeDateVal: (lastChangeDateVal: string) => void;
+  setLastChangeDateVal: (lastChangeDateVal: string) => void;
   titleRef: any;
   //handlerSaveToServer: any;
   resetStore: () => void;
@@ -64,6 +65,10 @@ function NotesInfo(props : IProps) {
   const notebooks = notesState.notebooks;
   const userId = notesState.userId;
   //console.log(noteRows);
+  
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  //const timeZone = "Europe/Moscow";
+  console.log(timeZone);
   //!!!
 
   const pageSize = config.PAGINATION_ROW_COUNT;
@@ -80,6 +85,7 @@ function NotesInfo(props : IProps) {
   const [sortRowName, setSortRowName] = useState<string>('');
   const [sortRowComm, setSortRowComm] = useState<any>('');
   const [sortRowDate, setSortRowDate] = useState<any>('');
+  const [sortRowLastChangeDate, setSortRowLastChangeDate] = useState<any>('');
   const [sortRowPeriod, setSortRowPeriod] = useState<any>('');
   const [pageCount, setPageCount] = useState(Math.ceil(noteRows.length / pageSize));
   const [currentPage, setCurrentPage] = useState(0);
@@ -123,14 +129,17 @@ function NotesInfo(props : IProps) {
   if (search) {
     filteredNotes = filteredNotes.filter((item) => {
       const titleMatch = item.title && item.title.toLowerCase().includes(search.toLowerCase());
-      const shortTextMatch = item.noteShortText && item.noteShortText.toLowerCase().includes(search.toLowerCase());
+      //const shortTextMatch = item.noteShortText && item.noteShortText.toLowerCase().includes(search.toLowerCase());
+      const lastChangeDateMatch = item.lastChangeDate && item.lastChangeDate.toLowerCase().includes(search.toLowerCase());
       const createDateMatch = item.createDate && item.createDate.toLowerCase().includes(search.toLowerCase());
-      return titleMatch || shortTextMatch || createDateMatch;
+      //return titleMatch || shortTextMatch || createDateMatch;
+      return titleMatch || lastChangeDateMatch || createDateMatch;
     });
   }
 
     // Сортировка
-    filteredNotes = _.orderBy(filteredNotes, 'title', sort); // Замените 'title' на нужное поле для сортировки
+    //filteredNotes = _.orderBy(filteredNotes, 'title', sort); // Замените 'title' на нужное поле для сортировки
+    filteredNotes = _.orderBy(filteredNotes, sortField, sortType); //!!!обработать!!
 
     return filteredNotes;
   };
@@ -231,57 +240,78 @@ function NotesInfo(props : IProps) {
     //   orderednoteRows = sortnoteRowsByData(datanoteRows, sortField, sortType);
     // }
 
-    //!!!
-    let orderednoteRows = datanoteRows;
-      orderednoteRows = _.orderBy(datanoteRows, sortField, sortType);
-    //!!!
+    //!!!comm
+    // let orderednoteRows = datanoteRows;
+    //   orderednoteRows = _.orderBy(datanoteRows, sortField, sortType);
+    //!!!comm
 
 
-    setDatanoteRows(orderednoteRows);
+    //setDatanoteRows(orderednoteRows); //!!!comm
     setSort(sortType);
 
     if (sortField === 'title') {
       if (sortType === 'asc') {
         setSortRowName('\u2193');
-        setSortRowComm('');
+        //setSortRowComm('');
+        setSortRowLastChangeDate('');
         setSortRowDate('');
-        setSortRowPeriod('');
+        //setSortRowPeriod('');
         setSortRowNum('');
       } else {
         setSortRowName('\u2191');
-        setSortRowComm('');
+        //setSortRowComm('');
+        setSortRowLastChangeDate('');
         setSortRowDate('');
-        setSortRowPeriod('');
+        //setSortRowPeriod('');
         setSortRowNum('');
       }
     } 
-    if (sortField === 'noteShortText') {
+    // if (sortField === 'noteShortText') {
+    //   if (sortType === 'asc') {
+    //     setSortRowName('');
+    //     setSortRowComm('\u2193');
+    //     setSortRowDate('');
+    //     setSortRowPeriod('');
+    //     setSortRowNum('');
+    //   } else {
+    //     setSortRowName('');
+    //     setSortRowComm('\u2191');
+    //     setSortRowDate('');
+    //     setSortRowPeriod('');
+    //     setSortRowNum('');
+    //   }
+    // }
+    if (sortField === 'lastChangeDate') {
       if (sortType === 'asc') {
         setSortRowName('');
-        setSortRowComm('\u2193');
+        //setSortRowComm('\u2193');
+        setSortRowLastChangeDate('\u2193');
         setSortRowDate('');
-        setSortRowPeriod('');
+        //setSortRowPeriod('');
         setSortRowNum('');
       } else {
         setSortRowName('');
-        setSortRowComm('\u2191');
+        //setSortRowComm('\u2191');
+        setSortRowLastChangeDate('\u2193');
         setSortRowDate('');
-        setSortRowPeriod('');
+        //setSortRowPeriod('');
         setSortRowNum('');
       }
     }
     if (sortField === 'createDate') {
       if (sortType === 'asc') {
         setSortRowName('');
-        setSortRowComm('');
+        //setSortRowComm('');
+        setSortRowLastChangeDate('');
         setSortRowDate('\u2193');
-        setSortRowPeriod('');
+        //setSortRowPeriod('');
         setSortRowNum('');
       } else {
         setSortRowName('');
-        setSortRowComm('');
+        //setSortRowComm('');
+        setSortRowLastChangeDate('');
         setSortRowDate('\u2191');
-        setSortRowPeriod('');
+        //setSortRowPeriod('');
         setSortRowNum('');
       }
     }
@@ -303,15 +333,17 @@ function NotesInfo(props : IProps) {
     if (sortField === 'id') {
       if (sortType === 'asc') {
         setSortRowName('');
-        setSortRowComm('');
+        //setSortRowComm('');
+        setSortRowLastChangeDate('');
         setSortRowDate('');
-        setSortRowPeriod('');
+        //setSortRowPeriod('');
         setSortRowNum('\u2193');
       } else {
         setSortRowName('');
-        setSortRowComm('');
+        //setSortRowComm('');
+        setSortRowLastChangeDate('');
         setSortRowDate('');
-        setSortRowPeriod('');
+        //setSortRowPeriod('');
         setSortRowNum('\u2191');
       }
     }
@@ -364,19 +396,6 @@ function NotesInfo(props : IProps) {
 
   const handleAddNotebookButtonClick = async function (){
     setNotebookModalShow(true);
-    // var notebookName = "блокнот 1";  //!!! обработать - добавить модальное окно ввода имени!!
-    // var notebookId = 0; //!!! обработать !!
-    
-    // var notebookData = {
-    //   id: notebookId,
-    //   name: notebookName,
-    //   userId
-    // };
-    // console.log("saveNotebookResult");
-    // let saveNotebookResult = await saveNotebookToServer(notebookData);
-    
-    //console.log(saveNotebookResult);
-
   }
 
   // const handleEditButtonClick = (NoteRowId : number) => {
@@ -443,11 +462,6 @@ function NotesInfo(props : IProps) {
     dispatch?.({ type: ACTIONS.CHECK_NOTEBOOK_ID, payload: notebookId });
     dispatch?.({ type: ACTIONS.CHECK_NOTEBOOK_NAME, payload: notebookName });
   }
-
-  //let notebooks = ["Блокнот 1", "Блокнот 2", "Блокнот 3", "Блокнот 4", "Блокнот 5", "Блокнот 5", "Блокнот 7", "Блокнот 8"];
-
-  //let currentNotebookId = 1; //!!! обработать!!
-  //let currentNotebookName = "блокнот 1" //!!! обработать!!
 
   return (
     <Row md={1} className="main-page__bd-info">
@@ -558,10 +572,15 @@ function NotesInfo(props : IProps) {
                 {' '}
                 {sortRowName}
               </th>
-              <th className="main-info__th-text" onClick={() => handleSortClick('noteShortText')}>
+              {/* <th className="main-info__th-text" onClick={() => handleSortClick('noteShortText')}>
                 Подробности
                 {' '}
                 {sortRowComm}
+              </th> */}
+              <th className="main-info__th-date" onClick={() => handleSortClick('lastChangeDate')}>
+                Изменено
+                {' '}
+                {sortRowLastChangeDate}
               </th>
               <th className="main-info__th-date" onClick={() => handleSortClick('createDate')}>
                 Создано
@@ -591,9 +610,13 @@ function NotesInfo(props : IProps) {
                   >
                     {sort !== 'asc' && sortRowNum !== '' ? <td>{noteRows.length - (index + currentPage * pageSize)}</td> : <td>{index + 1 + currentPage * pageSize}</td>}
                     <td>{NoteRow.title}</td>
-                    <td>{NoteRow.noteShortText}</td>
-                    {/* <td>{NoteRow.createDate}</td> */}
-                    <td>{moment(NoteRow.createDate).format('DD.MM.YYYY HH:mm')}</td>
+                    {/* <td>{NoteRow.noteShortText}</td> */}
+
+                    {/* <td>{moment(NoteRow.lastChangeDate).format('DD.MM.YYYY HH:mm')}</td> */}
+                    <td>{moment(NoteRow.lastChangeDate).tz(timeZone).format('DD.MM.YYYY HH:mm')}</td>
+                    {/* <td>{moment(NoteRow.createDate).format('DD.MM.YYYY HH:mm')}</td> */}
+                    <td>{moment(NoteRow.createDate).tz(timeZone).format('DD.MM.YYYY HH:mm')}</td>
+
                     {/* <td>{NoteRow.bdPeriod}</td> */}
                     <td className="main-info__td-edit">
                       <div>

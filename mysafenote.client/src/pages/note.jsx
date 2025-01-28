@@ -3,7 +3,8 @@ import JoditEditor from "jodit-react";
 import { Row, Col, Form, Button } from "react-bootstrap";
 import { StateContext } from "../state/notes-context";
 import { ACTIONS, DispatchContext } from "../state/notes-context";
-import { loadNoteBodyFromServer, saveNoteToServer, saveNotebookToServer, loadNoteDocxFromServer } from "../api/note-api";
+//import { loadNoteBodyFromServer, saveNoteToServer, saveNotebookToServer, loadNoteDocxFromServer } from "../api/note-api";
+import { loadNoteBodyFromServer, saveNoteToServer, loadNoteDocxFromServer } from "../api/note-api";
 import moment from "moment";
 import { Link, useNavigate } from 'react-router-dom';
 import { encryptNote, decryptNote } from '../functions'; 
@@ -14,6 +15,9 @@ const Note = () => {
   //const {noteId, userId} = props;
   const editor = useRef(null);
   const [noteBody, setNoteBody] = useState("");
+  const [createDate, setCreateDate] = useState("");
+  const [lastChangeDate, setLastChangeDate] = useState("");
+  
   const [noteName, setNoteName] = useState("");
   const [notebookName, setNotebookName] = useState("");
   const [notebookId, setNotebookId] = useState("");
@@ -73,6 +77,8 @@ const Note = () => {
     console.log(noteDataFromServer);
     if (noteDataFromServer) {
       setNoteName(noteDataFromServer.noteName);
+      setCreateDate(noteDataFromServer.createDate);
+      setLastChangeDate(noteDataFromServer.lastChangeDate);
       setNoteBody(noteDataFromServer.noteBody);
       setNotebookName(noteDataFromServer.notebookName);
       setNotebookId(noteDataFromServer.notebookId);
@@ -86,13 +92,10 @@ const Note = () => {
     console.log("handleSaveNoteToServer");
     console.log(noteBody);
     let note;
-    //let notePassword = ""; //!!! добавить обработку!
-
-    //var qqq = null; //!!! обработать, убрать!!
-    //var qqq = 1; //!!! обработать, убрать!!
 
     //const date = moment().format("DD.MM.YYYY HH.mm.ss");
     const date = new Date();
+    console.log(date);
 
     console.log(`currentNoteId =${currentNoteId}`);
     console.log(currentNotebookId);
@@ -103,9 +106,9 @@ const Note = () => {
       title: noteName,
       createDate: date,
       lastChangeDate: date,
+      // createDate: date.toISOString(), // Используем ISO формат
+      // lastChangeDate: date.toISOString(), // Используем ISO формат
       notebookId: currentNotebookId,
-      //notebookId: notebookId,
-      //notebookId: qqq,
       noteBody: noteBody,
       notePasswordHash: notePasswordHash,
       userId,
@@ -114,9 +117,8 @@ const Note = () => {
     note = {
       noteId: currentNoteId,
       title: noteName,
-      createDate: date, //!!!обработать!!
+      createDate: createDate, //!!!обработать!!
       lastChangeDate: date,
-      //notebookId: notebookId,
       notebookId: currentNotebookId,
       noteBody: noteBody,
       notePasswordHash: notePasswordHash,
@@ -173,13 +175,12 @@ const Note = () => {
         setEncryptModalShow(false);
         //handleSaveNoteToServer();
         const date = new Date();
-        //var notePasswordHash = password; //!!! обработать!! 
         setNotePasswordHash(notePasswordHash);
         var note = {
           noteId: currentNoteId,
           title: noteName,
-          createDate: date,
-          lastChangeDate: date, //!!! обработать!! 
+          createDate: createDate, //!!! обработать!! 
+          lastChangeDate: date, 
           notebookId: notebookId,
           noteBody: encryptedBody,
           notePasswordHash: notePasswordHash,

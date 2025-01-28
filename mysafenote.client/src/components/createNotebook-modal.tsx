@@ -20,7 +20,6 @@ function CreateNotebookModal(props: IProps) {
   const [notebookName, setNotebookName] = useState<string>('');
 
   const handleCreateNotebookClick = async () => {
-    //var notebookName = "блокнот 1";  //!!! обработать - добавить модальное окно ввода имени!!
     let notebookId = 0;
     
     let notebookData = {
