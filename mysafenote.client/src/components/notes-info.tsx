@@ -79,7 +79,8 @@ function NotesInfo(props : IProps) {
   const [datanoteRows, setDatanoteRows] = useState<INoteRow[]>(noteRows);
   const [filteredData, setFilteredData] = useState<INoteRow[]>(noteRows);
   const [displayData, setDisplayData] = useState<INoteRow[]>(noteRows);
-  const [sort, setSort] = useState<any>('asc');
+  // const [sort, setSort] = useState<any>('asc');
+  const [sort, setSort] = useState<any>('desc');
   const [search, setSearch] = useState<any>('');
   const [sortRowNum, setSortRowNum] = useState<string>('\u2193');
   const [sortRowName, setSortRowName] = useState<string>('');
@@ -99,6 +100,9 @@ function NotesInfo(props : IProps) {
   //const [selectedNotebookId, setSelectedNotebookId] = useState(0);
   const [currentNotebookId, setCurrentNotebookId] = useState(0);
   const [currentNotebookName, setCurrentNotebookName] = useState(allnoteFilterName);
+
+  const [sortField, setSortField] = useState("lastChangeDate");
+  //const [sortType, setSortType] = useState("desc");
 
 
   const getFinalFilteredData = () => {
@@ -139,7 +143,7 @@ function NotesInfo(props : IProps) {
 
     // Сортировка
     //filteredNotes = _.orderBy(filteredNotes, 'title', sort); // Замените 'title' на нужное поле для сортировки
-    filteredNotes = _.orderBy(filteredNotes, sortField, sortType); //!!!обработать!!
+    filteredNotes = _.orderBy(filteredNotes, sortField, sort);
 
     return filteredNotes;
   };
@@ -232,6 +236,15 @@ function NotesInfo(props : IProps) {
 
   const handleSortClick = (sortField) => {
     const sortType = sort === 'asc' ? 'desc' : 'asc';
+    //const sortTypeVal = sort === 'asc' ? 'desc' : 'asc';
+
+    setSortField(sortField);
+    //setSortType(sortTypeVal);
+
+  // Обновляем данные сразу после изменения сортировки
+  const finalFilteredData = getFinalFilteredData();
+  setFilteredData(finalFilteredData);
+  setCurrentPage(0); // Сброс текущей страницы при изменении сортировки
 
     // let orderednoteRows = datanoteRows;
     // if (sortField !== 'createDate') {
@@ -247,7 +260,7 @@ function NotesInfo(props : IProps) {
 
 
     //setDatanoteRows(orderednoteRows); //!!!comm
-    setSort(sortType);
+    setSort(sortType); //!!!comm
 
     if (sortField === 'title') {
       if (sortType === 'asc') {
@@ -611,12 +624,9 @@ function NotesInfo(props : IProps) {
                     {sort !== 'asc' && sortRowNum !== '' ? <td>{noteRows.length - (index + currentPage * pageSize)}</td> : <td>{index + 1 + currentPage * pageSize}</td>}
                     <td>{NoteRow.title}</td>
                     {/* <td>{NoteRow.noteShortText}</td> */}
-
                     {/* <td>{moment(NoteRow.lastChangeDate).format('DD.MM.YYYY HH:mm')}</td> */}
-                    <td>{moment(NoteRow.lastChangeDate).tz(timeZone).format('DD.MM.YYYY HH:mm')}</td>
-                    {/* <td>{moment(NoteRow.createDate).format('DD.MM.YYYY HH:mm')}</td> */}
-                    <td>{moment(NoteRow.createDate).tz(timeZone).format('DD.MM.YYYY HH:mm')}</td>
-
+                    <td>{moment.utc(NoteRow.lastChangeDate).tz(timeZone).format('DD.MM.YYYY HH:mm')}</td>
+                    <td>{moment.utc(NoteRow.createDate).tz(timeZone).format('DD.MM.YYYY HH:mm')}</td>
                     {/* <td>{NoteRow.bdPeriod}</td> */}
                     <td className="main-info__td-edit">
                       <div>

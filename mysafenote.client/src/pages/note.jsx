@@ -95,6 +95,8 @@ const Note = () => {
 
     //const date = moment().format("DD.MM.YYYY HH.mm.ss");
     const date = new Date();
+    //const currDate = new Date();
+    //const date = currDate.toISOString()
     console.log(date);
 
     console.log(`currentNoteId =${currentNoteId}`);
