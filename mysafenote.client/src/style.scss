@@ -290,6 +290,10 @@ tr.main-info__tr-selected td{
 .main-info-notebook__td-edit{
 
 }
+.note-notebook__select{
+  max-height: 50px;
+  overflow-y: auto;
+}
 
 .main-info-notebook__td{
 width: 90%;
