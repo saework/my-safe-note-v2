@@ -66,6 +66,19 @@ const Note = () => {
   //const userId = 1; //!!!убрать!
 
   useEffect(() => {
+    // if (userId ===0 || !userId || currentNoteId===0){
+    if (userId ===0 || !userId){
+      const loginDataJSON = localStorage.getItem('loginData');
+      if (loginDataJSON)
+      {
+        const loginData = JSON.parse(loginDataJSON);
+        dispatch({ type: ACTIONS.LOGIN_SAVE_STORE, payload: loginData });
+        navigate('/main');
+      }
+    }
+  }, [userId, currentNoteId]);
+
+  useEffect(() => {
     //const userId = notesState.userId;
     //const currentNoteId = notesState.currentNoteId;
     if (needLoadNoteBody) {
@@ -88,7 +101,7 @@ const Note = () => {
       currentNoteId
     );
     console.log("loadNoteBodyFromServer");
-    console.log(noteDataFromServer);
+    //console.log(noteDataFromServer);
     if (noteDataFromServer) {
       setNoteName(noteDataFromServer.noteName);
       setCreateDate(noteDataFromServer.createDate);
@@ -104,7 +117,7 @@ const Note = () => {
   //const handleSaveNoteBodyToServer = () => {
   const handleSaveNoteToServer = async function () {
     console.log("handleSaveNoteToServer");
-    console.log(noteBody);
+    //console.log(noteBody);
     let note;
 
     //const date = moment().format("DD.MM.YYYY HH.mm.ss");
@@ -147,7 +160,7 @@ const Note = () => {
     }
     //let result = await saveNoteBodyToServer(userId, currentNoteId, content, setLoading);
     //let result = await saveNoteToServer(note, setLoading);
-    console.log(note);
+    //console.log(note);
     let saveNoteResult = await saveNoteToServer(note);
     console.log(saveNoteResult);
 
@@ -187,7 +200,7 @@ const Note = () => {
   const handleEncrypt = async (password, notePasswordHash) => {
     //const encryptedBody = encryptNote(noteBody, notePasswordHash);
     const encryptedBody = encryptNote(noteBody, password);
-    console.log(encryptedBody);
+    //console.log(encryptedBody);
     setNoteBody(encryptedBody);
     //console.log(`handleEncrypt noteBody = ${noteBody}`);
     setEncryptModalShow(false);
@@ -224,14 +237,14 @@ const Note = () => {
 
   //!!!
   const handleDecrypt = (password, notePasswordHash) => {
-    console.log("Зашифрованная заметка:", noteBody);
-    console.log("Введенный пароль:", password);
-    console.log("Хеш пароля:", notePasswordHash);
+    //console.log("Зашифрованная заметка:", noteBody);
+    //console.log("Введенный пароль:", password);
+    //console.log("Хеш пароля:", notePasswordHash);
 
     try {
       //noteBody = "U2FsdGVkX18SUC6B4figL6jypnTd2uhJ4U3TY7NP6Bo="; //!!!убрать!!
       const decryptedBody = decryptNote(noteBody, password);
-      console.log("Расшифрованная заметка:", decryptedBody);
+      //console.log("Расшифрованная заметка:", decryptedBody);
       setNoteBody(decryptedBody);
       setNotePasswordHash(notePasswordHash);
       setDecryptModalShow(false);
@@ -325,7 +338,7 @@ const Note = () => {
     setNotebookName(e.target.value);
   };
   const onBlurHandle = (newNoteBody) => {
-    console.log(newNoteBody);
+    //console.log(newNoteBody);
     setNoteBody(newNoteBody);
   };
 

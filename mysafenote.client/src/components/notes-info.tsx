@@ -64,11 +64,13 @@ function NotesInfo(props : IProps) {
   const noteRows = notesState.noteRows;
   const notebooks = notesState.notebooks;
   const userId = notesState.userId;
-  //console.log(noteRows);
+  console.log("NotesInfo - userId");
+  console.log(userId);
+  console.log(notesState);
   
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   //const timeZone = "Europe/Moscow";
-  console.log(timeZone);
+  //console.log(timeZone);
   //!!!
 
   const pageSize = config.PAGINATION_ROW_COUNT;
@@ -88,7 +90,8 @@ function NotesInfo(props : IProps) {
   const [sortRowDate, setSortRowDate] = useState<any>('');
   const [sortRowLastChangeDate, setSortRowLastChangeDate] = useState<any>('');
   const [sortRowPeriod, setSortRowPeriod] = useState<any>('');
-  const [pageCount, setPageCount] = useState(Math.ceil(noteRows.length / pageSize));
+  //const [pageCount, setPageCount] = useState(Math.ceil(noteRows.length / pageSize));
+  const [pageCount, setPageCount] = useState(Math.ceil((noteRows || []).length / pageSize));
   const [currentPage, setCurrentPage] = useState(0);
   const [modalShow, setModalShow] = useState(false);
   const [notebookModalShow, setNotebookModalShow] = useState(false);
@@ -107,38 +110,41 @@ function NotesInfo(props : IProps) {
 
   const getFinalFilteredData = () => {
     let filteredNotes = datanoteRows;
+      if (filteredNotes)
+      {
 
-    // Фильтрация по currentNotebookName
-    if (currentNotebookName === allnoteFilterName) {
-      // Без дополнительной фильтрации
-    } else if (currentNotebookName === withoutnotebookFilterName) {
-      // Выводим заметки, у которых поле notebookId = 0 или null
-      filteredNotes = filteredNotes.filter(note => note.notebookId === 0 || note.notebookId === null);
-    } else if (currentNotebookName) {
-      // Выводим заметки только те, у которых notebookId = выбранному значению
-      filteredNotes = filteredNotes.filter(note => note.notebookId === currentNotebookId);
+      // Фильтрация по currentNotebookName
+      if (currentNotebookName === allnoteFilterName) {
+        // Без дополнительной фильтрации
+      } else if (currentNotebookName === withoutnotebookFilterName) {
+        // Выводим заметки, у которых поле notebookId = 0 или null
+        filteredNotes = filteredNotes.filter(note => note.notebookId === 0 || note.notebookId === null);
+      } else if (currentNotebookName) {
+        // Выводим заметки только те, у которых notebookId = выбранному значению
+        filteredNotes = filteredNotes.filter(note => note.notebookId === currentNotebookId);
+      }
+
+      // // Поиск
+      // if (search) {
+      //   filteredNotes = filteredNotes.filter(
+      //     (item) =>
+      //       item.title.toLowerCase().includes(search.toLowerCase()) ||
+      //       item.noteShortText.toLowerCase().includes(search.toLowerCase()) ||
+      //       item.createDate.toLowerCase().includes(search.toLowerCase())
+      //   );
+      // }
+
+    // Поиск
+    if (search) {
+      filteredNotes = filteredNotes.filter((item) => {
+        const titleMatch = item.title && item.title.toLowerCase().includes(search.toLowerCase());
+        //const shortTextMatch = item.noteShortText && item.noteShortText.toLowerCase().includes(search.toLowerCase());
+        const lastChangeDateMatch = item.lastChangeDate && item.lastChangeDate.toLowerCase().includes(search.toLowerCase());
+        const createDateMatch = item.createDate && item.createDate.toLowerCase().includes(search.toLowerCase());
+        //return titleMatch || shortTextMatch || createDateMatch;
+        return titleMatch || lastChangeDateMatch || createDateMatch;
+      });
     }
-
-    // // Поиск
-    // if (search) {
-    //   filteredNotes = filteredNotes.filter(
-    //     (item) =>
-    //       item.title.toLowerCase().includes(search.toLowerCase()) ||
-    //       item.noteShortText.toLowerCase().includes(search.toLowerCase()) ||
-    //       item.createDate.toLowerCase().includes(search.toLowerCase())
-    //   );
-    // }
-
-  // Поиск
-  if (search) {
-    filteredNotes = filteredNotes.filter((item) => {
-      const titleMatch = item.title && item.title.toLowerCase().includes(search.toLowerCase());
-      //const shortTextMatch = item.noteShortText && item.noteShortText.toLowerCase().includes(search.toLowerCase());
-      const lastChangeDateMatch = item.lastChangeDate && item.lastChangeDate.toLowerCase().includes(search.toLowerCase());
-      const createDateMatch = item.createDate && item.createDate.toLowerCase().includes(search.toLowerCase());
-      //return titleMatch || shortTextMatch || createDateMatch;
-      return titleMatch || lastChangeDateMatch || createDateMatch;
-    });
   }
 
     // Сортировка
@@ -163,8 +169,16 @@ function NotesInfo(props : IProps) {
   // };
 
   const getPageCount = () => {
-    return Math.ceil(filteredData.length / pageSize);
+    // return Math.ceil(filteredData.length / pageSize);
+    return Math.ceil((filteredData || []).length / pageSize);
   };
+
+  //   useEffect(() => {
+  //   console.log("navigate")
+  //   console.log(userId)
+  //   if (userId === 0 || !userId)
+  //     navigate('/login');
+  // }, [userId]);
   
   useEffect(() => {
     const finalFilteredData = getFinalFilteredData();
@@ -387,7 +401,7 @@ function NotesInfo(props : IProps) {
 
   const handleDelButtonClick = (NoteRowId : number) => {
     setDelRowId(NoteRowId);
-    console.log(NoteRowId);
+    //console.log(NoteRowId);
     setModalShow(true);
   };
   //const handleDeleteRow = () => {
@@ -542,7 +556,8 @@ function NotesInfo(props : IProps) {
                         >
                           <td>{withoutnotebookFilterName}</td>
                         </tr>
-                    {notebooks.length > 0 && (
+                    {/* {notebooks.length > 0 && ( */}
+                    { (notebooks && notebooks.length > 0) && (
                       <>
                         {notebooks.map((notebook, index) => (
                           <tr key={notebook.id}
@@ -611,7 +626,8 @@ function NotesInfo(props : IProps) {
           </thead>
 
           <tbody>
-            {noteRows.length > 0 && (
+            {/* {noteRows.length > 0 && ( */}
+            {noteRows && noteRows.length > 0 && (
               <>
                 {displayData.map((NoteRow, index) => (
                   <tr 
@@ -646,7 +662,7 @@ function NotesInfo(props : IProps) {
                 ))}
               </>
             )}
-            {noteRows.length === 0 && (
+            {noteRows && noteRows.length === 0 && (
               <tr>
                 <td colSpan={7}>
                   <div className="main-page__bd-nodata">Список пуст</div>

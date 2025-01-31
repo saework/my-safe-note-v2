@@ -157,13 +157,13 @@ export const initialState: IRootReducer = {
     case ACTIONS.LOAD_BD: {
       //return payload;
       console.log("load_bd");
-      console.log(payload);
+      //console.log(payload);
       return { ...state, noteRows: payload };
     } 
     case ACTIONS.LOAD_NOTEBOOKS: {
       //return payload;
-      console.log("LOAD_NOTEBOOKS");
-      console.log(payload);
+      //console.log("LOAD_NOTEBOOKS");
+      //console.log(payload);
       return { ...state, notebooks: payload };
     }
     case ACTIONS.ADD_NOTEBOOK: {

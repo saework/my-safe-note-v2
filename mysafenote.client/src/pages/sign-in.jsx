@@ -49,7 +49,7 @@ import '../style.scss';
         dispatch({ type: ACTIONS.LOGIN_SAVE_STORE, payload: loginData });
         dispatch({ type: ACTIONS.NEED_LOAD_DATA, payload: true });
         console.log("signInHandler");
-        console.log(loginData);
+        //console.log(loginData);
         const url = '/main';
         navigate(url);
 

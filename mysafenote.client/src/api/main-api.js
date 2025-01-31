@@ -11,39 +11,25 @@ import { StateContext } from "../state/notes-context";
 import { DispatchContext } from "../state/notes-context";
 
 export const loadNotesDataFromServer = async function (userId, setLoading) {
-  const url = `api/note/userid/${userId}`;
-
-  //const jwtAuthHeader = getLoginData('jwtAuthHeader');
+  
   const jwtToken = getLoginData("jwtToken");
-  //let result;
-  // if (!_.isEmpty(jwtAuthHeader)) {
-  //   console.log(`loadNotesDataFromServer - jwtAuthHeader - ${JSON.stringify(jwtAuthHeader)}`);
-  if (!_.isEmpty(jwtToken)) {
-    console.log(`loadNotesDataFromServer - jwtToken - ${JSON.stringify(jwtToken)}`);
-    // const config = {
-    //   headers: jwtAuthHeader,
-    // };
-    //const data = { currentUser };
+   if (userId === 0 || !userId)  
+     userId = getLoginData("userId");
 
-    //const response = await fetch(url);
+  if (!_.isEmpty(jwtToken) && (userId > 0)) {
+    console.log(`loadNotesDataFromServer - userId = ${userId} jwtToken = ${JSON.stringify(jwtToken)}`);
+    
+    const url = `api/note/userid/${userId}`;
+    
     const response = await fetch(url, {
       method: "GET",
       headers: {
         Accept: "application/json",
         Authorization: "Bearer " + jwtToken, // передача токена в заголовке
       },
-      // headers: { jwtAuthHeader,
-      //   Accept: "application/json",
-      //   "Content-Type": "application/json",
-      // },
-      // body: JSON.stringify({
-      //   email: email,
-      //   password: password,
-      // }),
     });
 
     if (response.ok === true) {
-      //console.log(response);
       const data = await response.json();
       console.log("Получены данные с сервера");
       //console.log(data);
@@ -54,25 +40,29 @@ export const loadNotesDataFromServer = async function (userId, setLoading) {
       );
     }
   } else {
-    console.log("loadNotesDataFromServer - Не определен jwtAuthHeader!");
+    console.log("loadNotesDataFromServer - Ошибка. Не определены значения loginData (userId или jwtToken)");
   }
 };
 
 export const loadNotebooksDataFromServer = async function (userId) {
-  const url = `api/notebook/userid/${userId}`;
   const jwtToken = getLoginData("jwtToken");
-  if (!_.isEmpty(jwtToken)) {
-    console.log(`loadNotebooksDataFromServer - jwtToken - ${JSON.stringify(jwtToken)}`);
+   if (userId === 0 || !userId)  
+     userId = getLoginData("userId");
+
+  if (!_.isEmpty(jwtToken) && (userId > 0)) {
+    console.log(`loadNotebooksDataFromServer - userId = ${userId} jwtToken = ${JSON.stringify(jwtToken)}`);
+
+    const url = `api/notebook/userid/${userId}`;
+
     const response = await fetch(url, {
       method: "GET",
       headers: {
         Accept: "application/json",
-        Authorization: "Bearer " + jwtToken, // передача токена в заголовке
+        Authorization: "Bearer " + jwtToken,
       },
     });
 
     if (response.ok === true) {
-      //console.log(response);
       const data = await response.json();
       console.log("Получены данные с сервера");
       //console.log(data);
@@ -83,7 +73,7 @@ export const loadNotebooksDataFromServer = async function (userId) {
       );
     }
   } else {
-    console.log("loadNotebooksDataFromServer - Не определен jwtAuthHeader!");
+    console.log("loadNotebooksDataFromServer - Ошибка. Не определены значения loginData (userId или jwtToken)");
   }
 };
 

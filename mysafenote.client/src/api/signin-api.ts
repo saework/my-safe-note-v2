@@ -14,7 +14,7 @@ const signInApi = async function (
   if (email && password) {
     const validEmail = validateEmail(email);
     if (validEmail === true) {
-      console.log(password);
+      //console.log(password);
       //const url = `api/note/userid/${userId}`;
       const url = "api/User/login";
       const response = await fetch(url, {

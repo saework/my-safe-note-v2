@@ -33,12 +33,15 @@ export const validateEmail = (email: string): boolean => {
 };
 export const getLoginData = (dataType: string): string | {} => {
   const loginDataJSON = localStorage.getItem('loginData') as string;
-  console.log(loginDataJSON);
+  //console.log(loginDataJSON);
   const loginData = JSON.parse(loginDataJSON);
   let res;
    if (loginData) {
     if (dataType === 'currenUser') {
       res = loginData.currenUser;
+    }
+    if (dataType === 'userId') {
+      res = loginData.userId;
     }
     if (dataType === 'jwtToken') {
       res = loginData.jwtToken;
@@ -66,9 +69,9 @@ export const decryptNote = (encryptedNote: string, password: string): string => 
   if (!encryptedNote || !password) {
       throw new Error('Пожалуйста, введите зашифрованную заметку и пароль.');
   }
-  console.log(`decryptNote`);
-  console.log(encryptedNote);
-  console.log(password);
+  //console.log(`decryptNote`);
+  //console.log(encryptedNote);
+  //console.log(password);
 
   const bytes = CryptoJS.AES.decrypt(encryptedNote, password);
   const originalNote = bytes.toString(CryptoJS.enc.Utf8);

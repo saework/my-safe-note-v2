@@ -48,8 +48,8 @@ export const loadNoteBodyFromServer = async function (userId, noteId) {
         notePasswordHash: responseData.notePasswordHash,
         //userId: noteData.userId,
       };
-      console.log(responseData);
-      console.log(noteData);
+      //console.log(responseData);
+      //console.log(noteData);
       console.log("Получена тело и данные заметки с сервера");
       //console.log(data);
       return noteData;
@@ -71,7 +71,7 @@ export const saveNoteToServer = async function (noteData) {
   const jwtToken = getLoginData("jwtToken");
   if (!_.isEmpty(jwtToken)) {
     console.log(`saveNoteToServer - jwtToken - ${JSON.stringify(jwtToken)}`);
-    console.log(noteData);
+    //console.log(noteData);
     //console.log(noteDto);
     const response = await fetch(url, {
       method: "POST",
@@ -113,7 +113,7 @@ export const saveNoteToServer = async function (noteData) {
       //   userId: 1,
       // }),
     });
-    console.log(response);
+    //console.log(response);
     if (response.ok === true) {
       //console.log(response);
       //const noteBody = await response.json();

@@ -11,7 +11,7 @@ export const saveNotebookToServer = async function (notebookData) {
   let result = false;
   if (!_.isEmpty(jwtToken)) {
     console.log(`saveNotebookToServer - jwtToken - ${JSON.stringify(jwtToken)}`);
-    console.log(notebookData);
+    //console.log(notebookData);
     //console.log(noteDto);
     const response = await fetch(url, {
       method: "POST",
@@ -25,7 +25,7 @@ export const saveNotebookToServer = async function (notebookData) {
         userId: notebookData.userId,
       }),
     });
-    console.log(response);
+    //console.log(response);
     if (response.ok === true) {
       //console.log(response);
       //const noteBody = await response.json();
@@ -60,7 +60,7 @@ export const deleteNotebookFromServer = async function (notebookId) {
         Authorization: "Bearer " + jwtToken, // Передаем токен в заголовке
       },
     });
-    console.log(response);
+    //console.log(response);
     if (response.ok) {
         const deletedId = await response.json();
         if (deletedId === notebookId)

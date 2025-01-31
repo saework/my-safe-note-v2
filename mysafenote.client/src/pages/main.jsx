@@ -47,7 +47,9 @@ const currentUser = notesState.currentUser;
 const jwtToken = notesState.jwtToken;
 const noteRows = notesState.noteRows;
 const userId = notesState.userId;
+const needLoadData = notesState.needLoadData; //!!!
 
+console.log(needLoadData);
 //     const [forecasts, setForecasts] = useState();
 //     const [notes, setNotes] = useState();
 
@@ -69,33 +71,50 @@ const userId = notesState.userId;
 
   const titleRef = useRef(null);
 
+  //!!!comm
+  // useEffect(() => {
+  //     const needLoadData = notesState.needLoadData; //!!!
+  //     console.log(`useEffect - needLoadData - needLoadData: ${needLoadData}`);
+  //     if (needLoadData) {
+  //        handlerLoadFromServer();
+  //       dispatch({ type: ACTIONS.NEED_LOAD_DATA, payload: false });
+  //     }
+  // });
+  //!!!comm
+  //!!!
+  //!!!обработать!! - убрать, чтобы можно было обновлять страницу и переходить назад, вперет
   useEffect(() => {
-    //const historyState = history.location.state;
-    //if (historyState) {
-      //const { needLoadData } = historyState;
-      const needLoadData = notesState.needLoadData; //!!!
-      console.log(`useEffect - needLoadData - needLoadData: ${needLoadData}`);
-      if (needLoadData) {
-         handlerLoadFromServer();
-        //historyState.needLoadData = false;
-        dispatch({ type: ACTIONS.NEED_LOAD_DATA, payload: false });
-
-        // const allNotesRow = {
-        //   id: 0,
-        //   name: "Все заметки",
-        //   userId: userId
-        // }
-        // dispatch({ type: ACTIONS.ADD_NOTEBOOK, payload: allNotesRow });
-
-        // const notesWithoutNotebookRow = {
-        //   id: -1,
-        //   name: "Заметки без блокнота",
-        //   userId: userId
-        // }
-        // dispatch({ type: ACTIONS.ADD_NOTEBOOK, payload: notesWithoutNotebookRow });
-      }
-    //}
+    console.log("navigate")
+    console.log(userId)
+    if (userId === 0 || !userId)
+      navigate('/login');
   });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // const notesData = await loadNotesDataFromServer(userId);
+        // const notebooksData = await loadNotebooksDataFromServer(userId);
+        
+        // dispatch({ type: ACTIONS.LOAD_BD, payload: notesData });
+        // dispatch({ type: ACTIONS.LOAD_NOTEBOOKS, payload: notebooksData });
+        handlerLoadFromServer();
+        dispatch({ type: ACTIONS.NEED_LOAD_DATA, payload: false });
+        console.log("fetchData");
+        //console.log(notesData);
+      } catch (error) {
+        console.error("Ошибка при загрузке данных:", error);
+      }
+    };
+      
+    // const needLoadData = notesState.needLoadData; //!!!
+    // console.log(`useEffect - needLoadData - needLoadData: ${needLoadData}`);
+      fetchData();
+
+  }, [userId, dispatch, needLoadData===true]); // Зависимости: userId и dispatch
+  //!!!
+
+
 
   const handlerLoading = () => {
     if (loading === '') {
@@ -125,16 +144,23 @@ const userId = notesState.userId;
   // };
 //!!!
 const handlerLoadFromServer = async function (){
-  //let data = await loadNotesDataFromServer(currentUser, setLoading);
-  //const userId = 2; //!!!убрать!!
-  //let notesData = await loadNotesDataFromServer(userId, setLoading);
+  console.log(userId);
+  //if  (userId === 0 || !userId){
   let notesData = await loadNotesDataFromServer(userId, setLoading);
   let notebooksData = await loadNotebooksDataFromServer(userId, setLoading);
   dispatch({ type: ACTIONS.LOAD_BD, payload: notesData });
   dispatch({ type: ACTIONS.LOAD_NOTEBOOKS, payload: notebooksData });
+  const loginDataJSON = localStorage.getItem('loginData');
+  if (loginDataJSON)
+  {
+    const loginData = JSON.parse(loginDataJSON);
+    dispatch({ type: ACTIONS.LOGIN_SAVE_STORE, payload: loginData });
+  }
   console.log("handlerLoadFromServer");
   console.log(notesData);
-  console.log(notebooksData);
+//}
+//else
+//navigate('/login');
 }
 
 const handleAddButtonClick = (e) => {
@@ -159,7 +185,7 @@ const handlerImportNotesToServer = async function (){
   }
   //await importNotesToServer(userId, file);
   var result = await importNotesToServer(userId, file);
-  console.log(result);
+  //console.log(result);
   if (result === true)
   {
     handlerLoadFromServer();

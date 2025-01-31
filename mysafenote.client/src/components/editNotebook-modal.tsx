@@ -36,8 +36,8 @@ function EditNotebookModal(props: IProps) {
     setNotebookName(currentNotebookName);
   }, [currentNotebookName]);
 
-  console.log(currentNotebookId);
-  console.log(currentNotebookName);
+  // console.log(currentNotebookId);
+  // console.log(currentNotebookName);
 
   const handleEditNotebookClick = async () => {
     let notebookData = {
