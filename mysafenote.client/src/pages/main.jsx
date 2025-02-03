@@ -84,8 +84,8 @@ console.log(needLoadData);
   //!!!
   //!!!обработать!! - убрать, чтобы можно было обновлять страницу и переходить назад, вперет
   useEffect(() => {
-    console.log("navigate")
-    console.log(userId)
+    //console.log("navigate")
+    //console.log(userId)
     if (userId === 0 || !userId)
       navigate('/login');
   });

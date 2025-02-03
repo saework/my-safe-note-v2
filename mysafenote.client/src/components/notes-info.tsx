@@ -64,8 +64,8 @@ function NotesInfo(props : IProps) {
   const noteRows = notesState.noteRows;
   const notebooks = notesState.notebooks;
   const userId = notesState.userId;
-  console.log("NotesInfo - userId");
-  console.log(userId);
+  console.log("NotesInfo");
+  //console.log(userId);
   console.log(notesState);
   
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -197,6 +197,7 @@ function NotesInfo(props : IProps) {
     }
     return [];
   };
+
 
   // const sortnoteRowsByData = (dataRows: INoteRow[], sortField: string, sortType: any) => {
   //   const rowsAfterFormat = dataRows.map((NoteRow) => {
@@ -482,11 +483,17 @@ function NotesInfo(props : IProps) {
   const handleEditNotebookButtonClick = () => {
     setNotebookEditModalShow(true);
   }
+
   //const handleCheckNotebook = (notebookId, notebookName) => {
-    const handleCheckNotebook = (notebookId: number, notebookName: string) => {
-    setCurrentNotebookId(notebookId);
+  const handleCheckNotebook = (notebookIdChecked: number, notebookName: string) => {
+
+      console.log("handleCheckNotebook");
+      console.log(notebookIdChecked);
+      //console.log(notebooks);
+      
+    setCurrentNotebookId(notebookIdChecked);
     setCurrentNotebookName(notebookName);
-    dispatch?.({ type: ACTIONS.CHECK_NOTEBOOK_ID, payload: notebookId });
+    dispatch?.({ type: ACTIONS.CHECK_NOTEBOOK_ID, payload: notebookIdChecked });
     dispatch?.({ type: ACTIONS.CHECK_NOTEBOOK_NAME, payload: notebookName });
   }
 
@@ -497,6 +504,9 @@ function NotesInfo(props : IProps) {
           userId = {userId}
           notebookModalShow={notebookModalShow}
           handleNotebookCloseModal={() => setNotebookModalShow(false)}
+          // handleCheckNotebook={() => handleCheckNotebook}
+          handleCheckNotebook={handleCheckNotebook}
+          
        />
       <EditNotebookModal
           userId = {userId}
@@ -533,6 +543,9 @@ function NotesInfo(props : IProps) {
                 <Button onClick={handleAddNotebookButtonClick} id="buttonAdd" type="button" variant="success" size="sm" className="main-form__button-add">
                   Добавить блокнот
                 </Button>
+
+                {/* <div>{currentNotebookId}</div> */}
+
                 <Table responsive="sm">
                   <thead>
                     <tr>
@@ -564,8 +577,8 @@ function NotesInfo(props : IProps) {
                           onDoubleClick={() => handleEditNotebookButtonClick()} 
                           // onClick={() => {setCurrentNotebookId(notebook.id)
                           //   setCurrentNotebookName(notebook.name)
-                          onClick={() => {handleCheckNotebook(notebook.id, notebook.name)
-                          }} // Устанавливаем выделенную строку
+                          onClick={() => handleCheckNotebook(notebook.id, notebook.name)
+                          } // Устанавливаем выделенную строку
 
                           className={ currentNotebookId === notebook.id ? "main-info__tr-selected" : "main-info__tr" }
                           >

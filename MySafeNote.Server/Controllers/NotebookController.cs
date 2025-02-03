@@ -30,11 +30,22 @@ namespace MySafeNote.Server.Controllers
             // GET: api/notebook/userid/{userId}
             [HttpGet("userid/{userId}")]
             //[Authorize]
-            public async Task<ActionResult<List<Notebook>>> GetNotebooksByUserIdAsync(int userId)
+            public async Task<ActionResult<List<NotebookDto>>> GetNotebooksByUserIdAsync(int userId)
             {
                 _logger.LogInformation("GetNotebooksByUserIdAsync userId = {userId}", userId);
+                var notebooksDto = new List<NotebookDto>();
                 var notebooks = await _notebookRepository.GetNotebooksByUserIdAsync(userId);
-                return Ok(notebooks);
+                //return Ok(notebooks);
+                if (notebooks.Any())
+
+                {
+                    notebooksDto = notebooks.Select(x => new NotebookDto
+                    {
+                        Id = x.Id,
+                        Name = x.Name
+                    }).ToList();
+                }
+                return notebooksDto;
             }
 
             //!!!

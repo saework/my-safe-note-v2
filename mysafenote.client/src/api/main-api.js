@@ -65,7 +65,13 @@ export const loadNotebooksDataFromServer = async function (userId) {
     if (response.ok === true) {
       const data = await response.json();
       console.log("Получены данные с сервера");
-      //console.log(data);
+      console.log(data);
+
+      // const resNotebooksData = {
+      //   id:data.id,
+      //   name:data.name
+      // }
+      // return resNotebooksData;
       return data;
     } else {
       console.log(

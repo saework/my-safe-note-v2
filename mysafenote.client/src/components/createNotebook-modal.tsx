@@ -8,6 +8,7 @@ import '../style.scss';
 
 interface IProps {
   handleNotebookCloseModal: () => void;
+  handleCheckNotebook: (currentNotebookId: number, currentNotebookName: string) => void
   notebookModalShow: boolean;
   userId: number;
 }
@@ -16,7 +17,7 @@ function CreateNotebookModal(props: IProps) {
   const dispatch = useContext(DispatchContext);
   //const notesState = useContext(StateContext);
 
-  const { notebookModalShow,  userId, handleNotebookCloseModal } = props;
+  const { notebookModalShow,  userId, handleNotebookCloseModal, handleCheckNotebook } = props;
   const [notebookName, setNotebookName] = useState<string>('');
 
   const handleCreateNotebookClick = async () => {
@@ -28,11 +29,20 @@ function CreateNotebookModal(props: IProps) {
       userId
     };
     console.log("saveNotebookResult");
-    let saveNotebookResult = await saveNotebookToServer(notebookData);
-    if (saveNotebookResult === true)
+    let savedNotebookId = await saveNotebookToServer(notebookData);
+    if (savedNotebookId > 0)
     {
         if (dispatch) {
-          dispatch({ type: ACTIONS.ADD_NOTEBOOK, payload: notebookData });
+          let resNotebookData = {
+            id: savedNotebookId,
+            name: notebookName,
+            userId
+          };
+          dispatch({ type: ACTIONS.ADD_NOTEBOOK, payload: resNotebookData });
+          //dispatch({ type: ACTIONS.CHECK_NOTEBOOK_ID, payload: resNotebookData.id });
+          //dispatch({ type: ACTIONS.CHECK_NOTEBOOK_NAME, payload: resNotebookData.name });
+          handleCheckNotebook(resNotebookData.id, resNotebookData.name);
+          console.log(resNotebookData.id);
         }
     }
     handleNotebookCloseModal();

@@ -46,8 +46,8 @@ function EditNotebookModal(props: IProps) {
       userId,
     };
     console.log("saveNotebookResult");
-    let saveNotebookResult = await saveNotebookToServer(notebookData);
-    if (saveNotebookResult === true) {
+    let savedNotebookId = await saveNotebookToServer(notebookData);
+    if (savedNotebookId > 0) {
         //const needLoadData = notesState.needLoadData;
         if (dispatch != null) {
           dispatch({ type: ACTIONS.NEED_LOAD_DATA, payload: true });

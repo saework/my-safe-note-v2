@@ -8,7 +8,7 @@ export const saveNotebookToServer = async function (notebookData) {
   //const url = `api/note/notebody`;
   const url = `api/notebook/savenotebook`;
   const jwtToken = getLoginData("jwtToken");
-  let result = false;
+  let result = 0;
   if (!_.isEmpty(jwtToken)) {
     console.log(`saveNotebookToServer - jwtToken - ${JSON.stringify(jwtToken)}`);
     //console.log(notebookData);
@@ -28,10 +28,12 @@ export const saveNotebookToServer = async function (notebookData) {
     //console.log(response);
     if (response.ok === true) {
       //console.log(response);
-      //const noteBody = await response.json();
-      console.log("Блокнот сохранен на сервер");
-      //console.log(data);
-      result = true;
+      const resNotebookId = await response.json();
+      if (resNotebookId && resNotebookId > 0){
+        console.log("Блокнот сохранен на сервер");
+        //console.log(data);
+        result = resNotebookId;
+        }
     } else {
       console.log(
         `Ошибка при сохранении блокнота на сервер - ${response.statusText}`
