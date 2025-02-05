@@ -31,7 +31,7 @@ function Main(props) {
   const [lastChangeDateVal, setLastChangeDateVal] = useState(TIME_ZONE);
   const [formVisible, setFormVisible] = useState(false);
 
-  const [file, setFile] = useState(null);
+  // const [file, setFile] = useState(null);
 
 //!!!
 const navigate = useNavigate();
@@ -163,18 +163,18 @@ const handlerLoadFromServer = async function (){
 //navigate('/login');
 }
 
-const handleAddButtonClick = (e) => {
-  //e.preventDefault();
-  dispatch({ type: ACTIONS.CHECK_ID_ROW, payload: 0 });
-  const url = '/note';
-  navigate(url);
-}
+// const handleAddButtonClick = (e) => {
+//   //e.preventDefault();
+//   dispatch({ type: ACTIONS.CHECK_ID_ROW, payload: 0 });
+//   const url = '/note';
+//   navigate(url);
+// }
 
-const handlerExportNotesFromServer = async function (){
-  console.log("handlerExportNotesFromServer");
-  //console.log(data);
-  await exportNotesFromServer(userId);
-}
+// const handlerExportNotesFromServer = async function (){
+//   console.log("handlerExportNotesFromServer");
+//   //console.log(data);
+//   await exportNotesFromServer(userId);
+// }
 
 const handlerImportNotesToServer = async function (){
   console.log("handlerImportNotesToServer");
@@ -220,22 +220,23 @@ const handleFileChange = (event) => {
           titleRef={titleRef}
           //handlerSaveToServer={handlerSaveToServer}
           setFormVisible={setFormVisible}
+          handlerLoadFromServer={handlerLoadFromServer}
         />
-        <Button onClick={handleAddButtonClick} id="buttonAdd" type="button" variant="success" size="lg" block className="main-form__button-add">
+        {/* <Button onClick={handleAddButtonClick} id="buttonAdd" type="button" variant="success" size="lg" block className="main-form__button-add">
           Добавить заметку
-        </Button>
+        </Button> */}
 
-        <Button onClick={handlerExportNotesFromServer} id="buttonExportNotes" type="button" variant="success" size="lg" block className="main-form__button-add">
+        {/* <Button onClick={handlerExportNotesFromServer} id="buttonExportNotes" type="button" variant="success" size="lg" block className="main-form__button-add">
           Выгрузить заметки
-        </Button>
-        <div>
+        </Button> */}
+        {/* <div>
             <input type="file" accept=".zip" onChange={handleFileChange} />
             <button onClick={handlerImportNotesToServer}>Загрузить заметки</button>
         </div>
 
         <Alert className="message__alert_center" variant="light" id="mainLabel">
           {handlerLoading()}
-        </Alert>
+        </Alert> */}
       </Container>
     </div>
   );

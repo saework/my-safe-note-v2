@@ -20,7 +20,7 @@ export default (props: IProps) => {
         Поиск
       </button>
       <input type="text" className="form-control" placeholder="" aria-describedby="findText" value={value} onChange={valueChangeHandler} />
-      <button className="btn btn-info" type="button" id="clearText" onClick={() => valueClearHandler()}>
+      <button className="btn btn-info clear-text__button" type="button" id="clearText" onClick={() => valueClearHandler()}>
         X
       </button>
     </div>

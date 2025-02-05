@@ -280,10 +280,54 @@ tr.main-info__tr-selected td{
 .main-form__notesinfo-container{
   width: 100%;
 }
-.main-form__notebooks-container{
+// .main-form__notebooks-container{
+//   margin-right: 40px;
+//   min-width: 250px;
+// }
+
+// .main-form__notebooks-container {
+//   max-height: 200px; /* Установите максимальную высоту по вашему усмотрению */
+//   overflow-y: auto; /* Добавляет вертикальную полосу прокрутки */
+//   border: 1px solid #ccc; /* Добавляет рамку для визуального отделения */
+//   margin-bottom: 10px; /* Отступ снизу для отделения от других элементов */
+// }
+
+.main-form__notebooks-container {
+  margin-bottom: 10px; 
   margin-right: 40px;
-  min-width: 250px;
 }
+
+.notebook-table-container {
+  
+  min-width: 250px;
+  max-height: 775px; 
+  overflow-y: auto; 
+  // border: 1px solid #ccc; 
+  margin-top: 10px; 
+}
+.notebook__button-add {
+  height: 70px;
+  width: 100%;
+}
+.menu-container{
+  position: relative;
+}
+
+.main-menu-dropdown {
+  position: absolute; /* Позволяет позиционировать меню относительно родительского элемента */
+  background-color: white; /* Цвет фона */
+  border: 1px solid #ccc; /* Рамка */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); /* Тень для эффекта */
+  z-index: 1000; /* Убедитесь, что меню отображается поверх других элементов */
+  margin-top: 5px; /* Отступ сверху от кнопки меню */
+  padding: 10px; /* Отступ внутри меню */
+  width: 300px;
+  height: 300px;
+}
+.main-menu-dropdown__button{
+
+}
+
 .main-info-notebook__th{
 
 }
@@ -293,6 +337,16 @@ tr.main-info__tr-selected td{
 .note-notebook__select{
   max-height: 50px;
   overflow-y: auto;
+}
+.menu__button{
+  margin-top: 13px;
+  margin-bottom: 13px;
+  background-color: #007bff;
+  color: white;
+}
+.clear-text__button{
+  background-color: #007bff;
+  color: white;
 }
 
 .main-info-notebook__td{

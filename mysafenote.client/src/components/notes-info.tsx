@@ -5,8 +5,9 @@ import React, { useState, useEffect, useContext } from 'react';
 import ReactPaginate from 'react-paginate';
 //import { connect } from 'react-redux';
 //import { Row, Col, Table, Button } from 'react-bootstrap';
-import { Row, Col, Table} from 'react-bootstrap';
-import Button from 'react-bootstrap/Button';
+//import { Row, Col, Table} from 'react-bootstrap';
+import { Button, Form, Container, Row, Col, Table } from 'react-bootstrap';
+//import Button from 'react-bootstrap/Button';
 import { useNavigate } from 'react-router-dom';
 //import moment from 'moment';
 import moment from 'moment-timezone';
@@ -18,11 +19,14 @@ import DeleteModal from './delete-modal';
 
 import CreateNotebookModal from './createNotebook-modal';
 import EditNotebookModal from './editNotebook-modal';
+import NotesImport from './notes-import';
 
 //import { history } from '../store/store';
 //import * as config from '../configs/config';
 import config from '../configs/config';
 import { deleteNoteFromServer, loadNoteBodyFromServer, saveNoteToServer } from "../api/note-api";
+//import { loadNotesDataFromServer, loadNotebooksDataFromServer, exportNotesFromServer, importNotesToServer } from '../api/main-api';
+import { exportNotesFromServer, importNotesToServer } from '../api/main-api';
 //import { saveNotebookToServer } from "../api/notebook-api";
 
 import { StateContext } from "../state/notes-context";
@@ -43,18 +47,14 @@ interface IProps {
   //handlerSaveToServer: any;
   resetStore: () => void;
   setFormVisible: (formVisible: boolean) => void;
+  handlerLoadFromServer: () => void;
   //userId: number
 }
 
 function NotesInfo(props : IProps) {
 
-  // const ALLNOTES = "Все заметки";
-  // const NOTESWITHOUTNOTEBOOK = "Заметки без блокнота";
-  // const ALLNOTES = "Все";
-  // const NOTESWITHOUTNOTEBOOK = "Без блокнота";
-
-  //const { userId } = props;
-  //!!!
+  const {handlerLoadFromServer} = props;
+  
   const dispatch = useContext(DispatchContext);
   const notesState = useContext(StateContext);
   const navigate = useNavigate();
@@ -106,6 +106,9 @@ function NotesInfo(props : IProps) {
 
   const [sortField, setSortField] = useState("lastChangeDate");
   //const [sortType, setSortType] = useState("desc");
+  const [menuVisible, setMenuVisible] = useState(false);
+  const [importNotesModalShow, setImportNotesModalShow] = useState(false);
+  
 
 
   const getFinalFilteredData = () => {
@@ -123,16 +126,6 @@ function NotesInfo(props : IProps) {
         // Выводим заметки только те, у которых notebookId = выбранному значению
         filteredNotes = filteredNotes.filter(note => note.notebookId === currentNotebookId);
       }
-
-      // // Поиск
-      // if (search) {
-      //   filteredNotes = filteredNotes.filter(
-      //     (item) =>
-      //       item.title.toLowerCase().includes(search.toLowerCase()) ||
-      //       item.noteShortText.toLowerCase().includes(search.toLowerCase()) ||
-      //       item.createDate.toLowerCase().includes(search.toLowerCase())
-      //   );
-      // }
 
     // Поиск
     if (search) {
@@ -158,15 +151,6 @@ function NotesInfo(props : IProps) {
     setDatanoteRows(noteRows);
   }, [noteRows]);
 
-  // useEffect(() => {
-  //   const finalFilteredData = getFinalFilteredData();
-  //   setFilteredData(finalFilteredData);
-  //   setDisplayData(getDisplayData(currentPage, finalFilteredData));
-  // }, [search, currentNotebookName, datanoteRows, sort, currentPage]);
-
-  // const getPageCount = () => {
-  //   return Math.ceil(filteredData.length / pageSize);
-  // };
 
   const getPageCount = () => {
     // return Math.ceil(filteredData.length / pageSize);
@@ -198,57 +182,6 @@ function NotesInfo(props : IProps) {
     return [];
   };
 
-
-  // const sortnoteRowsByData = (dataRows: INoteRow[], sortField: string, sortType: any) => {
-  //   const rowsAfterFormat = dataRows.map((NoteRow) => {
-  //     //const createDate = NoteRow.createDate.replace(/(\d+).(\d+).(\d+)/, '$3.$2.$1');
-  //     const createDate = NoteRow.createDate;
-  //     return {
-  //       ...NoteRow,
-  //       createDate,
-  //     };
-  //   });
-
-  //   const sortRowsAfterFormat = _.orderBy(rowsAfterFormat, sortField, sortType);
-  //   const resultRows = sortRowsAfterFormat.map((NoteRow) => {
-  //     //const createDate = NoteRow.createDate.replace(/(\d+).(\d+).(\d+)/, '$3.$2.$1');
-  //     const createDate = NoteRow.createDate;
-  //     return {
-  //       ...NoteRow,
-  //       createDate,
-  //     };
-  //   });
-  //   return resultRows;
-  // };
-
-  // useEffect(() => {
-  //   if (needSave) {
-  //     //props.handlerSaveToServer();
-  //     setNeedSave(false);
-  //   }
-  // });
-
-  // useEffect(() => {
-  //   setDatanoteRows(noteRows);
-  // }, [noteRows]);
-
-  // useEffect(() => {
-  //   setFilteredData(getFilteredData());
-  // }, [search]);
-
-  // useEffect(() => {
-  //   setFilteredData(getFilteredData());
-  // }, [currentPage]);
-
-  // useEffect(() => {
-  //   setFilteredData(getFilteredData());
-  // }, [datanoteRows]);
-
-  // useEffect(() => {
-  //   setPageCount(getPageCount());
-  //   setDisplayData(getDisplayData(currentPage));
-  // }, [filteredData]);
-
   const handleSortClick = (sortField) => {
     const sortType = sort === 'asc' ? 'desc' : 'asc';
     //const sortTypeVal = sort === 'asc' ? 'desc' : 'asc';
@@ -261,21 +194,7 @@ function NotesInfo(props : IProps) {
   setFilteredData(finalFilteredData);
   setCurrentPage(0); // Сброс текущей страницы при изменении сортировки
 
-    // let orderednoteRows = datanoteRows;
-    // if (sortField !== 'createDate') {
-    //   orderednoteRows = _.orderBy(datanoteRows, sortField, sortType);
-    // } else {
-    //   orderednoteRows = sortnoteRowsByData(datanoteRows, sortField, sortType);
-    // }
-
-    //!!!comm
-    // let orderednoteRows = datanoteRows;
-    //   orderednoteRows = _.orderBy(datanoteRows, sortField, sortType);
-    //!!!comm
-
-
-    //setDatanoteRows(orderednoteRows); //!!!comm
-    setSort(sortType); //!!!comm
+  setSort(sortType); 
 
     if (sortField === 'title') {
       if (sortType === 'asc') {
@@ -294,21 +213,6 @@ function NotesInfo(props : IProps) {
         setSortRowNum('');
       }
     } 
-    // if (sortField === 'noteShortText') {
-    //   if (sortType === 'asc') {
-    //     setSortRowName('');
-    //     setSortRowComm('\u2193');
-    //     setSortRowDate('');
-    //     setSortRowPeriod('');
-    //     setSortRowNum('');
-    //   } else {
-    //     setSortRowName('');
-    //     setSortRowComm('\u2191');
-    //     setSortRowDate('');
-    //     setSortRowPeriod('');
-    //     setSortRowNum('');
-    //   }
-    // }
     if (sortField === 'lastChangeDate') {
       if (sortType === 'asc') {
         setSortRowName('');
@@ -343,21 +247,6 @@ function NotesInfo(props : IProps) {
         setSortRowNum('');
       }
     }
-    // if (sortField === 'bdPeriod') {
-    //   if (sortType === 'asc') {
-    //     setSortRowName('');
-    //     setSortRowComm('');
-    //     setSortRowDate('');
-    //     setSortRowPeriod('\u2193');
-    //     setSortRowNum('');
-    //   } else {
-    //     setSortRowName('');
-    //     setSortRowComm('');
-    //     setSortRowDate('');
-    //     setSortRowPeriod('\u2191');
-    //     setSortRowNum('');
-    //   }
-    // }
     if (sortField === 'id') {
       if (sortType === 'asc') {
         setSortRowName('');
@@ -392,12 +281,6 @@ function NotesInfo(props : IProps) {
     //dispatch({ type: "NEED_LOAD_DATA", payload: true });
     dispatch?.({ type: ACTIONS.RESET_STORE, payload: 0});
     navigate('/login');
-    
-    
-    // history.push({
-    //   pathname: '/login',
-    // });
-   // props.resetStore();
   };
 
   const handleDelButtonClick = (NoteRowId : number) => {
@@ -408,9 +291,6 @@ function NotesInfo(props : IProps) {
   //const handleDeleteRow = () => {
     const handleDeleteRow = async function (){
     if (delRowId !== 0) {
-      //props.delNoteRow(delRowId);
-      // setNeedSave(true);
-      // setDelRowId(0);
       console.log("handleDeleteRow start");
       var delResult = await deleteNoteFromServer(delRowId);
       console.log(delResult);
@@ -426,29 +306,6 @@ function NotesInfo(props : IProps) {
     setNotebookModalShow(true);
   }
 
-  // const handleEditButtonClick = (NoteRowId : number) => {
-  //   props.checkIdNoteRow(NoteRowId);
-  //   const NoteRow = getRowById(NoteRowId);
-  //   props.setButtonAddName('Сохранить изменения');
-  //   props.setFormVisible(true);
-  //   if (props.titleRef.current !== null) {
-  //     props.titleRef.current.focus();
-  //   }
-  //   if (NoteRow) {
-  //     //const { createDate, title, noteShortText, lastChangeDate, bdPeriod } = NoteRow;
-  //     const { createDate, title, noteShortText, lastChangeDate } = NoteRow;
-  //     const createDateStr = moment(createDate, 'DD.MM.YYYY, H:mm').format('YYYY-MM-DD, H:mm');
-  //     const createDateVal = new Date(createDateStr);
-  //     props.settitleVal(title);
-  //     props.setStartDate(createDateVal);
-  //     props.setnoteShortTextVal(noteShortText);
-  //     props.setlastChangeDateVal(lastChangeDate);
-  //     //props.setBdPeriodVal(bdPeriod);
-  //   }
-
-  //   //console.log(displayData); //!!!
-  // };
-
   //const handleEditButtonClick = (NoteRowId : number) => {
     const handleEditButtonClick = async function (currentNoteId) {
       //const userId = notesState.userId;
@@ -457,27 +314,6 @@ function NotesInfo(props : IProps) {
     //let noteBodyFromServer = await loadNoteBodyFromServer(userId, currentNoteId);
     const url = '/note';
     navigate(url);
-
-    // props.checkIdNoteRow(NoteRowId); 
-    // const NoteRow = getRowById(NoteRowId);
-    // props.setButtonAddName('Сохранить изменения');
-    // props.setFormVisible(true);
-    // if (props.titleRef.current !== null) {
-    //   props.titleRef.current.focus();
-    // }
-    // if (NoteRow) {
-    //   //const { createDate, title, noteShortText, lastChangeDate, bdPeriod } = NoteRow;
-    //   const { createDate, title, noteShortText, lastChangeDate } = NoteRow;
-    //   const createDateStr = moment(createDate, 'DD.MM.YYYY, H:mm').format('YYYY-MM-DD, H:mm');
-    //   const createDateVal = new Date(createDateStr);
-    //   props.settitleVal(title);
-    //   props.setStartDate(createDateVal);
-    //   props.setnoteShortTextVal(noteShortText);
-    //   props.setlastChangeDateVal(lastChangeDate);
-    //   //props.setBdPeriodVal(bdPeriod);
-    // }
-
-    //console.log(displayData); //!!!
   };
 
   const handleEditNotebookButtonClick = () => {
@@ -495,6 +331,65 @@ function NotesInfo(props : IProps) {
     setCurrentNotebookName(notebookName);
     dispatch?.({ type: ACTIONS.CHECK_NOTEBOOK_ID, payload: notebookIdChecked });
     dispatch?.({ type: ACTIONS.CHECK_NOTEBOOK_NAME, payload: notebookName });
+  }
+
+  const handleAddButtonClick = (e) => {
+    //e.preventDefault();
+    dispatch({ type: ACTIONS.CHECK_ID_ROW, payload: 0 });
+    const url = '/note';
+    navigate(url);
+  }
+
+  // const handleMenuButtonClick = (e) => {
+  //   //e.preventDefault();
+  //   dispatch({ type: ACTIONS.CHECK_ID_ROW, payload: 0 });
+  //   const url = '/note';
+  //   navigate(url);
+  // } 
+
+  const handleMenuButtonClick = () => {
+    console.log("Меню кнопка нажата");
+    console.log(menuVisible);
+    setMenuVisible(!menuVisible); // Переключаем видимость выпадающего списка
+  };
+
+  const handleFirstOptionClick = () => {
+    console.log("Первая кнопка нажата");
+    setMenuVisible(false); // Закрываем меню после нажатия
+  };
+
+  const handleSecondOptionClick = () => {
+    console.log("Вторая кнопка нажата");
+    setMenuVisible(false); 
+  };
+
+  const handlerExportNotesFromServer = async function (){
+    console.log("handlerExportNotesFromServer");
+    //console.log(data);
+    await exportNotesFromServer(userId);
+  }
+
+  // const handlerImportNotesToServer = async function (){
+  //   console.log("handlerImportNotesToServer");
+  
+  //   if (!file) {
+  //     alert('Пожалуйста, выберите zip-файл для загрузки.');
+  //     return;
+  //   }
+  //   //await importNotesToServer(userId, file);
+  //   var result = await importNotesToServer(userId, file);
+  //   //console.log(result);
+  //   if (result === true)
+  //   {
+  //     handlerLoadFromServer();
+  //   }
+  // }
+  // const handleFileChange = (event) => {
+  //   setFile(event.target.files[0]);
+  // };
+
+  const handlerImportNotes = function () {
+    setImportNotesModalShow(true)
   }
 
   return (
@@ -517,6 +412,59 @@ function NotesInfo(props : IProps) {
        />
 
         <div className="main-info__capt-container">
+        <Button
+              id="buttonMenu"
+              type="button"
+              //variant="success"
+              variant="info"
+              onClick={handleMenuButtonClick}
+              className="menu__button"
+            >
+              Меню
+            </Button>
+
+            {/* <div className = "menu-container">
+              <div className="sub-menu__button">
+            {menuVisible && ( <Button onClick={handleFirstOptionClick} type="button" variant="danger" className="sub-menu__button1">Первая кнопка</Button>
+            )}
+            </div>
+             </div> */}
+          <div className = "menu-container">
+            {menuVisible && (
+             <div className="main-menu-dropdown">
+               {/* <Button onClick={handleFirstOptionClick} type="button" className="main-menu-dropdown__button" variant="danger">Первая кнопка</Button> */}
+              
+              <Button onClick={handlerExportNotesFromServer} id="buttonExportNotes" type="button" variant="success" size="lg" block className="main-menu-dropdown__button">
+                Сохранить заметки
+              </Button>
+              <Button onClick={handlerImportNotes} id="buttonImportNotes" type="button" variant="success" size="lg" block className="main-menu-dropdown__button">
+                Загрузить заметки
+              </Button>
+
+              {/* <div>
+              <input type="file" accept=".zip" onChange={handleFileChange} />
+                <button onClick={handlerImportNotesToServer}>Загрузить заметки</button>
+              </div> */}
+
+
+
+        {/* <Alert className="message__alert_center" variant="light" id="mainLabel">
+          {handlerLoading()}
+        </Alert> */}
+
+              {/* <Button onClick={handleSecondOptionClick} type="button" className="main-menu-dropdown__button" variant="light">Вторая кнопка</Button> */}
+             </div> 
+          )}
+         </div>
+         <NotesImport
+            userId = {userId}
+            handlerLoadFromServer = {handlerLoadFromServer}
+            importNotesModalShow={importNotesModalShow}
+            handleImportNotesCloseModal={() => setImportNotesModalShow(false)}
+            // handlerImportNotesToServer={handlerImportNotesToServer}
+         />
+
+
           <div className="main-info__page-capt">Мои заметки</div>
           <div>
             <Button
@@ -530,7 +478,16 @@ function NotesInfo(props : IProps) {
               Выйти
             </Button>
           </div>
+          {/* <div className = "menu-container"> */}
+          {/* {menuVisible && (
+             <div className="dropdown-menu">
+               <Button onClick={handleFirstOptionClick} type="button" variant="danger" className="exit__button">Первая кнопка</Button>
+              <Button onClick={handleSecondOptionClick} type="button" variant="light">Вторая кнопка</Button>
+             </div> 
+          )} */}
+            {/* </div> */}
         </div>
+
         <DeleteModal
           modalShow={modalShow}
           handleCloseModal={() => setModalShow(false)}
@@ -540,12 +497,12 @@ function NotesInfo(props : IProps) {
         <TableSearch onSearch={searchHandler} />
             <div className="main-form__container">
               <div className="main-form__notebooks-container">
-                <Button onClick={handleAddNotebookButtonClick} id="buttonAdd" type="button" variant="success" size="sm" className="main-form__button-add">
+                <Button onClick={handleAddNotebookButtonClick} id="buttonAdd" type="button" variant="success" size="sm" className="notebook__button-add">
                   Добавить блокнот
                 </Button>
 
                 {/* <div>{currentNotebookId}</div> */}
-
+                <div className="notebook-table-container"> {/* Оберните таблицу в новый div */}
                 <Table responsive="sm">
                   <thead>
                     <tr>
@@ -598,8 +555,12 @@ function NotesInfo(props : IProps) {
                       )}
                     </tbody>
                 </Table>
+                </div>
               </div>
             <div className="main-form__notesinfo-container">
+            <Button onClick={handleAddButtonClick} id="buttonAdd" type="button" variant="success" size="lg" block className="main-form__button-add">
+              Добавить заметку
+            </Button>
         <Table responsive="sm">
           <thead>
             <tr>
