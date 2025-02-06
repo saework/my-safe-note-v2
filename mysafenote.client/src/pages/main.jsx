@@ -180,7 +180,7 @@ const handlerImportNotesToServer = async function (){
   console.log("handlerImportNotesToServer");
 
   if (!file) {
-    alert('Пожалуйста, выберите zip-файл для загрузки.');
+    //alert('Пожалуйста, выберите zip-файл для загрузки.');
     return;
   }
   //await importNotesToServer(userId, file);

@@ -163,7 +163,7 @@ export const exportNotesFromServer = async function (userId) {
     window.URL.revokeObjectURL(url); // Освобождаем память
   } catch (error) {
     console.error("Ошибка:", error);
-    alert("Не удалось выгрузить заметки. Пожалуйста, попробуйте еще раз.");
+    //alert("Не удалось выгрузить заметки. Пожалуйста, попробуйте еще раз.");
   }
 };
 
@@ -180,14 +180,17 @@ export const importNotesToServer = async function (userId, file) {
       });
 
       if (!response.ok) {
+        //console.log("Ошибка при загрузке заметок");
           throw new Error('Ошибка при загрузке заметок');
       }
 
-      alert('Заметки успешно загружены!');
+      //alert("Заметки успешно загружены!"");
+      console.log("Заметки успешно загружены!");
       result = true; 
   } catch (error) {
       console.error('Ошибка:', error);
-      alert('Не удалось загрузить заметки. Пожалуйста, попробуйте еще раз.');
+      //alert('Не удалось загрузить заметки. Пожалуйста, попробуйте еще раз.');
+      console.log("Не удалось загрузить заметки");
   }
   return result;
 };

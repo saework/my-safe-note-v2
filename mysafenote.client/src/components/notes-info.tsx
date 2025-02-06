@@ -335,7 +335,7 @@ function NotesInfo(props : IProps) {
 
   const handleAddButtonClick = (e) => {
     //e.preventDefault();
-    dispatch({ type: ACTIONS.CHECK_ID_ROW, payload: 0 });
+    dispatch?.({ type: ACTIONS.CHECK_ID_ROW, payload: 0 });
     const url = '/note';
     navigate(url);
   }
@@ -392,6 +392,14 @@ function NotesInfo(props : IProps) {
     setImportNotesModalShow(true)
   }
 
+  const handleMouseEnter = () => {
+    setMenuVisible(true);
+  };
+
+  const handleMouseLeave = () => {
+    setMenuVisible(false);
+  };
+
   return (
     <Row md={1} className="main-page__bd-info">
       <Col>
@@ -412,6 +420,10 @@ function NotesInfo(props : IProps) {
        />
 
         <div className="main-info__capt-container">
+        <div 
+        onMouseEnter={handleMouseEnter} 
+        onMouseLeave={handleMouseLeave}
+      >
         <Button
               id="buttonMenu"
               type="button"
@@ -422,6 +434,7 @@ function NotesInfo(props : IProps) {
             >
               Меню
             </Button>
+            </div>
 
             {/* <div className = "menu-container">
               <div className="sub-menu__button">
@@ -429,15 +442,18 @@ function NotesInfo(props : IProps) {
             )}
             </div>
              </div> */}
-          <div className = "menu-container">
+          <div className = "menu-container"
+                  onMouseEnter={handleMouseEnter} 
+                  onMouseLeave={handleMouseLeave}
+          >
             {menuVisible && (
              <div className="main-menu-dropdown">
                {/* <Button onClick={handleFirstOptionClick} type="button" className="main-menu-dropdown__button" variant="danger">Первая кнопка</Button> */}
               
-              <Button onClick={handlerExportNotesFromServer} id="buttonExportNotes" type="button" variant="success" size="lg" block className="main-menu-dropdown__button">
+              <Button onClick={handlerExportNotesFromServer} id="buttonExportNotes" type="button" variant="info" size="lg" className="main-menu-export__button">
                 Сохранить заметки
               </Button>
-              <Button onClick={handlerImportNotes} id="buttonImportNotes" type="button" variant="success" size="lg" block className="main-menu-dropdown__button">
+              <Button onClick={handlerImportNotes} id="buttonImportNotes" type="button" variant="info" size="lg" className="main-menu-import__button">
                 Загрузить заметки
               </Button>
 
@@ -558,7 +574,7 @@ function NotesInfo(props : IProps) {
                 </div>
               </div>
             <div className="main-form__notesinfo-container">
-            <Button onClick={handleAddButtonClick} id="buttonAdd" type="button" variant="success" size="lg" block className="main-form__button-add">
+            <Button onClick={handleAddButtonClick} id="buttonAdd" type="button" variant="success" size="lg" className="main-form__button-add">
               Добавить заметку
             </Button>
         <Table responsive="sm">

@@ -321,19 +321,39 @@ tr.main-info__tr-selected td{
   z-index: 1000; /* Убедитесь, что меню отображается поверх других элементов */
   margin-top: 5px; /* Отступ сверху от кнопки меню */
   padding: 10px; /* Отступ внутри меню */
-  width: 300px;
-  height: 300px;
+  width: 242px;
+  height: 132px;
+  border-radius: 15px;
+  left: 0px;
+  top: -5px;
 }
-.main-menu-dropdown__button{
-
+.main-menu-import__button{
+  width: 220px;
+  height: 50px;
+  font-size:20px;
+  background-color: #007bff;
+  color: white;
+}
+.main-menu-export__button{
+  width: 220px;
+  height: 50px;
+  font-size:20px;
+  margin-bottom: 10px;
+  background-color: #007bff;
+  color: white;
+}
+.main-menu-export__button:hover, .main-menu-import__button:hover, .menu__button:hover{
+  background-color: #0066ff;
+  color: white;
 }
 
-.main-info-notebook__th{
+// .main-info-notebook__th{
 
-}
-.main-info-notebook__td-edit{
+// }
+// .main-info-notebook__td-edit{
 
-}
+// }
+
 .note-notebook__select{
   max-height: 50px;
   overflow-y: auto;
