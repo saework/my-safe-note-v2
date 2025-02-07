@@ -1,7 +1,7 @@
 import React, { useState, useRef, useMemo, useContext, useEffect } from "react";
 import JoditEditor from "jodit-react";
 import { Row, Col, Form, Button } from "react-bootstrap";
-import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import { StateContext } from "../state/notes-context";
 import { ACTIONS, DispatchContext } from "../state/notes-context";
 //import { loadNoteBodyFromServer, saveNoteToServer, saveNotebookToServer, loadNoteDocxFromServer } from "../api/note-api";
@@ -67,13 +67,12 @@ const Note = () => {
 
   useEffect(() => {
     // if (userId ===0 || !userId || currentNoteId===0){
-    if (userId ===0 || !userId){
-      const loginDataJSON = localStorage.getItem('loginData');
-      if (loginDataJSON)
-      {
+    if (userId === 0 || !userId) {
+      const loginDataJSON = localStorage.getItem("loginData");
+      if (loginDataJSON) {
         const loginData = JSON.parse(loginDataJSON);
         dispatch({ type: ACTIONS.LOGIN_SAVE_STORE, payload: loginData });
-        navigate('/main');
+        navigate("/main");
       }
     }
   }, [userId, currentNoteId]);
@@ -314,16 +313,47 @@ const Note = () => {
       "bold",
       "italic",
       "underline",
+      "strikethrough",
+      "superscript",
+      "subscript",
+      "paragraph",
       "font",
       "fontsize",
       "brush",
-      "paragraph",
-      "|",
+      "eraser",
+
+      "indent",
+      "outdent",
+      "left",
+
+      "ul",
+      "ol",
+
+      "lineHeight",
+
+      "hr",
       "image",
+      "table",
+      "link",
+      "symbols",
+
+      "spellcheck",
+
+      "selectall",
+      "cut",
+      "copy",
+      "paste",
+
       "undo",
       "redo",
+      "find",
+
+      "source",
+      "fullsize",
+      "preview",
       "print",
     ],
+
     uploader: { insertImageAsBase64URI: true },
     readonly: false,
     toolbarAdaptive: false,
@@ -364,7 +394,7 @@ const Note = () => {
           // onChange={notebookChangeHandler}  //!!!обработать!!
           readonly
         /> */}
-        
+
         {/* <label>Блокнот</label>
         <select
           // className="note-notebook__select"
@@ -384,35 +414,34 @@ const Note = () => {
           )}
         </select> */}
 
-    <div>
-      <FormControl fullWidth>
-        <InputLabel id="notebook-select-label">Блокнот</InputLabel>
-        <Select
-          labelId="notebook-select-label"
-          value={notebookId}
-          onChange={(e) => setNotebookId(e.target.value)}
-          MenuProps={{
-            PaperProps: {
-              style: {
-                maxHeight: 400, // Максимальная высота выпадающего меню
-                overflowY: 'auto', // Прокрутка
-              },
-            },
-          }}
-        >
-          {notebooks.length > 0 ? (
-            notebooks.map((notebook) => (
-              <MenuItem key={notebook.id} value={notebook.id}>
-                {notebook.name}
-              </MenuItem>
-            ))
-          ) : (
-            <MenuItem disabled>Нет доступных блокнотов</MenuItem>
-          )}
-        </Select>
-      </FormControl>
-    </div>
-
+        <div>
+          <FormControl fullWidth>
+            <InputLabel id="notebook-select-label">Блокнот</InputLabel>
+            <Select
+              labelId="notebook-select-label"
+              value={notebookId}
+              onChange={(e) => setNotebookId(e.target.value)}
+              MenuProps={{
+                PaperProps: {
+                  style: {
+                    maxHeight: 400, // Максимальная высота выпадающего меню
+                    overflowY: "auto", // Прокрутка
+                  },
+                },
+              }}
+            >
+              {notebooks.length > 0 ? (
+                notebooks.map((notebook) => (
+                  <MenuItem key={notebook.id} value={notebook.id}>
+                    {notebook.name}
+                  </MenuItem>
+                ))
+              ) : (
+                <MenuItem disabled>Нет доступных блокнотов</MenuItem>
+              )}
+            </Select>
+          </FormControl>
+        </div>
       </div>
       <EncryptModal
         modalShow={encryptModalShow}

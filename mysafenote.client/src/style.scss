@@ -373,6 +373,10 @@ tr.main-info__tr-selected td{
 width: 90%;
 }
 
+.jodit-status-bar{
+  display: none !important;
+}
+
 @keyframes lds-dual-ring {
   0% {
     transform: rotate(0deg);
