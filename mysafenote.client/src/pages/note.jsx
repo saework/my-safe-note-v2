@@ -1,7 +1,7 @@
 import React, { useState, useRef, useMemo, useContext, useEffect } from "react";
 import JoditEditor from "jodit-react";
 import { Row, Col, Form, Button } from "react-bootstrap";
-import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { FormControl, InputLabel, Select, MenuItem, TextField } from "@mui/material";
 import { StateContext } from "../state/notes-context";
 import { ACTIONS, DispatchContext } from "../state/notes-context";
 //import { loadNoteBodyFromServer, saveNoteToServer, saveNotebookToServer, loadNoteDocxFromServer } from "../api/note-api";
@@ -10,11 +10,12 @@ import {
   saveNoteToServer,
   loadNoteDocxFromServer,
 } from "../api/note-api";
-import moment from "moment";
+// import moment from "moment";
 import { Link, useNavigate } from "react-router-dom";
 import { encryptNote, decryptNote } from "../functions";
 import EncryptModal from "../components/encrypt-modal.tsx";
 import DecryptModal from "../components/decrypt-modal.tsx";
+import moment from 'moment-timezone';
 
 const Note = () => {
   //const {noteId, userId} = props;
@@ -47,6 +48,9 @@ const Note = () => {
   const [encryptedNote, setEncryptedNote] = useState("");
   const [decryptedNote, setDecryptedNote] = useState("");
   const [error, setError] = useState("");
+  const [isEncryptMode, setIsEncryptMode] = useState(true);
+
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   //const [userUnfold, setUserUnfold] = useState(true);
   //const [isModal, setModal] = useState(false);
@@ -219,19 +223,6 @@ const Note = () => {
 
     let result = await saveNoteToServer(note);
     console.log(result);
-
-    // setEncryptedNote(encryptedBody);
-    // setDecryptedNote(''); // Сбросить расшифрованную заметку
-    // setEncryptModalShow(false);
-
-    // try {
-    //     const encrypted = encryptNote(note, password);
-    //     setEncryptedNote(encrypted);
-    //     setDecryptedNote(''); // Сбросить расшифрованную заметку
-    //     setError(''); // Сбросить ошибку
-    // } catch (error) {
-    //     setError(error.message);
-    // }
   };
 
   //!!!
@@ -254,44 +245,6 @@ const Note = () => {
     }
   };
   //!!!
-
-  // // Функция для дешифрования заметки
-  // const handleDecrypt = (password, notePasswordHash) => {
-  // //  const handleDecrypt = (notePasswordHash) => {
-  //   const decryptedBody = decryptNote(noteBody, password);
-  //   //const decryptedBody = decryptNote(noteBody, notePasswordHash);
-  //   console.log(decryptedBody);
-  //   setNoteBody(decryptedBody);
-  //   setNotePasswordHash(notePasswordHash);
-  //   //setNotePasswordHash(notePasswordHash);
-  //   setDecryptModalShow(false);
-  //   handleSaveNoteToServer();
-
-  //   // const decryptedBody = decryptNote(encryptedNote, password);
-  //   // setDecryptedNote(decryptedBody);
-  //   // setEncryptedNote(''); // Сбросить расшифрованную заметку
-  //   // setDecryptModalShow(false);
-
-  //     // try {
-  //     //     const originalNote = decryptNote(encryptedNote, password);
-  //     //     setDecryptedNote(originalNote);
-  //     //     setError(''); // Сбросить ошибку
-  //     // } catch (error) {
-  //     //     setError(error.message);
-  //     // }
-  // };
-
-  //     // Функция для дешифрования заметки
-  // const handleDecrypt = (password) => {
-  //   const decryptedBody = decryptNote(noteBody, password);
-  //   //const decryptedBody = decryptNote(noteBody, notePasswordHash);
-  //   console.log(decryptedBody);
-  //   setNoteBody(decryptedBody);
-  //   setNotePasswordHash(password);
-  //   //setNotePasswordHash(notePasswordHash);
-  //   setDecryptModalShow(false);
-  //   handleSaveNoteToServer();
-  // };
 
   // const config = useMemo(
   // 	{
@@ -324,7 +277,7 @@ const Note = () => {
 
       "indent",
       "outdent",
-      "left",
+      "align",
 
       "ul",
       "ol",
@@ -372,10 +325,101 @@ const Note = () => {
     setNoteBody(newNoteBody);
   };
 
+  const handleEncryptDecryptClick = () => {
+    if (isEncryptMode) {
+      setEncryptModalShow(true);
+    } else {
+      setDecryptModalShow(true);
+    }
+    setIsEncryptMode(!isEncryptMode);
+  };
+
   return (
-    <div>
-      <div>
-        <label>Название</label>
+    <div className="container">
+      <div className="note_main-container">
+
+
+<div className="note-headpanel_container">
+
+        {/* <Button
+              id="buttonNoteMenu"
+              type="button"
+              //variant="success"
+              variant="info"
+              // onClick={handleMenuButtonClick}
+              className="menu__button"
+            >
+              Меню
+            </Button> */}
+<Button
+        onClick={handleSaveNoteToServer}
+        id="buttonSaveNote"
+        type="button"
+        variant="success"
+        className="note-headpanel__button"
+      >
+        Сохранить заметку
+      </Button>
+
+<Button
+        onClick={handleLoadNoteDocxFromServer}
+        id="buttonSaveDocxNote"
+        type="button"
+        variant="success"
+        className="note-headpanel__button"
+      >
+        Скачать в формате docx
+      </Button>
+
+      <Button
+      onClick={handleEncryptDecryptClick}
+      id="buttonEncryptNote"
+      type="button"
+      variant="success"
+      className="note-headpanel__button"
+    >
+      {isEncryptMode ? 'Зашифровать заметку' : 'Расшифровать заметку'}
+    </Button>
+
+      <Button
+        onClick={handleExitNote}
+        id="buttonExitNote"
+        type="button"
+        variant="danger"
+        className="note-headpanel__button"
+      >
+        Выйти из заметки
+      </Button>
+</div>
+<TextField
+        label="Название"
+        variant="outlined"
+        value={noteName}
+        onChange={noteNameChangeHandler}
+        // InputProps={{
+        //   className: 'note-name__textfield' // Применяем класс к внутреннему элементу Input
+        // }}
+        // className={'note-name__textfield'}
+        className="note-name__textfield"
+      />
+
+{/* <Form.Group controlId="formNoteName">
+      <Row>
+        <Col xs="auto">
+          <Form.Label>Название</Form.Label>
+        </Col>
+        <Col>
+          <Form.Control
+            type="text"
+            value={noteName}
+            onChange={noteNameChangeHandler}
+            className="note-name__textfield"
+          />
+        </Col>
+      </Row>
+    </Form.Group> */}
+
+        {/* <label>Название</label>
         <input
           type="text"
           className="form-control"
@@ -383,7 +427,9 @@ const Note = () => {
           aria-describedby="findText"
           value={noteName}
           onChange={noteNameChangeHandler}
-        />
+        /> */}
+
+
         {/* <label>Блокнот</label>
         <input
           type="text"
@@ -395,26 +441,7 @@ const Note = () => {
           readonly
         /> */}
 
-        {/* <label>Блокнот</label>
-        <select
-          // className="note-notebook__select"
-          className="form-control note-notebook__select"
-          value={notebookId} // используйте notebookId для отслеживания выбранного блока
-          onChange={(e) => setNotebookId(e.target.value)} // обновляем состояние при выборе
-          // style={{ maxHeight: "100px", overflowY: "auto" }} // стиль для прокрутки
-        >
-          {notebooks.length > 0 ? (
-            notebooks.map((notebook) => (
-              <option key={notebook.id} value={notebook.id}>
-                {notebook.name}
-              </option>
-            ))
-          ) : (
-            <option disabled>Нет доступных блокнотов</option>
-          )}
-        </select> */}
-
-        <div>
+        
           <FormControl fullWidth>
             <InputLabel id="notebook-select-label">Блокнот</InputLabel>
             <Select
@@ -441,7 +468,23 @@ const Note = () => {
               )}
             </Select>
           </FormControl>
+
+         {lastChangeDate && createDate && (
+        <div className="notebook-date-container">
+          <div className="notebook-lastChangeDate__div">
+            <label className="notebook-date-text__label">Последние изменения: </label>
+            {/* <label>{lastChangeDate}</label> */}
+            <label>{moment.utc(lastChangeDate).tz(timeZone).format('DD.MM.YYYY HH:mm')}</label>
+            
+          </div>
+          <div className="notebook-createDate__div">
+            <label className="notebook-date-text__label">Дата создания: </label>
+            {/* <label>{createDate}</label> */}
+            <label>{moment.utc(createDate).tz(timeZone).format('DD.MM.YYYY HH:mm')}</label>
+          </div>
         </div>
+      )}
+
       </div>
       <EncryptModal
         modalShow={encryptModalShow}
@@ -461,50 +504,23 @@ const Note = () => {
         tabIndex={1} // tabIndex of textarea
         //onBlur={(newNoteBody) => setNoteBody(newNoteBody)} // preferred to use only this option to update the content for performance reasons
         onBlur={(newNoteBody) => onBlurHandle(newNoteBody)}
-
-        //onChange={(newNoteBody) => {}}
-        //onChange={(newNoteBody) => onBlurHandle(newNoteBody)}
-
-        //  onChange={(newNoteBody) => setNoteBody(newNoteBody)}
       />
       {/* <button onClick={handleSave}>Save</button> */}
+
+      {/* <div className="note-add-container"> 
       <Button
         onClick={handleSaveNoteToServer}
         id="buttonSaveNote"
         type="button"
         variant="success"
-        size="lg"
-        block
-        className="main-form__button-add"
+        className="note-add__button"
       >
         Сохранить заметку
       </Button>
-      <Button
-        onClick={handleExitNote}
-        id="buttonExitNote"
-        type="button"
-        variant="danger"
-        size="lg"
-        block
-        className="main-form__button-add"
-      >
-        Выйти из заметки
-      </Button>
-      <Button
-        onClick={handleLoadNoteDocxFromServer}
-        id="buttonExitNote"
-        type="button"
-        variant="success"
-        size="lg"
-        block
-        className="main-form__button-add"
-      >
-        Скачать в формате docx
-      </Button>
-      <div>
+      </div> */}
+
+      {/* <div>
         <Button
-          // onClick={handleEncrypt}
-          //onClick={setEncrypteModalShow(true)}
           onClick={() => setEncryptModalShow(true)}
           id="buttonExitNote"
           type="button"
@@ -526,7 +542,7 @@ const Note = () => {
         >
           Расшифровать заметку
         </Button>
-      </div>
+      </div> */}
     </div>
   );
 };
