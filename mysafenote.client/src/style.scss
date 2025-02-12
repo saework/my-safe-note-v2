@@ -6,6 +6,7 @@ $base-color: #28a745;
   margin: 0;
   padding: 0;
 }
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
@@ -33,17 +34,31 @@ code {
   margin: 10px 0 10px 0;
 }
 .main-form__button-add {
-  height: 70px;
+  // height: 70px;
   width: 100%;
+  width: 83%;
+  // width: 400px;
+  height: 55px;
+  font-size: 22px;
+  border-radius: 8px;
+  margin-bottom: 13px;
+}
+.main-form__add-container{
+  display: flex;
+  justify-content: center;
 }
 .main-info__th-num {
-  width: 5%;
+  width: 8%;
 }
 .main-info__th-num:hover {
   cursor: pointer;
 }
 .main-info__th-name {
-  width: 25%;
+  width: 50%;
+  // word-wrap: break-word; /* Для старых браузеров */
+  // overflow-wrap: break-word; /* Для современных браузеров */
+  // white-space: normal; /* Позволяет переносить текст на новую строку */
+  // overflow: hidden; /* или auto */
 }
 .main-info__th-name:hover {
   cursor: pointer;
@@ -66,9 +81,10 @@ code {
 .main-info__th-period:hover {
   cursor: pointer;
 }
-.main-info__th-edit {
-  width: 10%;
-}
+// .main-info__th-edit {
+//   width: 10%;
+//   // white-space: nowrap; /*чтобы кнопки не переносились */
+// }
 .was-validated .form-control:valid,
 .form-control.is-valid {
   background-position: right calc(0.375em + 0.7875rem) center;
@@ -90,8 +106,17 @@ textarea.form-control.is-valid {
   cursor: pointer;
 }
 th.main-info__th-edit {
-  width: 50px;
-  height: 50px;
+  // width: 50px;
+  // height: 50px;
+  min-width: 50px;
+  min-height: 50px;
+  width: 7%;
+}
+
+th.main-info__th-delete{
+  min-width: 50px;
+  min-height: 50px;
+  width: 5%;
 }
 .message__alert_center {
   display: flex;
@@ -270,6 +295,15 @@ button.sign-in__button {
 tr.main-info__tr-selected td{
   background-color: #28a74514;
 }
+tr.main-info__tr td:hover{
+  cursor: pointer;
+}
+tr.main-info__tr-selected td:hover{
+  cursor: pointer;
+}
+.notebook-table-container td{
+  font-weight: 500;
+}
 
 .main-form__container{
   display: flex;
@@ -298,7 +332,6 @@ tr.main-info__tr-selected td{
 }
 
 .notebook-table-container {
-  
   min-width: 250px;
   max-height: 775px; 
   overflow-y: auto; 
@@ -306,9 +339,17 @@ tr.main-info__tr-selected td{
   margin-top: 10px; 
 }
 .notebook__button-add {
-  height: 70px;
-  width: 100%;
+  height: 55px;
+  // width: 80%;
+  width: 230px;
+  font-size: 20px;
+  border-radius: 8px;
 }
+.notebook__add-container{
+  display: flex;
+  justify-content: left;
+}
+
 .menu-container{
   position: relative;
 }
@@ -429,6 +470,18 @@ div.note-name__textfield input{
 }
 .notebook-date-text__label{
   margin-right: 5px;
+}
+button.notebook-modal__button{
+  width: 125px;
+  height: 50px;
+}
+.notebook-modal__container{
+  display:flex;
+  justify-content: space-around;
+}
+button.delete-modal__button{
+  width: 80px;
+  height: 50px;
 }
 
 // .note-add__button{

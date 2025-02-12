@@ -66,8 +66,8 @@ function CreateNotebookModal(props: IProps) {
         />
       </Modal.Body>
       <Modal.Footer>
-        <Button onClick={handleCreateNotebookClick}>Создать</Button>
-        <Button onClick={handleNotebookCloseModal}>Отмена</Button>
+        <Button variant="success" className="notebook-modal__button" onClick={handleCreateNotebookClick}>Создать</Button>
+        <Button className="notebook-modal__button" onClick={handleNotebookCloseModal}>Отмена</Button>
       </Modal.Footer>
     </Modal>
   );

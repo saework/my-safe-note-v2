@@ -21,8 +21,8 @@ function DeleteModal(props: IProps) {
         <p>Вы действительно хотите удалить {deleteObjectName}?</p>
       </Modal.Body>
       <Modal.Footer>
-        <Button onClick={handleDeleteRow}>Да</Button>
-        <Button onClick={handleCloseModal}>Нет</Button>
+        <Button className="delete-modal__button" variant="danger" onClick={handleDeleteRow}>Да</Button>
+        <Button className="delete-modal__button" onClick={handleCloseModal}>Нет</Button>
       </Modal.Footer>
     </Modal>
   );

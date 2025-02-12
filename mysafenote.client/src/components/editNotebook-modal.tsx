@@ -105,10 +105,10 @@ function EditNotebookModal(props: IProps) {
             onChange={(e) => setNotebookName(e.target.value)}
           />
         </Modal.Body>
-        <Modal.Footer>
-          <Button onClick={handleEditNotebookClick}>Сохранить</Button>
-          <Button onClick={handleDeleteNotebookClick}>Удалить</Button>
-          <Button onClick={handleNotebookEditCloseModal}>Отмена</Button>
+        <Modal.Footer className="notebook-modal__container">
+          <Button variant="success" className="notebook-modal__button" onClick={handleEditNotebookClick}>Сохранить</Button>
+          <Button variant="danger" className="notebook-modal__button" onClick={handleDeleteNotebookClick}>Удалить</Button>
+          <Button className="notebook-modal__button" onClick={handleNotebookEditCloseModal}>Отмена</Button>
         </Modal.Footer>
       </Modal>
       <DeleteModal

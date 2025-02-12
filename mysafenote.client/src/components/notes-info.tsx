@@ -513,9 +513,11 @@ function NotesInfo(props : IProps) {
         <TableSearch onSearch={searchHandler} />
             <div className="main-form__container">
               <div className="main-form__notebooks-container">
+                <div className="notebook__add-container">
                 <Button onClick={handleAddNotebookButtonClick} id="buttonAdd" type="button" variant="success" size="sm" className="notebook__button-add">
                   Добавить блокнот
                 </Button>
+                </div>
 
                 {/* <div>{currentNotebookId}</div> */}
                 <div className="notebook-table-container"> {/* Оберните таблицу в новый div */}
@@ -574,9 +576,11 @@ function NotesInfo(props : IProps) {
                 </div>
               </div>
             <div className="main-form__notesinfo-container">
+              <div className="main-form__add-container">
             <Button onClick={handleAddButtonClick} id="buttonAdd" type="button" variant="success" size="lg" className="main-form__button-add">
               Добавить заметку
             </Button>
+            </div>
         <Table responsive="sm">
           <thead>
             <tr>
@@ -611,7 +615,7 @@ function NotesInfo(props : IProps) {
                 {sortRowPeriod}
               </th> */}
               <th className="main-info__th-edit"> </th>
-              <th className="main-info__th-edit"> </th>
+              <th className="main-info__th-delete"> </th>
             </tr>
           </thead>
 
