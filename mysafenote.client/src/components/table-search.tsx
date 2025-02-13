@@ -15,7 +15,8 @@ export default (props: IProps) => {
   };
 
   return (
-    <div className="input-group mb-3">
+    // <div className="input-group mb-3">
+     <div className="notes-info-find input-group">
       <button className="btn btn-success" type="button" id="findText" onClick={() => props.onSearch(value)}>
         Поиск
       </button>

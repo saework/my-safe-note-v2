@@ -483,6 +483,12 @@ button.delete-modal__button{
   width: 80px;
   height: 50px;
 }
+.notebook-small-panel{
+  display: none;
+}
+.notes-info-find{
+  margin: 5px 0 19px 0;
+}
 
 // .note-add__button{
 //   width: 252px;
@@ -521,11 +527,14 @@ button.delete-modal__button{
   .main-info__page-capt {
     font-size: 19px;
     padding-left: 0px;
-    margin: 15px auto 20px 0;
+    // margin: 15px auto 20px 0;
   }
   .main-form__button-add {
-    height: 65px;
-    font-size: 16px;
+    // height: 65px;
+    // font-size: 16px;
+    height: 55px;
+    font-size: 20px;
+    width: 100%;
   }
   .main-form__button-cancel {
     height: 65px;
@@ -538,12 +547,60 @@ button.delete-modal__button{
     padding-right: 0.3rem;
   }
   .main-info__th-num {
-    min-width: 46px;
+    // min-width: 46px;
+    min-width:8%;
+    width:8%;
   }
   .main-info__th-name {
     min-width: 100px;
   }
   .main-info__th-text {
     min-width: 130px;
+  }
+
+  .main-form__notebooks-container{
+    display: none;
+  }
+  .main-info__th-date{
+    display: none;
+  }
+  .main-info-createDate__td{
+    display: none;
+  }
+  .main-info-lastChangeDate__td{
+    display: none;
+  }
+  .notebook-small-panel{
+    display: flex;
+    justify-content: space-between;
+  }
+  .notebook-small-panel__select{
+    width: 75%;
+    height: 50px;
+    min-height: 50px;
+    margin-bottom: 17px;
+    // padding: 5px;
+  }
+  // mb-3.input-group {
+  //   margin-bottom:10px;
+  // }
+
+  // div.css-sc8y68-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root{
+  //   padding: 5px;
+  // }
+  div.css-w76bbz-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input{
+    padding: 10px;
+    // height: 50px;
+    // min-height: 50px;
+  }
+  .notebook-small-add{
+    width: 47px;
+    height: 47px;
+    margin-left: 10px;
+  }
+  .notebook-small-edit{
+    width: 47px;
+    height: 47px;
+    margin-left: 20px;
   }
 }
