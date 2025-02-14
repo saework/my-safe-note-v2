@@ -113,7 +113,8 @@ function NotesInfo(props: IProps) {
 
   const [selectedRowId, setSelectedRowId] = useState(0);
   //const [selectedNotebookId, setSelectedNotebookId] = useState(0);
-  const [currentNotebookId, setCurrentNotebookId] = useState(0);
+  const [currentNotebookId, setCurrentNotebookId] = useState(-1);
+  //const [currentNotebookId, setCurrentNotebookId] = useState(0);
   const [currentNotebookName, setCurrentNotebookName] =
     useState(allnoteFilterName);
 
@@ -121,6 +122,9 @@ function NotesInfo(props: IProps) {
   //const [sortType, setSortType] = useState("desc");
   const [menuVisible, setMenuVisible] = useState(false);
   const [importNotesModalShow, setImportNotesModalShow] = useState(false);
+
+  const [notebooksForSelect, setNotebooksForSelect] = useState(notebooks);
+  
 
   const getFinalFilteredData = () => {
     let filteredNotes = datanoteRows;
@@ -169,6 +173,20 @@ function NotesInfo(props: IProps) {
   useEffect(() => {
     setDatanoteRows(noteRows);
   }, [noteRows]);
+
+
+  useEffect(() => {
+    if (notebooks)
+    {
+    let notebooksForSelectNewVal = [
+      //{ id: -1, name: allnoteFilterName },
+      { id: -2, name: withoutnotebookFilterName }, 
+      { id: -1, name: allnoteFilterName },
+      ...notebooks];
+    setNotebooksForSelect(notebooksForSelectNewVal);
+    }
+  }, [notebooks]);
+
 
   const getPageCount = () => {
     // return Math.ceil(filteredData.length / pageSize);
@@ -340,12 +358,17 @@ function NotesInfo(props: IProps) {
 
   //const handleCheckNotebook = (notebookId, notebookName) => {
   const handleCheckNotebook = (
-    notebookIdChecked: number,
+    notebookIdCheckedVal: number,
     notebookName: string
   ) => {
+    let notebookIdChecked = notebookIdCheckedVal;
+
     console.log("handleCheckNotebook");
     console.log(notebookIdChecked);
-    //console.log(notebooks);
+    console.log(notebookName);
+
+    // if (notebookIdChecked === -1)
+    //   notebookIdChecked = 0;
 
     setCurrentNotebookId(notebookIdChecked);
     setCurrentNotebookName(notebookName);
@@ -567,7 +590,7 @@ function NotesInfo(props: IProps) {
                 <tbody>
                   <tr
                     onClick={() => {
-                      handleCheckNotebook(0, allnoteFilterName);
+                      handleCheckNotebook(-1, allnoteFilterName);
                     }}
                     // <tr onClick={() => {setCurrentNotebookId(0)
                     //     setCurrentNotebookName(allnoteFilterName)}}
@@ -581,7 +604,7 @@ function NotesInfo(props: IProps) {
                   </tr>
                   <tr
                     onClick={() => {
-                      handleCheckNotebook(0, withoutnotebookFilterName);
+                      handleCheckNotebook(-2, withoutnotebookFilterName);
                     }}
                     // <tr  onClick={() => {setCurrentNotebookId(0)
                     //     setCurrentNotebookName(withoutnotebookFilterName)}}
@@ -650,7 +673,7 @@ function NotesInfo(props: IProps) {
                   <Select
                     labelId="notes-notebook-select-label"
                     value={currentNotebookId}
-                    onChange={(e) => handleCheckNotebook(Number(e.target.value), notebooks.find(notebook => notebook.id === Number(e.target.value))?.name || "")}
+                    onChange={(e) => handleCheckNotebook(Number(e.target.value), notebooksForSelect.find(notebook => notebook.id === Number(e.target.value))?.name || "")}
                     MenuProps={{
                       PaperProps: {
                         style: {
@@ -660,9 +683,10 @@ function NotesInfo(props: IProps) {
                       },
                     }}
                   >
-                    {notebooks.length > 0 ? (
-                      notebooks.map((notebook) => (
+                    {notebooksForSelect.length > 0 ? (
+                      notebooksForSelect.map((notebook) => (
                         <MenuItem key={notebook.id} value={notebook.id}>
+                        {/* <MenuItem key={notebook.name} value={notebook.id}> */}
                           {notebook.name}
                         </MenuItem>
                       ))
@@ -672,33 +696,39 @@ function NotesInfo(props: IProps) {
                   </Select>
                 </FormControl>
               </div>
-              <div>
+              <div className={
+                      currentNotebookName != withoutnotebookFilterName && currentNotebookName != allnoteFilterName
+                        ? "notebook-small-edit"
+                        : "hide__div"}>
+
                 <button
                   id="notebookEditButton"
                   type="button"
-                  className="manual__button"
+                  // className="manual__button"
+                  className="edit-notebook__button"
                   onClick={handleEditNotebookButtonClick}
                   onKeyDown={handleEditNotebookButtonClick}
                 >
                   <img
                     // className="main-info__edit"
-                    className="notebook-small-edit"
+                    className="notebook-small-edit__img"
                     src="images/edit.svg"
                     alt="edit"
                   />
                 </button>
               </div>
-              <div>
+              <div className="notebook-small-add">
                 <button
                   id="notebookAddButton"
                   type="button"
-                  className="manual__button"
+                  // className="manual__button"
+                  className="edit-notebook__button"
                   onClick={handleAddNotebookButtonClick}
                   onKeyDown={handleAddNotebookButtonClick}
                 >
                   <img
                     // className="main-info__edit"
-                    className="notebook-small-add"
+                    className="notebook-small-add__img"
                     src="images/add.svg"
                     alt="add"
                   />

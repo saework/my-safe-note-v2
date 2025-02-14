@@ -593,14 +593,30 @@ button.delete-modal__button{
     // height: 50px;
     // min-height: 50px;
   }
-  .notebook-small-add{
+  .notebook-small-add__img{
     width: 47px;
     height: 47px;
     margin-left: 10px;
   }
-  .notebook-small-edit{
+  .notebook-small-edit__img{
     width: 47px;
     height: 47px;
     margin-left: 20px;
   }
+  .hide__div{
+    display: none;
+  }
+.edit-notebook__button{
+  border: none;
+  outline: none;
+  padding: 0;
+  color: inherit;
+  background-color: transparent;
+}
+button.notebook-modal__button{
+  width: 100%;
+  height: 50px;
+  // font-size: 18px;
+}
+
 }

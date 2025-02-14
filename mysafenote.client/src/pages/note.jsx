@@ -16,6 +16,8 @@ import { encryptNote, decryptNote } from "../functions";
 import EncryptModal from "../components/encrypt-modal.tsx";
 import DecryptModal from "../components/decrypt-modal.tsx";
 import moment from 'moment-timezone';
+import noteConfig from "../configs/config";
+
 
 const Note = () => {
   //const {noteId, userId} = props;
@@ -51,6 +53,10 @@ const Note = () => {
   const [isEncryptMode, setIsEncryptMode] = useState(true);
 
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  const [notebooksForSelect, setNotebooksForSelect] = useState(notebooks);
+
+  const withoutnotebookFilterName = noteConfig.WITHOUTNOTEBOOK_FILTER_NAME;
 
   //const [userUnfold, setUserUnfold] = useState(true);
   //const [isModal, setModal] = useState(false);
@@ -96,6 +102,40 @@ const Note = () => {
     }
   });
 
+  //!!!
+  useEffect(() => {
+    if (notebooks)
+    {
+    let notebooksForSelectNewVal = [
+      //{ id: -1, name: allnoteFilterName },
+      { id: -2, name: withoutnotebookFilterName }, 
+      ...notebooks];
+    setNotebooksForSelect(notebooksForSelectNewVal);
+    }
+  }, [notebooks]);
+  //!!!
+
+
+  const handleCheckNotebook = (
+    notebookIdCheckedVal
+    //notebookName: string
+  ) => {
+    // let notebookIdChecked = notebookIdCheckedVal;
+
+    // console.log("handleCheckNotebook");
+    // console.log(notebookIdChecked);
+    // //console.log(notebookName);
+
+    // if (notebookIdChecked === -2)
+    //   notebookIdChecked = null;
+
+    //setCurrentNotebookId(notebookIdChecked);
+    setNotebookId(notebookIdCheckedVal)
+    //setCurrentNotebookName(notebookName);
+    //dispatch?.({ type: ACTIONS.CHECK_NOTEBOOK_ID, payload: notebookIdChecked });
+    //dispatch?.({ type: ACTIONS.CHECK_NOTEBOOK_NAME, payload: notebookName });
+  };
+
   const handlerLoadNoteBodyFromServer = async function () {
     //let data = await loadNotesDataFromServer(currentUser, setLoading);
     //let noteBodyFromServer = await loadNoteBodyFromServer(userId, currentNoteId, setLoading);
@@ -131,6 +171,9 @@ const Note = () => {
 
     //console.log(`currentNoteId =${currentNoteId}`);
     //console.log(currentNotebookId);
+    let notebookIdVal = notebookId;
+    if (notebookId === -1 || notebookId === -2)
+      notebookIdVal = null;
 
     if (currentNoteId == 0) {
       //если новая заметка
@@ -142,7 +185,7 @@ const Note = () => {
         // createDate: date.toISOString(), // Используем ISO формат
         // lastChangeDate: date.toISOString(), // Используем ISO формат
         //notebookId: currentNotebookId,
-        notebookId: notebookId,
+        notebookId: notebookIdVal,
         noteBody: noteBody,
         notePasswordHash: notePasswordHash,
         userId,
@@ -155,7 +198,7 @@ const Note = () => {
         createDate: createDate,
         lastChangeDate: date,
         //notebookId: currentNotebookId,
-        notebookId: notebookId,
+        notebookId: notebookIdVal,
         noteBody: noteBody,
         notePasswordHash: notePasswordHash,
         userId,
@@ -163,7 +206,8 @@ const Note = () => {
     }
     //let result = await saveNoteBodyToServer(userId, currentNoteId, content, setLoading);
     //let result = await saveNoteToServer(note, setLoading);
-    //console.log(note);
+    console.log("note");
+    console.log(note);
     let saveNoteResult = await saveNoteToServer(note);
     console.log(saveNoteResult);
 
@@ -442,7 +486,7 @@ const Note = () => {
         /> */}
 
         
-          <FormControl fullWidth>
+          {/* <FormControl fullWidth>
             <InputLabel id="notebook-select-label">Блокнот</InputLabel>
             <Select
               labelId="notebook-select-label"
@@ -459,6 +503,34 @@ const Note = () => {
             >
               {notebooks.length > 0 ? (
                 notebooks.map((notebook) => (
+                  <MenuItem key={notebook.id} value={notebook.id}>
+                    {notebook.name}
+                  </MenuItem>
+                ))
+              ) : (
+                <MenuItem disabled>Нет доступных блокнотов</MenuItem>
+              )}
+            </Select>
+          </FormControl> */}
+
+          <FormControl fullWidth>
+            <InputLabel id="note-notebook-select-label">Блокнот</InputLabel>
+            <Select
+              labelId="note-notebook-select-label"
+              value={notebookId}
+              //onChange={(e) => setNotebookId(e.target.value)}
+              onChange={(e) => handleCheckNotebook(Number(e.target.value))}
+              MenuProps={{
+                PaperProps: {
+                  style: {
+                    maxHeight: 400, // Максимальная высота выпадающего меню
+                    overflowY: "auto", // Прокрутка
+                  },
+                },
+              }}
+            >
+              {notebooksForSelect.length > 0 ? (
+                notebooksForSelect.map((notebook) => (
                   <MenuItem key={notebook.id} value={notebook.id}>
                     {notebook.name}
                   </MenuItem>
