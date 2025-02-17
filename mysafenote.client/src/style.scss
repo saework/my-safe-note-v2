@@ -483,13 +483,34 @@ button.delete-modal__button{
   width: 80px;
   height: 50px;
 }
+button.encrypt-modal__button{
+  width: 100px;
+  height: 50px;
+}
+p.encrypt-modal__p{
+  // font-weight: bold;
+  font-size: 24px;
+}
 .notebook-small-panel{
   display: none;
 }
 .notes-info-find{
   margin: 5px 0 19px 0;
 }
+.note-headpanel__img{
+  display: none;
+}
 
+// .btn-check:checked+.btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check)+.btn:active{
+//   background-color: #007bff;
+// }
+
+button.btn-info:active{
+  background-color: #0066ff !important;
+}
+button.btn-info:hover{
+  background-color: #0066ff !important;
+}
 // .note-add__button{
 //   width: 252px;
 //   height: 47px;
@@ -517,6 +538,18 @@ button.delete-modal__button{
   }
   .main-info__th-num {
     min-width: 46px;
+  }
+  .container, .container-md, .container-sm {
+    max-width: inherit;
+  }
+  .main-info__th-date{
+    display: none;
+  }
+  .main-info-createDate__td{
+    display: none;
+  }
+  .note-headpanel__button{
+    width: 180px;
   }
 }
 
@@ -593,6 +626,12 @@ button.delete-modal__button{
     // height: 50px;
     // min-height: 50px;
   }
+  .css-quhxjy-MuiInputBase-root-MuiOutlinedInput-root{
+    height: 50px;
+  }
+  .notebook-lastChangeDate__div, .notebook-createDate__div{
+    font-size: 16px;
+  }
   .notebook-small-add__img{
     width: 47px;
     height: 47px;
@@ -617,6 +656,53 @@ button.notebook-modal__button{
   width: 100%;
   height: 50px;
   // font-size: 18px;
+}
+.note-headpanel__button{
+  width:50px;
+  height: 50px;
+  border: none;
+  outline: none;
+  padding: 0;
+  color: inherit;
+  background-color: transparent;
+}
+
+button.note-headpanel__button:active {
+  width:50px;
+  height: 50px;
+  border: none;
+  outline: none;
+  padding: 0;
+  color: inherit;
+  background-color: transparent !important;
+}
+
+  button.note-headpanel__button:hover {
+    // width:50px;
+    // height: 50px;
+    border: none;
+    outline: none;
+    // padding: 0;
+    color: inherit;
+    background-color: transparent !important;
+  }
+
+  // .note-headpanel__button .btn :hover{
+  //   background-color: transparent;
+  //   border:none;
+  // }
+  // .note-headpanel__button .btn-check:checked+.btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check)+.btn:active{
+  //   background-color: transparent;
+  //   border:none;
+  // }
+
+.note-headpanel__img{
+  width: 50px;
+  height: 50px;
+  display: block;
+}
+.note-headpanel__label{
+  display: none;
 }
 
 }

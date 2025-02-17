@@ -25,17 +25,25 @@ function EncryptModal(props: IProps) {
       const salt = await bcrypt.genSalt(10);
       const notePasswordHash = await bcrypt.hash(password, salt);
       handleEncrypt(password, notePasswordHash);
-
+      setPassword("");
+      setPasswordRpt("");
       //handleEncrypt(password);
     } else {
       alert("Пароли не совпадают!");
     }
   };
 
+  const handleButtonClose = () => {
+    setPassword("");
+    setPasswordRpt("");
+    handleCloseModal();
+  }
+
   return (
     <Modal
       show={modalShow}
-      onHide={handleCloseModal}
+      // onHide={handleCloseModal}
+      onHide={handleButtonClose}
       backdrop="static"
       keyboard={false}
       aria-labelledby="contained-modal-title-vcenter"
@@ -47,10 +55,11 @@ function EncryptModal(props: IProps) {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p>Зашифровать заметку?</p>
+        <p className="encrypt-modal__p">Зашифровать заметку?</p>
         <label>Пароль</label>
         <input
-          type="text"
+          // type="text"
+          type="password"
           className="form-control"
           placeholder=""
           aria-describedby="findText"
@@ -60,7 +69,8 @@ function EncryptModal(props: IProps) {
         />
         <label>Повтор пароля</label>
         <input
-          type="text"
+          // type="text"
+          type="password"
           className="form-control"
           placeholder=""
           aria-describedby="findText"
@@ -71,8 +81,9 @@ function EncryptModal(props: IProps) {
       </Modal.Body>
       <Modal.Footer>
         {/* <Button onClick={handleEncrypt}>Да</Button> */}
-        <Button onClick={handleEncryptClick}>Да</Button>
-        <Button onClick={handleCloseModal}>Отмена</Button>
+        <Button className="encrypt-modal__button" onClick={handleEncryptClick}>Да</Button>
+        {/* <Button className="encrypt-modal__button" onClick={handleCloseModal}>Отмена</Button> */}
+        <Button className="encrypt-modal__button" onClick={handleButtonClose}>Отмена</Button>
       </Modal.Footer>
     </Modal>
   );

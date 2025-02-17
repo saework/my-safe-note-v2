@@ -1,7 +1,13 @@
 import React, { useState, useRef, useMemo, useContext, useEffect } from "react";
 import JoditEditor from "jodit-react";
 import { Row, Col, Form, Button } from "react-bootstrap";
-import { FormControl, InputLabel, Select, MenuItem, TextField } from "@mui/material";
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  TextField,
+} from "@mui/material";
 import { StateContext } from "../state/notes-context";
 import { ACTIONS, DispatchContext } from "../state/notes-context";
 //import { loadNoteBodyFromServer, saveNoteToServer, saveNotebookToServer, loadNoteDocxFromServer } from "../api/note-api";
@@ -15,9 +21,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { encryptNote, decryptNote } from "../functions";
 import EncryptModal from "../components/encrypt-modal.tsx";
 import DecryptModal from "../components/decrypt-modal.tsx";
-import moment from 'moment-timezone';
+import moment from "moment-timezone";
 import noteConfig from "../configs/config";
-
 
 const Note = () => {
   //const {noteId, userId} = props;
@@ -104,17 +109,16 @@ const Note = () => {
 
   //!!!
   useEffect(() => {
-    if (notebooks)
-    {
-    let notebooksForSelectNewVal = [
-      //{ id: -1, name: allnoteFilterName },
-      { id: -2, name: withoutnotebookFilterName }, 
-      ...notebooks];
-    setNotebooksForSelect(notebooksForSelectNewVal);
+    if (notebooks) {
+      let notebooksForSelectNewVal = [
+        //{ id: -1, name: allnoteFilterName },
+        { id: -2, name: withoutnotebookFilterName },
+        ...notebooks,
+      ];
+      setNotebooksForSelect(notebooksForSelectNewVal);
     }
   }, [notebooks]);
   //!!!
-
 
   const handleCheckNotebook = (
     notebookIdCheckedVal
@@ -130,7 +134,7 @@ const Note = () => {
     //   notebookIdChecked = null;
 
     //setCurrentNotebookId(notebookIdChecked);
-    setNotebookId(notebookIdCheckedVal)
+    setNotebookId(notebookIdCheckedVal);
     //setCurrentNotebookName(notebookName);
     //dispatch?.({ type: ACTIONS.CHECK_NOTEBOOK_ID, payload: notebookIdChecked });
     //dispatch?.({ type: ACTIONS.CHECK_NOTEBOOK_NAME, payload: notebookName });
@@ -172,8 +176,7 @@ const Note = () => {
     //console.log(`currentNoteId =${currentNoteId}`);
     //console.log(currentNotebookId);
     let notebookIdVal = notebookId;
-    if (notebookId === -1 || notebookId === -2)
-      notebookIdVal = null;
+    if (notebookId === -1 || notebookId === -2) notebookIdVal = null;
 
     if (currentNoteId == 0) {
       //если новая заметка
@@ -381,11 +384,8 @@ const Note = () => {
   return (
     <div className="container">
       <div className="note_main-container">
-
-
-<div className="note-headpanel_container">
-
-        {/* <Button
+        <div className="note-headpanel_container">
+          {/* <Button
               id="buttonNoteMenu"
               type="button"
               //variant="success"
@@ -395,59 +395,89 @@ const Note = () => {
             >
               Меню
             </Button> */}
-<Button
-        onClick={handleSaveNoteToServer}
-        id="buttonSaveNote"
-        type="button"
-        variant="success"
-        className="note-headpanel__button"
-      >
-        Сохранить заметку
-      </Button>
+          <Button
+            onClick={handleSaveNoteToServer}
+            id="buttonSaveNote"
+            type="button"
+            variant="success"
+            className="note-headpanel__button"
+          >
+            {/* <label className="note-headpanel__label">Сохранить заметку</label> */}
+            <label className="note-headpanel__label">Сохранить</label>
+            <img
+              className="note-headpanel__img"
+              src="images/save.svg"
+              alt="save"
+            />
+          </Button>
 
-<Button
-        onClick={handleLoadNoteDocxFromServer}
-        id="buttonSaveDocxNote"
-        type="button"
-        variant="success"
-        className="note-headpanel__button"
-      >
-        Скачать в формате docx
-      </Button>
+          <Button
+            onClick={handleLoadNoteDocxFromServer}
+            id="buttonSaveDocxNote"
+            type="button"
+            variant="success"
+            className="note-headpanel__button"
+          >
+            {/* Скачать в формате docx */}
+            <label className="note-headpanel__label">Скачать в docx</label>
+            <img
+              className="note-headpanel__img"
+              src="images/download.svg"
+              alt="download"
+            />
+          </Button>
 
-      <Button
-      onClick={handleEncryptDecryptClick}
-      id="buttonEncryptNote"
-      type="button"
-      variant="success"
-      className="note-headpanel__button"
-    >
-      {isEncryptMode ? 'Зашифровать заметку' : 'Расшифровать заметку'}
-    </Button>
+          <Button
+            onClick={handleEncryptDecryptClick}
+            id="buttonEncryptNote"
+            type="button"
+            variant="success"
+            className="note-headpanel__button"
+          >
+            {/* {isEncryptMode ? "Зашифровать заметку" : "Расшифровать заметку"} */}
+            <label className="note-headpanel__label">{isEncryptMode ? "Зашифровать" : "Расшифровать"}</label>
+            {isEncryptMode ? <img
+              className="note-headpanel__img"
+              src="images/lock.svg"
+              alt="lock"
+            />: 
+            <img
+              className="note-headpanel__img"
+              src="images/key.svg"
+              alt="key"
+            />
+            }
+          </Button>
 
-      <Button
-        onClick={handleExitNote}
-        id="buttonExitNote"
-        type="button"
-        variant="danger"
-        className="note-headpanel__button"
-      >
-        Выйти из заметки
-      </Button>
-</div>
-<TextField
-        label="Название"
-        variant="outlined"
-        value={noteName}
-        onChange={noteNameChangeHandler}
-        // InputProps={{
-        //   className: 'note-name__textfield' // Применяем класс к внутреннему элементу Input
-        // }}
-        // className={'note-name__textfield'}
-        className="note-name__textfield"
-      />
+          <Button
+            onClick={handleExitNote}
+            id="buttonExitNote"
+            type="button"
+            variant="danger"
+            className="note-headpanel__button"
+          >
+            {/* Выйти из заметки */}
+            <label className="note-headpanel__label">Выйти</label>
+            <img
+              className="note-headpanel__img"
+              src="images/exit.svg"
+              alt="exit"
+            />
+          </Button>
+        </div>
+        <TextField
+          label="Название"
+          variant="outlined"
+          value={noteName}
+          onChange={noteNameChangeHandler}
+          // InputProps={{
+          //   className: 'note-name__textfield' // Применяем класс к внутреннему элементу Input
+          // }}
+          // className={'note-name__textfield'}
+          className="note-name__textfield"
+        />
 
-{/* <Form.Group controlId="formNoteName">
+        {/* <Form.Group controlId="formNoteName">
       <Row>
         <Col xs="auto">
           <Form.Label>Название</Form.Label>
@@ -473,7 +503,6 @@ const Note = () => {
           onChange={noteNameChangeHandler}
         /> */}
 
-
         {/* <label>Блокнот</label>
         <input
           type="text"
@@ -485,8 +514,7 @@ const Note = () => {
           readonly
         /> */}
 
-        
-          {/* <FormControl fullWidth>
+        {/* <FormControl fullWidth>
             <InputLabel id="notebook-select-label">Блокнот</InputLabel>
             <Select
               labelId="notebook-select-label"
@@ -513,50 +541,57 @@ const Note = () => {
             </Select>
           </FormControl> */}
 
-          <FormControl fullWidth>
-            <InputLabel id="note-notebook-select-label">Блокнот</InputLabel>
-            <Select
-              labelId="note-notebook-select-label"
-              value={notebookId}
-              //onChange={(e) => setNotebookId(e.target.value)}
-              onChange={(e) => handleCheckNotebook(Number(e.target.value))}
-              MenuProps={{
-                PaperProps: {
-                  style: {
-                    maxHeight: 400, // Максимальная высота выпадающего меню
-                    overflowY: "auto", // Прокрутка
-                  },
+        <FormControl fullWidth>
+          <InputLabel id="note-notebook-select-label">Блокнот</InputLabel>
+          <Select
+            labelId="note-notebook-select-label"
+            value={notebookId}
+            //onChange={(e) => setNotebookId(e.target.value)}
+            onChange={(e) => handleCheckNotebook(Number(e.target.value))}
+            MenuProps={{
+              PaperProps: {
+                style: {
+                  maxHeight: 400, // Максимальная высота выпадающего меню
+                  overflowY: "auto", // Прокрутка
                 },
-              }}
-            >
-              {notebooksForSelect.length > 0 ? (
-                notebooksForSelect.map((notebook) => (
-                  <MenuItem key={notebook.id} value={notebook.id}>
-                    {notebook.name}
-                  </MenuItem>
-                ))
-              ) : (
-                <MenuItem disabled>Нет доступных блокнотов</MenuItem>
-              )}
-            </Select>
-          </FormControl>
+              },
+            }}
+          >
+            {notebooksForSelect.length > 0 ? (
+              notebooksForSelect.map((notebook) => (
+                <MenuItem key={notebook.id} value={notebook.id}>
+                  {notebook.name}
+                </MenuItem>
+              ))
+            ) : (
+              <MenuItem disabled>Нет доступных блокнотов</MenuItem>
+            )}
+          </Select>
+        </FormControl>
 
-         {lastChangeDate && createDate && (
-        <div className="notebook-date-container">
-          <div className="notebook-lastChangeDate__div">
-            <label className="notebook-date-text__label">Последние изменения: </label>
-            {/* <label>{lastChangeDate}</label> */}
-            <label>{moment.utc(lastChangeDate).tz(timeZone).format('DD.MM.YYYY HH:mm')}</label>
-            
+        {lastChangeDate && createDate && (
+          <div className="notebook-date-container">
+            <div className="notebook-lastChangeDate__div">
+              {/* <label className="notebook-date-text__label">Последние изменения: </label> */}
+              <label className="notebook-date-text__label">Изменено: </label>
+              {/* <label>{lastChangeDate}</label> */}
+              <label>
+                {moment
+                  .utc(lastChangeDate)
+                  .tz(timeZone)
+                  .format("DD.MM.YYYY HH:mm")}
+              </label>
+            </div>
+            <div className="notebook-createDate__div">
+              {/* <label className="notebook-date-text__label">Дата создания: </label> */}
+              <label className="notebook-date-text__label">Создано: </label>
+              {/* <label>{createDate}</label> */}
+              <label>
+                {moment.utc(createDate).tz(timeZone).format("DD.MM.YYYY HH:mm")}
+              </label>
+            </div>
           </div>
-          <div className="notebook-createDate__div">
-            <label className="notebook-date-text__label">Дата создания: </label>
-            {/* <label>{createDate}</label> */}
-            <label>{moment.utc(createDate).tz(timeZone).format('DD.MM.YYYY HH:mm')}</label>
-          </div>
-        </div>
-      )}
-
+        )}
       </div>
       <EncryptModal
         modalShow={encryptModalShow}

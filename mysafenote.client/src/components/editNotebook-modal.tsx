@@ -94,7 +94,6 @@ function EditNotebookModal(props: IProps) {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {/* <p>Расшифровать заметку?</p> */}
           <label>Название</label>
           <input
             type="text"

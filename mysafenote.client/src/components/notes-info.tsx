@@ -683,7 +683,7 @@ function NotesInfo(props: IProps) {
                       },
                     }}
                   >
-                    {notebooksForSelect.length > 0 ? (
+                    {notebooksForSelect.length && notebooksForSelect.length > 0 ? (
                       notebooksForSelect.map((notebook) => (
                         <MenuItem key={notebook.id} value={notebook.id}>
                         {/* <MenuItem key={notebook.name} value={notebook.id}> */}

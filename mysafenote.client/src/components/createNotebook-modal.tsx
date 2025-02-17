@@ -54,7 +54,6 @@ function CreateNotebookModal(props: IProps) {
         <Modal.Title id="contained-modal-title-vcenter">Создание блокнота</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {/* <p>Расшифровать заметку?</p> */}
         <label>Название</label>
         <input
           type="text"
