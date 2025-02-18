@@ -511,6 +511,19 @@ button.btn-info:active{
 button.btn-info:hover{
   background-color: #0066ff !important;
 }
+.decrypt-modal-alert{
+  display: block;
+  text-align: center;
+  width: 100%;
+  height: 30px;
+  margin: 10px 0 10px 0;
+  font-size: 18px;
+  color: darkred;
+  font-weight: bold;
+}
+.decrypt-modal__body{
+  padding-bottom: 0px;
+}
 // .note-add__button{
 //   width: 252px;
 //   height: 47px;

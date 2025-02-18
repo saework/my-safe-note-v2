@@ -17,23 +17,31 @@ function DecryptModal(props: IProps) {
   //const { modalShow, handleCloseModal, handleDeleteRow } = props;
   const {modalShow, notePasswordHash, handleCloseModal, handleDecrypt } = props;
   const [password, setPassword] = useState<string>('');
+  const [alertMessage, setAlertMessage] = useState<string>('');
   //const [passwordTrue, setPasswordTrue] = useState<string>('');
 
   const handleDecryptClick = async () => {
        console.log(`notePasswordHash - ${notePasswordHash}`);
-       
+       if (!password)
+        {
+          setAlertMessage("Введите пароль!");
+          return;
+        }
         // Проверяем введенный пароль с хешем
         const isMatch = await bcrypt.compare(password, notePasswordHash);
         if (isMatch) {
           handleDecrypt(password, notePasswordHash); // Если пароли совпадают, вызываем handleDecrypt
           setPassword("");
+          setAlertMessage("");
         } else {
-          alert("Неверный пароль!");
+          //alert("Неверный пароль!");
+          setAlertMessage("Неверный пароль!")
         }
   };
 
     const handleButtonClose = () => {
       setPassword("");
+      setAlertMessage("");
       handleCloseModal();
     }
 
@@ -43,7 +51,8 @@ function DecryptModal(props: IProps) {
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">Расшифровка заметки</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      {/* <Modal.Body className="decrypt-modal__body form-control"> */}
+      <Modal.Body className="decrypt-modal__body">
         {/* <p className="encrypt-modal__p">Расшифровать заметку?</p> */}
         <label>Пароль</label>
         <input
@@ -56,6 +65,7 @@ function DecryptModal(props: IProps) {
           //onChange={setPassword}
           onChange={(e) => setPassword(e.target.value)}
         />
+        <label className="decrypt-modal-alert">{alertMessage}</label>
       </Modal.Body>
       <Modal.Footer>
         {/* <Button onClick={handleEncrypt}>Да</Button> */}

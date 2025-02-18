@@ -17,8 +17,14 @@ function EncryptModal(props: IProps) {
   const { modalShow, handleCloseModal, handleEncrypt } = props;
   const [password, setPassword] = useState<string>("");
   const [passwordRpt, setPasswordRpt] = useState<string>("");
+  const [alertMessage, setAlertMessage] = useState<string>('');
 
   const handleEncryptClick = async () => {
+    if (!password || !passwordRpt)
+    {
+      setAlertMessage("Заполните обязательные поля!");
+      return;
+    }
     if (password === passwordRpt) {
 
       // Хешируем пароль
@@ -27,15 +33,18 @@ function EncryptModal(props: IProps) {
       handleEncrypt(password, notePasswordHash);
       setPassword("");
       setPasswordRpt("");
+      setAlertMessage("");
       //handleEncrypt(password);
     } else {
-      alert("Пароли не совпадают!");
+      //alert("Пароли не совпадают!");
+      setAlertMessage("Пароли не совпадают!")  
     }
   };
 
   const handleButtonClose = () => {
     setPassword("");
     setPasswordRpt("");
+    setAlertMessage("");
     handleCloseModal();
   }
 
@@ -54,11 +63,12 @@ function EncryptModal(props: IProps) {
           Шифрование заметки
         </Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body className="decrypt-modal__body">
         <p className="encrypt-modal__p">Зашифровать заметку?</p>
         <label>Пароль</label>
         <input
           // type="text"
+          required
           type="password"
           className="form-control"
           placeholder=""
@@ -69,6 +79,7 @@ function EncryptModal(props: IProps) {
         />
         <label>Повтор пароля</label>
         <input
+          required
           // type="text"
           type="password"
           className="form-control"
@@ -78,6 +89,7 @@ function EncryptModal(props: IProps) {
           //onChange={setPassword}
           onChange={(e) => setPasswordRpt(e.target.value)}
         />
+        <label className="decrypt-modal-alert">{alertMessage}</label>
       </Modal.Body>
       <Modal.Footer>
         {/* <Button onClick={handleEncrypt}>Да</Button> */}

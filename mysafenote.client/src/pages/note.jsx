@@ -273,22 +273,37 @@ const Note = () => {
   };
 
   //!!!
-  const handleDecrypt = (password, notePasswordHash) => {
+  const handleDecrypt = async (password, notePasswordHash) => {
     //console.log("Зашифрованная заметка:", noteBody);
     //console.log("Введенный пароль:", password);
     //console.log("Хеш пароля:", notePasswordHash);
 
     try {
       //noteBody = "U2FsdGVkX18SUC6B4figL6jypnTd2uhJ4U3TY7NP6Bo="; //!!!убрать!!
-      const decryptedBody = decryptNote(noteBody, password);
+      const decryptedBody =  decryptNote(noteBody, password);
       //console.log("Расшифрованная заметка:", decryptedBody);
       setNoteBody(decryptedBody);
-      setNotePasswordHash(notePasswordHash);
+      // setNotePasswordHash(notePasswordHash);
+      setNotePasswordHash("");
       setDecryptModalShow(false);
-      handleSaveNoteToServer();
+      // handleSaveNoteToServer();
+      const date = new Date();
+      var note = {
+        noteId: currentNoteId,
+        title: noteName,
+        createDate: createDate,
+        lastChangeDate: date,
+        notebookId: notebookId,
+        noteBody: decryptedBody,
+        notePasswordHash: "",
+        userId,
+      };
+  
+      let result = await saveNoteToServer(note);
+      console.log(result);
     } catch (error) {
       console.error("Ошибка при расшифровке:", error);
-      alert("Ошибка при расшифровке: " + error.message);
+      //alert("Ошибка при расшифровке: " + error.message);
     }
   };
   //!!!
@@ -373,12 +388,13 @@ const Note = () => {
   };
 
   const handleEncryptDecryptClick = () => {
-    if (isEncryptMode) {
+    //if (isEncryptMode) {
+    if (!notePasswordHash){
       setEncryptModalShow(true);
     } else {
       setDecryptModalShow(true);
     }
-    setIsEncryptMode(!isEncryptMode);
+    //setIsEncryptMode(!isEncryptMode);
   };
 
   return (
@@ -435,7 +451,7 @@ const Note = () => {
             className="note-headpanel__button"
           >
             {/* {isEncryptMode ? "Зашифровать заметку" : "Расшифровать заметку"} */}
-            <label className="note-headpanel__label">{isEncryptMode ? "Зашифровать" : "Расшифровать"}</label>
+            <label className="note-headpanel__label">{notePasswordHash ? "Расшифровать" : "Зашифровать"}</label>
             {isEncryptMode ? <img
               className="note-headpanel__img"
               src="images/lock.svg"
