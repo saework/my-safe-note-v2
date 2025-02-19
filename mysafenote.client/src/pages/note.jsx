@@ -280,7 +280,7 @@ const Note = () => {
 
     try {
       //noteBody = "U2FsdGVkX18SUC6B4figL6jypnTd2uhJ4U3TY7NP6Bo="; //!!!убрать!!
-      const decryptedBody =  decryptNote(noteBody, password);
+      const decryptedBody = decryptNote(noteBody, password);
       //console.log("Расшифрованная заметка:", decryptedBody);
       setNoteBody(decryptedBody);
       // setNotePasswordHash(notePasswordHash);
@@ -298,7 +298,7 @@ const Note = () => {
         notePasswordHash: "",
         userId,
       };
-  
+
       let result = await saveNoteToServer(note);
       console.log(result);
     } catch (error) {
@@ -389,7 +389,7 @@ const Note = () => {
 
   const handleEncryptDecryptClick = () => {
     //if (isEncryptMode) {
-    if (!notePasswordHash){
+    if (!notePasswordHash) {
       setEncryptModalShow(true);
     } else {
       setDecryptModalShow(true);
@@ -433,6 +433,7 @@ const Note = () => {
             type="button"
             variant="success"
             className="note-headpanel__button"
+            disabled={notePasswordHash}
           >
             {/* Скачать в формате docx */}
             <label className="note-headpanel__label">Скачать в docx</label>
@@ -451,18 +452,23 @@ const Note = () => {
             className="note-headpanel__button"
           >
             {/* {isEncryptMode ? "Зашифровать заметку" : "Расшифровать заметку"} */}
-            <label className="note-headpanel__label">{notePasswordHash ? "Расшифровать" : "Зашифровать"}</label>
-            {isEncryptMode ? <img
-              className="note-headpanel__img"
-              src="images/lock.svg"
-              alt="lock"
-            />: 
-            <img
+            <label className="note-headpanel__label">
+              {notePasswordHash ? "Расшифровать" : "Зашифровать"}
+            </label>
+            {/* {isEncryptMode ? ( */}
+            {notePasswordHash ? (
+              <img
               className="note-headpanel__img"
               src="images/key.svg"
               alt="key"
             />
-            }
+            ) : (
+              <img
+                className="note-headpanel__img"
+                src="images/lock.svg"
+                alt="lock"
+              />
+            )}
           </Button>
 
           <Button
@@ -620,14 +626,22 @@ const Note = () => {
         handleCloseModal={() => setDecryptModalShow(false)}
         handleDecrypt={handleDecrypt}
       />
-      <JoditEditor
-        ref={editor}
-        value={noteBody}
-        config={config}
-        tabIndex={1} // tabIndex of textarea
-        //onBlur={(newNoteBody) => setNoteBody(newNoteBody)} // preferred to use only this option to update the content for performance reasons
-        onBlur={(newNoteBody) => onBlurHandle(newNoteBody)}
-      />
+      <div className="jodit-main-container">
+        <JoditEditor
+          ref={editor}
+          value={noteBody}
+          config={config}
+          tabIndex={1} // tabIndex of textarea
+          //onBlur={(newNoteBody) => setNoteBody(newNoteBody)} // preferred to use only this option to update the content for performance reasons
+          onBlur={(newNoteBody) => onBlurHandle(newNoteBody)}
+          // className="jodit-react-container-block"
+          className={notePasswordHash ? "jodit-note-editor-block" : "jodit-note-editor"}
+        />
+
+        {notePasswordHash && ( <div class="jodit-block-container">
+          <img src="images/lock.svg" alt="lock" />
+        </div>)}
+      </div>
       {/* <button onClick={handleSave}>Save</button> */}
 
       {/* <div className="note-add-container"> 

@@ -420,8 +420,14 @@ width: 90%;
 .jodit-wysiwyg{
   //  min-height: 500px !important;
   //min-height: 500px;
+
   min-height: 70vh !important;
 }
+.jodit-workplace{
+  min-height: 70vh !important;
+  // min-height: 700px !important;
+}
+
 .jodit-react-container{
   // padding: 0px;
   // width: 255px;
@@ -499,6 +505,35 @@ p.encrypt-modal__p{
 }
 .note-headpanel__img{
   display: none;
+}
+div.jodit-react-container-block{
+background-color: white;
+z-index: 9999;
+position: absolute;
+}
+
+.jodit-main-container{
+  position: relative;
+  width: 100%; /* Ширина контейнера */
+  height: 100%; /* Высота контейнера */
+  // border: 1px solid #000; /* Для наглядности */
+  overflow: hidden; /* Скрыть переполнение */
+}
+.jodit-block-container{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8); /* Полупрозрачный белый фон */
+  z-index: 2; /* Наложение на содержимое */
+  display: flex;
+  justify-content: center; /* Центрирование по горизонтали */
+  align-items: center; /* Центрирование по вертикали */
+}
+.jodit-block-container img {
+  max-width: 100px; /* Максимальная ширина изображения */
+  max-height: 100px; /* Максимальная высота изображения */
 }
 
 // .btn-check:checked+.btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check)+.btn:active{
@@ -689,7 +724,6 @@ button.note-headpanel__button:active {
   color: inherit;
   background-color: transparent !important;
 }
-
   button.note-headpanel__button:hover {
     // width:50px;
     // height: 50px;
@@ -699,6 +733,17 @@ button.note-headpanel__button:active {
     color: inherit;
     background-color: transparent !important;
   }
+  button.note-headpanel__button:disabled {
+    // width:50px;
+    // height: 50px;
+    border: none;
+    outline: none;
+    // padding: 0;
+    color: inherit;
+    background-color: transparent !important;
+  }
+
+  
 
   // .note-headpanel__button .btn :hover{
   //   background-color: transparent;
