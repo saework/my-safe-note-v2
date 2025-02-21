@@ -1,18 +1,13 @@
 import _ from "lodash";
-//import React from 'react';
-import React, { useContext } from "react";
 import { getLoginData } from "../functions";
 
-export const saveNotebookToServer = async function (notebookData) {
-  //const url = `api/note/notebody/${noteId}`;
-  //const url = `api/note/notebody`;
+export const saveNotebookToServer = async (notebookData) => {
   const url = `api/notebook/savenotebook`;
   const jwtToken = getLoginData("jwtToken");
   let result = 0;
   if (!_.isEmpty(jwtToken)) {
     console.log(`saveNotebookToServer - jwtToken - ${JSON.stringify(jwtToken)}`);
-    //console.log(notebookData);
-    //console.log(noteDto);
+
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -25,18 +20,15 @@ export const saveNotebookToServer = async function (notebookData) {
         userId: notebookData.userId,
       }),
     });
-    //console.log(response);
     if (response.ok === true) {
-      //console.log(response);
       const resNotebookId = await response.json();
       if (resNotebookId && resNotebookId > 0){
-        console.log("Блокнот сохранен на сервер");
-        //console.log(data);
+        console.log("saveNotebookToServer - Блокнот сохранен на сервер");
         result = resNotebookId;
         }
     } else {
       console.log(
-        `Ошибка при сохранении блокнота на сервер - ${response.statusText}`
+        `saveNotebookToServer - Ошибка при сохранении блокнота на сервер - ${response.statusText}`
       );
     }
   } else {
@@ -45,34 +37,32 @@ export const saveNotebookToServer = async function (notebookData) {
   return result;
 };
 
-export const deleteNotebookFromServer = async function (notebookId) {
+export const deleteNotebookFromServer = async (notebookId) => {
   const url = `api/notebook/${notebookId}`;
-  const jwtToken = getLoginData("jwtToken"); // Получаем токен аутентификации
+  const jwtToken = getLoginData("jwtToken");
   let result = false;
   if (!_.isEmpty(jwtToken)) {
     console.log(
       `deleteNotebookFromServer - jwtToken - ${JSON.stringify(jwtToken)}`
     );
-
     const response = await fetch(url, {
-      method: "DELETE", // Указываем метод DELETE
+      method: "DELETE",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: "Bearer " + jwtToken, // Передаем токен в заголовке
+        Authorization: "Bearer " + jwtToken,
       },
     });
-    //console.log(response);
     if (response.ok) {
         const deletedId = await response.json();
         if (deletedId === notebookId)
         {
-          console.log("Блокнот успешно удален с сервера");
-          return true; // Возвращаем true, если удаление прошло успешно
+          console.log("deleteNotebookFromServer - Блокнот успешно удален с сервера");
+          return true;
         }
     } else {
       console.log(
-        `Ошибка при удалении блокнота с сервера - ${response.statusText}`
+        `deleteNotebookFromServer - Ошибка при удалении блокнота с сервера - ${response.statusText}`
       );
     }
   } else {

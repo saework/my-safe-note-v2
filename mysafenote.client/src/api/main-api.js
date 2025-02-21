@@ -1,17 +1,7 @@
 import _ from "lodash";
-//import React from 'react';
-import React, { useContext } from "react";
-import axios from "axios";
-//import { history, store } from '../store/store';
 import { getLoginData } from "../functions";
-//import { loadBD } from '../actions/actions';
-//import { ISendData } from '../interfaces';
-import { StateContext } from "../state/notes-context";
-//import { ACTIONS, DispatchContext } from "../state/notes-context";
-import { DispatchContext } from "../state/notes-context";
 
-export const loadNotesDataFromServer = async function (userId, setLoading) {
-  
+  export const loadNotesDataFromServer = async (userId) => {
   const jwtToken = getLoginData("jwtToken");
    if (userId === 0 || !userId)  
      userId = getLoginData("userId");
@@ -19,24 +9,21 @@ export const loadNotesDataFromServer = async function (userId, setLoading) {
   if (!_.isEmpty(jwtToken) && (userId > 0)) {
     console.log(`loadNotesDataFromServer - userId = ${userId} jwtToken = ${JSON.stringify(jwtToken)}`);
     
-    const url = `api/note/userid/${userId}`;
-    
+    const url = `api/note/userid/${userId}`; 
     const response = await fetch(url, {
       method: "GET",
       headers: {
         Accept: "application/json",
-        Authorization: "Bearer " + jwtToken, // передача токена в заголовке
+        Authorization: "Bearer " + jwtToken,
       },
     });
-
     if (response.ok === true) {
       const data = await response.json();
-      console.log("Получены данные с сервера");
-      //console.log(data);
+      console.log("loadNotesDataFromServer - Получены данные с сервера");
       return data;
     } else {
       console.log(
-        `Ошибка при получении данных с сервера - ${response.statusText}`
+        `loadNotesDataFromServer - Ошибка при получении данных с сервера - ${response.statusText}`
       );
     }
   } else {
@@ -44,7 +31,7 @@ export const loadNotesDataFromServer = async function (userId, setLoading) {
   }
 };
 
-export const loadNotebooksDataFromServer = async function (userId) {
+export const loadNotebooksDataFromServer = async (userId) => {
   const jwtToken = getLoginData("jwtToken");
    if (userId === 0 || !userId)  
      userId = getLoginData("userId");
@@ -53,7 +40,6 @@ export const loadNotebooksDataFromServer = async function (userId) {
     console.log(`loadNotebooksDataFromServer - userId = ${userId} jwtToken = ${JSON.stringify(jwtToken)}`);
 
     const url = `api/notebook/userid/${userId}`;
-
     const response = await fetch(url, {
       method: "GET",
       headers: {
@@ -61,21 +47,13 @@ export const loadNotebooksDataFromServer = async function (userId) {
         Authorization: "Bearer " + jwtToken,
       },
     });
-
     if (response.ok === true) {
       const data = await response.json();
-      console.log("Получены данные с сервера");
-      console.log(data);
-
-      // const resNotebooksData = {
-      //   id:data.id,
-      //   name:data.name
-      // }
-      // return resNotebooksData;
+      console.log("loadNotebooksDataFromServer - Получены данные с сервера");
       return data;
     } else {
       console.log(
-        `Ошибка при получении данных с сервера - ${response.statusText}`
+        `loadNotebooksDataFromServer - Ошибка при получении данных с сервера - ${response.statusText}`
       );
     }
   } else {
@@ -83,73 +61,28 @@ export const loadNotebooksDataFromServer = async function (userId) {
   }
 };
 
-// export const exportNotesFromServer = async function (userId, setLoading){
-//   const url = `api/note/userid/${userId}`;
-
-//     const jwtToken = getLoginData('jwtToken');
-//     if (!_.isEmpty(jwtToken)) {
-//       console.log(`loadNotesDataFromServer - jwtToken - ${JSON.stringify(jwtToken)}`);
-
-//   const response = await fetch(url, {
-//     method: "GET",
-//     headers: {
-//       "Accept": "application/json",
-//       "Authorization": "Bearer " + jwtToken  // передача токена в заголовке
-//   }
-//   });
-
-//   if (response.ok === true) {
-//     //console.log(response);
-//     const data = await response.json();
-//     console.log('Получены данные с сервера');
-//     //console.log(data);
-//     return data;
-//   }
-//   else
-// {
-//   console.log(`Ошибка при получении данных с сервера - ${response.statusText}`);
-// }
-//     }
-//     else {
-//       console.log('sendBDtoServer - Не определен jwtAuthHeader!');
-//     }
-// };
-
-export const exportNotesFromServer = async function (userId) {
+export const exportNotesFromServer = async (userId) => {
   try {
+    const jwtToken = getLoginData("jwtToken");
+    if (userId === 0 || !userId)  
+      userId = getLoginData("userId");
+ 
+   if (!_.isEmpty(jwtToken) && (userId > 0)) {
+     console.log(`exportNotesFromServer - userId = ${userId} jwtToken = ${JSON.stringify(jwtToken)}`);
+
     const response = await fetch(`/api/Note/export/${userId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        // Добавьте здесь заголовок авторизации, если необходимо
-        // 'Authorization': `Bearer ${token}`
+        "Authorization": `Bearer ${jwtToken}`,
       },
     });
 
     if (!response.ok) {
-      throw new Error("Ошибка при выгрузке заметок");
+      throw new Error("exportNotesFromServer - Ошибка при выгрузке заметок");
     }
 
-
-    // Получаем имя файла из заголовка Content-Disposition
-    // const contentDisposition = response.headers.get("Content-Disposition");
-    // let fileName = "notes.zip"; // Значение по умолчанию
-
-    // if (contentDisposition) {
-    //   const matches = /filename[^*=]*=((['"]).*?\2|[^;\n]*)/.exec(
-    //     contentDisposition
-    //   );
-    //   if (matches != null && matches[1]) {
-    //     fileName = matches[1].replace(/['"]/g, ""); // Удаляем кавычки
-    //   }
-    // }
-   
-    //console.log(contentDisposition);
-    //console.log(fileName);
-
     let fileName = "notes_backup.zip"; // Значение по умолчанию
-
-    // Создаем blob из ответа
     const blob = await response.blob();
 
     // Создаем ссылку для скачивания
@@ -161,36 +94,46 @@ export const exportNotesFromServer = async function (userId) {
     a.click();
     a.remove();
     window.URL.revokeObjectURL(url); // Освобождаем память
+  } else {
+    console.log("exportNotesFromServer - Ошибка. Не определены значения loginData (userId или jwtToken)");
+  }
   } catch (error) {
-    console.error("Ошибка:", error);
-    //alert("Не удалось выгрузить заметки. Пожалуйста, попробуйте еще раз.");
+    console.error("exportNotesFromServer - Ошибка:", error);
   }
 };
 
 
-export const importNotesToServer = async function (userId, file) {
+export const importNotesToServer = async (userId, file) => {
+  try {
+  const jwtToken = getLoginData("jwtToken");
+  if (userId === 0 || !userId)  
+    userId = getLoginData("userId");
+
+ if (!_.isEmpty(jwtToken) && (userId > 0)) {
+   console.log(`importNotesToServer - userId = ${userId} jwtToken = ${JSON.stringify(jwtToken)}`);
 
   const formData = new FormData();
   formData.append('file', file);
   var result = false;
-  try {
+
       const response = await fetch(`/api/Note/import/${userId}`, {
           method: 'POST',
+          headers: {
+            "Authorization": `Bearer ${jwtToken}`,
+          },
           body: formData,
       });
 
       if (!response.ok) {
-        //console.log("Ошибка при загрузке заметок");
-          throw new Error('Ошибка при загрузке заметок');
+          throw new Error('importNotesToServer - Ошибка при загрузке заметок');
       }
-
-      //alert("Заметки успешно загружены!"");
-      console.log("Заметки успешно загружены!");
+      console.log("importNotesToServer - Заметки успешно загружены");
       result = true; 
+    } else {
+      console.log("exportNotesFromServer - Ошибка. Не определены значения loginData (userId или jwtToken)");
+    }
   } catch (error) {
-      console.error('Ошибка:', error);
-      //alert('Не удалось загрузить заметки. Пожалуйста, попробуйте еще раз.');
-      console.log("Не удалось загрузить заметки");
+      console.error('importNotesToServer - Не удалось загрузить заметки. Ошибка:', error);
   }
   return result;
 };

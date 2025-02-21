@@ -1,31 +1,18 @@
 import _ from "lodash";
-//import React from 'react';
-import React, { useContext } from "react";
 import { getLoginData } from "../functions";
-//import { ISendData } from '../interfaces';
-//import { StateContext } from "../state/notes-context";
-//import { ACTIONS, DispatchContext } from "../state/notes-context";
 
-//export const loadNoteBodyFromServer = async function (userId, noteId, setLoading){
-export const loadNoteBodyFromServer = async function (userId, noteId) {
-  //const url = `api/note/notebody/${noteId}`;
+export const loadNoteBodyFromServer = async (userId, noteId) => {
   const url = `api/note/notebody`;
   const jwtToken = getLoginData("jwtToken");
   if (!_.isEmpty(jwtToken)) {
     console.log(
       `loadNoteBodyFromServer - jwtToken - ${JSON.stringify(jwtToken)}`
     );
-
-    //console.log(userId);
-    //console.log(noteId);
-
     const response = await fetch(url, {
       method: "POST",
       headers: {
-        // "Accept": "application/json",
-        // "Authorization": "Bearer " + jwtToken  // передача токена в заголовке
-        Accept: "application/json",
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${jwtToken}`,
       },
       body: JSON.stringify({
         userId: userId,
@@ -34,11 +21,9 @@ export const loadNoteBodyFromServer = async function (userId, noteId) {
     });
 
     if (response.ok === true) {
-      //console.log(response);
       const responseData = await response.json();
 
       var noteData = {
-        //noteId: noteData.noteId,
         noteName: responseData.title,
         createDate: responseData.createDate,
         lastChangeDate: responseData.lastChangeDate,
@@ -46,16 +31,12 @@ export const loadNoteBodyFromServer = async function (userId, noteId) {
         notebookId: responseData.notebookId,
         noteBody: responseData.noteBody,
         notePasswordHash: responseData.notePasswordHash,
-        //userId: noteData.userId,
       };
-      //console.log(responseData);
-      //console.log(noteData);
-      console.log("Получена тело и данные заметки с сервера");
-      //console.log(data);
+      console.log("loadNoteBodyFromServer - Получена тело и данные заметки с сервера");
       return noteData;
     } else {
       console.log(
-        `Ошибка при получении данных с сервера - ${response.statusText}`
+        `loadNoteBodyFromServer - Ошибка при получении данных с сервера - ${response.statusText}`
       );
     }
   } else {
@@ -63,33 +44,17 @@ export const loadNoteBodyFromServer = async function (userId, noteId) {
   }
 };
 
-//export const saveNoteToServer = async function (noteData, setLoading){
-export const saveNoteToServer = async function (noteData) {
-  //const url = `api/note/notebody/${noteId}`;
-  //const url = `api/note/notebody`;
+export const saveNoteToServer = async (noteData) => {
   const url = `api/note/savenote`;
   const jwtToken = getLoginData("jwtToken");
   if (!_.isEmpty(jwtToken)) {
     console.log(`saveNoteToServer - jwtToken - ${JSON.stringify(jwtToken)}`);
-    //console.log(noteData);
-    //console.log(noteDto);
+
     const response = await fetch(url, {
       method: "POST",
       headers: {
-        // "Accept": "application/json",
-        // //"Content-Type": "application/json",
-        // "Authorization": "Bearer " + jwtToken  // передача токена в заголовке
-
-        //   Accept: "application/json",
-        //   "Content-Type": "application/json",
-        // },
-        // body: JSON.stringify(
-        //   {noteData},
-        // ),
-        //body: {noteDto} ,
-
-        Accept: "application/json",
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${jwtToken}`,
       },
       body: JSON.stringify({
         noteId: noteData.noteId,
@@ -101,28 +66,13 @@ export const saveNoteToServer = async function (noteData) {
         notePasswordHash: noteData.notePasswordHash,
         userId: noteData.userId,
       }),
-
-      // body: JSON.stringify({
-      //   noteId: 0,
-      //   title: "noteData.title",
-      //   // createDate: date,
-      //   // lastChangeDate: date,
-      //   notebook: "noteData.notebook",
-      //   noteBody: "noteData.noteBody",
-      //   notePassword: "",
-      //   userId: 1,
-      // }),
     });
-    //console.log(response);
     if (response.ok === true) {
-      //console.log(response);
-      //const noteBody = await response.json();
-      console.log("Заметка сохранена на сервера");
-      //console.log(data);
+      console.log("saveNoteToServer - Заметка сохранена на сервера");
       return true;
     } else {
       console.log(
-        `Ошибка при сохранении заметки на сервер - ${response.statusText}`
+        `saveNoteToServer - Ошибка при сохранении заметки на сервер - ${response.statusText}`
       );
     }
   } else {
@@ -130,9 +80,9 @@ export const saveNoteToServer = async function (noteData) {
   }
 };
 
-export const deleteNoteFromServer = async function (noteId) {
-  const url = `api/note/${noteId}`; // URL для удаления заметки по ID
-  const jwtToken = getLoginData("jwtToken"); // Получаем токен аутентификации
+export const deleteNoteFromServer = async (noteId) => {
+  const url = `api/note/${noteId}`;
+  const jwtToken = getLoginData("jwtToken"); 
 
   if (!_.isEmpty(jwtToken)) {
     console.log(
@@ -140,52 +90,44 @@ export const deleteNoteFromServer = async function (noteId) {
     );
 
     const response = await fetch(url, {
-      method: "DELETE", // Указываем метод DELETE
+      method: "DELETE",
       headers: {
-        Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: "Bearer " + jwtToken, // Передаем токен в заголовке
+        "Authorization": `Bearer ${jwtToken}`,
       },
     });
 
     console.log(response);
     if (response.ok) {
-      console.log("Заметка успешно удалена с сервера");
-      return true; // Возвращаем true, если удаление прошло успешно
+      console.log("deleteNoteFromServer - Заметка успешно удалена с сервера");
+      return true;
     } else {
       console.log(
-        `Ошибка при удалении заметки с сервера - ${response.statusText}`
+        `deleteNoteFromServer - Ошибка при удалении заметки с сервера - ${response.statusText}`
       );
-      return false; // Возвращаем false в случае ошибки
+      return false;
     }
   } else {
     console.log("deleteNoteFromServer - Не определен jwtAuthHeader!");
-    return false; // Возвращаем false, если токен не определен
+    return false;
   }
 };
 
-export const loadNoteDocxFromServer = async function (noteId, noteName) {
+export const loadNoteDocxFromServer = async (noteId, noteName) => {
   const url = "api/note/notedocx";
   try {
-    const jwtToken = getLoginData("jwtToken"); // Получаем токен аутентификации
-
+    const jwtToken = getLoginData("jwtToken");
     if (!_.isEmpty(jwtToken)) {
       console.log(
         `loadNoteDocxFromServer - jwtToken - ${JSON.stringify(jwtToken)}`
       );
       const response = await fetch(url, {
         method: "POST",
-        // headers: {
-        //   //   "Content-Type": "application/json",
-        //   // },
-        //   Accept: "application/json",
-        //   "Content-Type": "application/json",
-        // },
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${jwtToken}`, // Добавляем токен в заголовок
+          "Authorization": `Bearer ${jwtToken}`,
         },
-        body: noteId, // Отправляем noteId в теле запроса
+        body: noteId,
       });
 
       if (!response.ok) {
@@ -203,9 +145,9 @@ export const loadNoteDocxFromServer = async function (noteId, noteName) {
       return true;
     } else {
       console.log("loadNoteDocxFromServer - Не определен jwtAuthHeader!");
-      return false; // Возвращаем false, если токен не определен
+      return false; 
     }
   } catch (error) {
-    console.error("Ошибка при скачивании файла:", error);
+    console.error("loadNoteDocxFromServer - Ошибка при скачивании файла:", error);
   }
 };

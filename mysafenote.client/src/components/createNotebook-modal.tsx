@@ -1,57 +1,66 @@
-//import React from 'react';
 import React, { useState, useContext } from "react";
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button } from "react-bootstrap";
 import { saveNotebookToServer } from "../api/notebook-api";
-import { StateContext } from "../state/notes-context";
 import { ACTIONS, DispatchContext } from "../state/notes-context";
-import '../style.scss';
+import "../style.scss";
 
 interface IProps {
   handleNotebookCloseModal: () => void;
-  handleCheckNotebook: (currentNotebookId: number, currentNotebookName: string) => void
+  handleCheckNotebook: (
+    currentNotebookId: number,
+    currentNotebookName: string
+  ) => void;
   notebookModalShow: boolean;
   userId: number;
 }
 
 function CreateNotebookModal(props: IProps) {
   const dispatch = useContext(DispatchContext);
-  //const notesState = useContext(StateContext);
 
-  const { notebookModalShow,  userId, handleNotebookCloseModal, handleCheckNotebook } = props;
-  const [notebookName, setNotebookName] = useState<string>('');
+  const {
+    notebookModalShow,
+    userId,
+    handleNotebookCloseModal,
+    handleCheckNotebook,
+  } = props;
+  const [notebookName, setNotebookName] = useState<string>("");
 
   const handleCreateNotebookClick = async () => {
     let notebookId = 0;
-    
+
     let notebookData = {
       id: notebookId,
       name: notebookName,
-      userId
+      userId,
     };
-    console.log("saveNotebookResult");
     let savedNotebookId = await saveNotebookToServer(notebookData);
-    if (savedNotebookId > 0)
-    {
-        if (dispatch) {
-          let resNotebookData = {
-            id: savedNotebookId,
-            name: notebookName,
-            userId
-          };
-          dispatch({ type: ACTIONS.ADD_NOTEBOOK, payload: resNotebookData });
-          //dispatch({ type: ACTIONS.CHECK_NOTEBOOK_ID, payload: resNotebookData.id });
-          //dispatch({ type: ACTIONS.CHECK_NOTEBOOK_NAME, payload: resNotebookData.name });
-          handleCheckNotebook(resNotebookData.id, resNotebookData.name);
-          console.log(resNotebookData.id);
-        }
+    if (savedNotebookId > 0) {
+      if (dispatch) {
+        let resNotebookData = {
+          id: savedNotebookId,
+          name: notebookName,
+          userId,
+        };
+        dispatch({ type: ACTIONS.ADD_NOTEBOOK, payload: resNotebookData });
+        handleCheckNotebook(resNotebookData.id, resNotebookData.name);
+      }
     }
     handleNotebookCloseModal();
   };
 
   return (
-    <Modal show={notebookModalShow} onHide={handleNotebookCloseModal} backdrop="static" keyboard={false} aria-labelledby="contained-modal-title-vcenter" centered>
+    <Modal
+      show={notebookModalShow}
+      onHide={handleNotebookCloseModal}
+      backdrop="static"
+      keyboard={false}
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+    >
       <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">Создание блокнота</Modal.Title>
+        <Modal.Title id="contained-modal-title-vcenter">
+          Создание блокнота
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <label>Название</label>
@@ -65,8 +74,19 @@ function CreateNotebookModal(props: IProps) {
         />
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="success" className="notebook-modal__button" onClick={handleCreateNotebookClick}>Создать</Button>
-        <Button className="notebook-modal__button" onClick={handleNotebookCloseModal}>Отмена</Button>
+        <Button
+          variant="success"
+          className="notebook-modal__button"
+          onClick={handleCreateNotebookClick}
+        >
+          Создать
+        </Button>
+        <Button
+          className="notebook-modal__button"
+          onClick={handleNotebookCloseModal}
+        >
+          Отмена
+        </Button>
       </Modal.Footer>
     </Modal>
   );

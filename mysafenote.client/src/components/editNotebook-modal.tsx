@@ -1,9 +1,10 @@
-//import React from 'react';
 import React, { useState, useEffect, useContext } from "react";
 import { Modal, Button } from "react-bootstrap";
-import { saveNotebookToServer, deleteNotebookFromServer } from "../api/notebook-api";
+import {
+  saveNotebookToServer,
+  deleteNotebookFromServer,
+} from "../api/notebook-api";
 import { ACTIONS, DispatchContext } from "../state/notes-context";
-import { StateContext } from "../state/notes-context";
 import DeleteModal from "./delete-modal";
 import "../style.scss";
 
@@ -17,9 +18,6 @@ interface IProps {
 
 function EditNotebookModal(props: IProps) {
   const dispatch = useContext(DispatchContext);
-  //const notesState = useContext(StateContext);
-  
-
 
   const {
     notebookEditModalShow,
@@ -36,26 +34,17 @@ function EditNotebookModal(props: IProps) {
     setNotebookName(currentNotebookName);
   }, [currentNotebookName]);
 
-  // console.log(currentNotebookId);
-  // console.log(currentNotebookName);
-
   const handleEditNotebookClick = async () => {
     let notebookData = {
       id: currentNotebookId,
       name: notebookName,
       userId,
     };
-    console.log("saveNotebookResult");
     let savedNotebookId = await saveNotebookToServer(notebookData);
     if (savedNotebookId > 0) {
-        //const needLoadData = notesState.needLoadData;
-        if (dispatch != null) {
-          dispatch({ type: ACTIONS.NEED_LOAD_DATA, payload: true });
-        }
-
-    //   if (dispatch) {
-    //     dispatch({ type: ACTIONS.ADD_NOTEBOOK, payload: notebookData });
-    //   }
+      if (dispatch != null) {
+        dispatch({ type: ACTIONS.NEED_LOAD_DATA, payload: true });
+      }
     }
     handleNotebookEditCloseModal();
   };
@@ -65,10 +54,8 @@ function EditNotebookModal(props: IProps) {
   };
 
   const handleDeleteNotebook = async () => {
-
-    //удаление заметки
     let deleteResult = await deleteNotebookFromServer(currentNotebookId);
-    console.log(`deleteNotebookFromServer result = ${deleteResult}`);
+    console.log(`handleDeleteNotebook deleteNotebookFromServer result = ${deleteResult}`);
     if (deleteResult === true) {
       if (dispatch != null) {
         dispatch({ type: ACTIONS.NEED_LOAD_DATA, payload: true });
@@ -105,9 +92,26 @@ function EditNotebookModal(props: IProps) {
           />
         </Modal.Body>
         <Modal.Footer className="notebook-modal__container">
-          <Button variant="success" className="notebook-modal__button" onClick={handleEditNotebookClick}>Сохранить</Button>
-          <Button variant="danger" className="notebook-modal__button" onClick={handleDeleteNotebookClick}>Удалить</Button>
-          <Button className="notebook-modal__button" onClick={handleNotebookEditCloseModal}>Отмена</Button>
+          <Button
+            variant="success"
+            className="notebook-modal__button"
+            onClick={handleEditNotebookClick}
+          >
+            Сохранить
+          </Button>
+          <Button
+            variant="danger"
+            className="notebook-modal__button"
+            onClick={handleDeleteNotebookClick}
+          >
+            Удалить
+          </Button>
+          <Button
+            className="notebook-modal__button"
+            onClick={handleNotebookEditCloseModal}
+          >
+            Отмена
+          </Button>
         </Modal.Footer>
       </Modal>
       <DeleteModal

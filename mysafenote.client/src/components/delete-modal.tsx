@@ -1,6 +1,6 @@
-import React from 'react';
-import { Modal, Button } from 'react-bootstrap';
-import '../style.scss';
+import React from "react";
+import { Modal, Button } from "react-bootstrap";
+import "../style.scss";
 
 interface IProps {
   handleDeleteRow: () => void;
@@ -10,10 +10,18 @@ interface IProps {
 }
 
 function DeleteModal(props: IProps) {
-  const { modalShow, deleteObjectName, handleCloseModal, handleDeleteRow } = props;
+  const { modalShow, deleteObjectName, handleCloseModal, handleDeleteRow } =
+    props;
 
   return (
-    <Modal show={modalShow} onHide={handleCloseModal} backdrop="static" keyboard={false} aria-labelledby="contained-modal-title-vcenter" centered>
+    <Modal
+      show={modalShow}
+      onHide={handleCloseModal}
+      backdrop="static"
+      keyboard={false}
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+    >
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">Удаление</Modal.Title>
       </Modal.Header>
@@ -21,8 +29,16 @@ function DeleteModal(props: IProps) {
         <p>Вы действительно хотите удалить {deleteObjectName}?</p>
       </Modal.Body>
       <Modal.Footer>
-        <Button className="delete-modal__button" variant="danger" onClick={handleDeleteRow}>Да</Button>
-        <Button className="delete-modal__button" onClick={handleCloseModal}>Нет</Button>
+        <Button
+          className="delete-modal__button"
+          variant="danger"
+          onClick={handleDeleteRow}
+        >
+          Да
+        </Button>
+        <Button className="delete-modal__button" onClick={handleCloseModal}>
+          Нет
+        </Button>
       </Modal.Footer>
     </Modal>
   );

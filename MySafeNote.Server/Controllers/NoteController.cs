@@ -170,6 +170,7 @@ namespace my_safe_note.Controllers
 
         // Post: api/Note/notebody/
         [HttpPost("notebody/")]
+        [Authorize]
         //public async Task<ActionResult<string>> GetNoteBodyByIdAsync([FromBody] NoteBodyDto noteDto)
         public async Task<ActionResult<NoteDataWithBodyDto>> GetNoteBodyByIdAsync(NoteBodyDto noteDto)
         {
@@ -208,6 +209,7 @@ namespace my_safe_note.Controllers
         }
 
         [HttpPost("savenote/")]
+        [Authorize]
         public async Task<ActionResult<int>> CreateNoteAsync([FromBody] NoteDto noteDto)
         {
             _logger.LogInformation("CreateNoteAsync. Start");
@@ -335,6 +337,7 @@ namespace my_safe_note.Controllers
 
         // DELETE api/Note/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<ActionResult<int>> DeleteNoteByIdAsync(int id)
         {
             var deletedId = await _noteRepository.RemoveAsync(id);
@@ -464,7 +467,7 @@ namespace my_safe_note.Controllers
 
         // POST: api/Note/export
         [HttpPost("export/{userId}")]
-        //[Authorize]
+        [Authorize]
         public async Task<ActionResult> ExportUserNotesToHtmlAsync(int userId)
         {
             _logger.LogInformation($"Экспорт заметок для пользователя с ID: {userId}");
@@ -595,7 +598,7 @@ namespace my_safe_note.Controllers
 
         // POST: api/Note/import/{userId}
         [HttpPost("import/{userId}")]
-        //[Authorize]
+        [Authorize]
         public async Task<ActionResult> UploadNotesFromZipAsync(int userId, IFormFile file)
         {
             if (file == null || file.Length == 0)
