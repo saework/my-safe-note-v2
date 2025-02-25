@@ -1,11 +1,6 @@
 import * as _ from "lodash";
-//import _chunk from 'lodash/chunk';
-
 import React, { useState, useEffect, useContext } from "react";
 import ReactPaginate from "react-paginate";
-//import { connect } from 'react-redux';
-//import { Row, Col, Table, Button } from 'react-bootstrap';
-//import { Row, Col, Table} from 'react-bootstrap';
 import { Button, Form, Container, Row, Col, Table } from "react-bootstrap";
 import {
   FormControl,
@@ -14,52 +9,36 @@ import {
   MenuItem,
   TextField,
 } from "@mui/material";
-//import Button from 'react-bootstrap/Button';
 import { useNavigate } from "react-router-dom";
-//import moment from 'moment';
 import moment from "moment-timezone";
-//import { delNoteRow, checkIdNoteRow, resetStore } from '../actions/actions';
 import { getRowById } from "../functions";
 import { INoteRow, IStore } from "../interfaces";
 import TableSearch from "./table-search";
 import DeleteModal from "./delete-modal";
-
 import CreateNotebookModal from "./createNotebook-modal";
 import EditNotebookModal from "./editNotebook-modal";
 import NotesImport from "./notes-import";
-
-//import { history } from '../store/store';
-//import * as config from '../configs/config';
 import config from "../configs/config";
 import {
   deleteNoteFromServer,
   loadNoteBodyFromServer,
   saveNoteToServer,
 } from "../api/note-api";
-//import { loadNotesDataFromServer, loadNotebooksDataFromServer, exportNotesFromServer, importNotesToServer } from '../api/main-api';
 import { exportNotesFromServer, importNotesToServer } from "../api/main-api";
-//import { saveNotebookToServer } from "../api/notebook-api";
-
 import { StateContext } from "../state/notes-context";
 import { ACTIONS, DispatchContext } from "../state/notes-context";
-//import '../style.scss';
 
 interface IProps {
-  //noteRows: INoteRow[];
   delNoteRow: (NoteRowId: number) => void;
   checkIdNoteRow: (NoteRowId: number) => void;
-  //setBdPeriodVal: (bdPeriodVal: string) => void;
   setButtonAddName: (buttonAddName: string) => void;
   setStartDate: (startDate: Date) => void;
   settitleVal: (titleVal: string) => void;
   setnoteShortTextVal: (noteShortTextVal: string) => void;
   setLastChangeDateVal: (lastChangeDateVal: string) => void;
-  titleRef: any;
-  //handlerSaveToServer: any;
   resetStore: () => void;
   setFormVisible: (formVisible: boolean) => void;
   handlerLoadFromServer: () => void;
-  //userId: number
 }
 
 function NotesInfo(props: IProps) {
@@ -69,20 +48,13 @@ function NotesInfo(props: IProps) {
   const notesState = useContext(StateContext);
   const navigate = useNavigate();
 
-  //const currentUser = notesState.currentUser;
-  //const jwtToken = notesState.jwtToken;
   const noteRows = notesState.noteRows;
   const notebooks = notesState.notebooks;
   const userId = notesState.userId;
   console.log("NotesInfo");
-  //console.log(userId);
   console.log(notesState);
 
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  //const timeZone = "Europe/Moscow";
-  //console.log(timeZone);
-  //!!!
-
   const pageSize = config.PAGINATION_ROW_COUNT;
   const allnoteFilterName = config.ALLNOTES_FILTER_NAME;
   const withoutnotebookFilterName = config.WITHOUTNOTEBOOK_FILTER_NAME;
@@ -91,7 +63,6 @@ function NotesInfo(props: IProps) {
   const [datanoteRows, setDatanoteRows] = useState<INoteRow[]>(noteRows);
   const [filteredData, setFilteredData] = useState<INoteRow[]>(noteRows);
   const [displayData, setDisplayData] = useState<INoteRow[]>(noteRows);
-  // const [sort, setSort] = useState<any>('asc');
   const [sort, setSort] = useState<any>("desc");
   const [search, setSearch] = useState<any>("");
   const [sortRowNum, setSortRowNum] = useState<string>("\u2193");
@@ -100,7 +71,6 @@ function NotesInfo(props: IProps) {
   const [sortRowDate, setSortRowDate] = useState<any>("");
   const [sortRowLastChangeDate, setSortRowLastChangeDate] = useState<any>("");
   const [sortRowPeriod, setSortRowPeriod] = useState<any>("");
-  //const [pageCount, setPageCount] = useState(Math.ceil(noteRows.length / pageSize));
   const [pageCount, setPageCount] = useState(
     Math.ceil((noteRows || []).length / pageSize)
   );
@@ -108,23 +78,16 @@ function NotesInfo(props: IProps) {
   const [modalShow, setModalShow] = useState(false);
   const [notebookModalShow, setNotebookModalShow] = useState(false);
   const [notebookEditModalShow, setNotebookEditModalShow] = useState(false);
-
   const [delRowId, setDelRowId] = useState(0);
-
   const [selectedRowId, setSelectedRowId] = useState(0);
-  //const [selectedNotebookId, setSelectedNotebookId] = useState(0);
   const [currentNotebookId, setCurrentNotebookId] = useState(-1);
-  //const [currentNotebookId, setCurrentNotebookId] = useState(0);
   const [currentNotebookName, setCurrentNotebookName] =
     useState(allnoteFilterName);
 
   const [sortField, setSortField] = useState("lastChangeDate");
-  //const [sortType, setSortType] = useState("desc");
   const [menuVisible, setMenuVisible] = useState(false);
   const [importNotesModalShow, setImportNotesModalShow] = useState(false);
-
   const [notebooksForSelect, setNotebooksForSelect] = useState(notebooks);
-  
 
   const getFinalFilteredData = () => {
     let filteredNotes = datanoteRows;
@@ -150,23 +113,19 @@ function NotesInfo(props: IProps) {
           const titleMatch =
             item.title &&
             item.title.toLowerCase().includes(search.toLowerCase());
-          //const shortTextMatch = item.noteShortText && item.noteShortText.toLowerCase().includes(search.toLowerCase());
           const lastChangeDateMatch =
             item.lastChangeDate &&
             item.lastChangeDate.toLowerCase().includes(search.toLowerCase());
           const createDateMatch =
             item.createDate &&
             item.createDate.toLowerCase().includes(search.toLowerCase());
-          //return titleMatch || shortTextMatch || createDateMatch;
           return titleMatch || lastChangeDateMatch || createDateMatch;
         });
       }
     }
 
     // Сортировка
-    //filteredNotes = _.orderBy(filteredNotes, 'title', sort); // Замените 'title' на нужное поле для сортировки
     filteredNotes = _.orderBy(filteredNotes, sortField, sort);
-
     return filteredNotes;
   };
 
@@ -174,31 +133,20 @@ function NotesInfo(props: IProps) {
     setDatanoteRows(noteRows);
   }, [noteRows]);
 
-
   useEffect(() => {
-    if (notebooks)
-    {
-    let notebooksForSelectNewVal = [
-      //{ id: -1, name: allnoteFilterName },
-      { id: -2, name: withoutnotebookFilterName }, 
-      { id: -1, name: allnoteFilterName },
-      ...notebooks];
-    setNotebooksForSelect(notebooksForSelectNewVal);
+    if (notebooks) {
+      let notebooksForSelectNewVal = [
+        { id: -2, name: withoutnotebookFilterName },
+        { id: -1, name: allnoteFilterName },
+        ...notebooks,
+      ];
+      setNotebooksForSelect(notebooksForSelectNewVal);
     }
   }, [notebooks]);
 
-
   const getPageCount = () => {
-    // return Math.ceil(filteredData.length / pageSize);
     return Math.ceil((filteredData || []).length / pageSize);
   };
-
-  //   useEffect(() => {
-  //   console.log("navigate")
-  //   console.log(userId)
-  //   if (userId === 0 || !userId)
-  //     navigate('/login');
-  // }, [userId]);
 
   useEffect(() => {
     const finalFilteredData = getFinalFilteredData();
@@ -220,83 +168,64 @@ function NotesInfo(props: IProps) {
 
   const handleSortClick = (sortField) => {
     const sortType = sort === "asc" ? "desc" : "asc";
-    //const sortTypeVal = sort === 'asc' ? 'desc' : 'asc';
 
     setSortField(sortField);
-    //setSortType(sortTypeVal);
 
     // Обновляем данные сразу после изменения сортировки
     const finalFilteredData = getFinalFilteredData();
     setFilteredData(finalFilteredData);
     setCurrentPage(0); // Сброс текущей страницы при изменении сортировки
-
     setSort(sortType);
 
     if (sortField === "title") {
       if (sortType === "asc") {
         setSortRowName("\u2193");
-        //setSortRowComm('');
         setSortRowLastChangeDate("");
         setSortRowDate("");
-        //setSortRowPeriod('');
         setSortRowNum("");
       } else {
         setSortRowName("\u2191");
-        //setSortRowComm('');
         setSortRowLastChangeDate("");
         setSortRowDate("");
-        //setSortRowPeriod('');
         setSortRowNum("");
       }
     }
     if (sortField === "lastChangeDate") {
       if (sortType === "asc") {
         setSortRowName("");
-        //setSortRowComm('\u2193');
         setSortRowLastChangeDate("\u2193");
         setSortRowDate("");
-        //setSortRowPeriod('');
         setSortRowNum("");
       } else {
         setSortRowName("");
-        //setSortRowComm('\u2191');
         setSortRowLastChangeDate("\u2193");
         setSortRowDate("");
-        //setSortRowPeriod('');
         setSortRowNum("");
       }
     }
     if (sortField === "createDate") {
       if (sortType === "asc") {
         setSortRowName("");
-        //setSortRowComm('');
         setSortRowLastChangeDate("");
         setSortRowDate("\u2193");
-        //setSortRowPeriod('');
         setSortRowNum("");
       } else {
         setSortRowName("");
-        //setSortRowComm('');
         setSortRowLastChangeDate("");
         setSortRowDate("\u2191");
-        //setSortRowPeriod('');
         setSortRowNum("");
       }
     }
     if (sortField === "id") {
       if (sortType === "asc") {
         setSortRowName("");
-        //setSortRowComm('');
         setSortRowLastChangeDate("");
         setSortRowDate("");
-        //setSortRowPeriod('');
         setSortRowNum("\u2193");
       } else {
         setSortRowName("");
-        //setSortRowComm('');
         setSortRowLastChangeDate("");
         setSortRowDate("");
-        //setSortRowPeriod('');
         setSortRowNum("\u2191");
       }
     }
@@ -314,26 +243,20 @@ function NotesInfo(props: IProps) {
 
   const handleExitButtonClick = () => {
     localStorage.removeItem("loginData");
-    //dispatch({ type: "NEED_LOAD_DATA", payload: true });
     dispatch?.({ type: ACTIONS.RESET_STORE, payload: 0 });
     navigate("/login");
   };
 
   const handleDelButtonClick = (NoteRowId: number) => {
     setDelRowId(NoteRowId);
-    //console.log(NoteRowId);
     setModalShow(true);
   };
-  //const handleDeleteRow = () => {
-  const handleDeleteRow = async function () {
+
+  const handleDeleteRow = async () => {
     if (delRowId !== 0) {
-      console.log("handleDeleteRow start");
       var delResult = await deleteNoteFromServer(delRowId);
-      console.log(delResult);
-      //handlerLoadFromServer();
       dispatch?.({ type: ACTIONS.NEED_LOAD_DATA, payload: true });
       setModalShow(false);
-      console.log("handleDeleteRow end");
       navigate("/main");
     }
   };
@@ -342,12 +265,8 @@ function NotesInfo(props: IProps) {
     setNotebookModalShow(true);
   };
 
-  //const handleEditButtonClick = (NoteRowId : number) => {
-  const handleEditButtonClick = async function (currentNoteId) {
-    //const userId = notesState.userId;
-    //const currentNoteId = notesState.currentNoteId;
+  const handleEditButtonClick = async (currentNoteId) => {
     dispatch?.({ type: ACTIONS.CHECK_ID_ROW, payload: currentNoteId });
-    //let noteBodyFromServer = await loadNoteBodyFromServer(userId, currentNoteId);
     const url = "/note";
     navigate(url);
   };
@@ -356,19 +275,11 @@ function NotesInfo(props: IProps) {
     setNotebookEditModalShow(true);
   };
 
-  //const handleCheckNotebook = (notebookId, notebookName) => {
   const handleCheckNotebook = (
     notebookIdCheckedVal: number,
     notebookName: string
   ) => {
     let notebookIdChecked = notebookIdCheckedVal;
-
-    console.log("handleCheckNotebook");
-    console.log(notebookIdChecked);
-    console.log(notebookName);
-
-    // if (notebookIdChecked === -1)
-    //   notebookIdChecked = 0;
 
     setCurrentNotebookId(notebookIdChecked);
     setCurrentNotebookName(notebookName);
@@ -383,53 +294,13 @@ function NotesInfo(props: IProps) {
     navigate(url);
   };
 
-  // const handleMenuButtonClick = (e) => {
-  //   //e.preventDefault();
-  //   dispatch({ type: ACTIONS.CHECK_ID_ROW, payload: 0 });
-  //   const url = '/note';
-  //   navigate(url);
-  // }
-
   const handleMenuButtonClick = () => {
-    console.log("Меню кнопка нажата");
-    console.log(menuVisible);
     setMenuVisible(!menuVisible); // Переключаем видимость выпадающего списка
   };
 
-  const handleFirstOptionClick = () => {
-    console.log("Первая кнопка нажата");
-    setMenuVisible(false); // Закрываем меню после нажатия
-  };
-
-  const handleSecondOptionClick = () => {
-    console.log("Вторая кнопка нажата");
-    setMenuVisible(false);
-  };
-
-  const handlerExportNotesFromServer = async function () {
-    console.log("handlerExportNotesFromServer");
-    //console.log(data);
+  const handlerExportNotesFromServer = async () => {
     await exportNotesFromServer(userId);
   };
-
-  // const handlerImportNotesToServer = async function (){
-  //   console.log("handlerImportNotesToServer");
-
-  //   if (!file) {
-  //     alert('Пожалуйста, выберите zip-файл для загрузки.');
-  //     return;
-  //   }
-  //   //await importNotesToServer(userId, file);
-  //   var result = await importNotesToServer(userId, file);
-  //   //console.log(result);
-  //   if (result === true)
-  //   {
-  //     handlerLoadFromServer();
-  //   }
-  // }
-  // const handleFileChange = (event) => {
-  //   setFile(event.target.files[0]);
-  // };
 
   const handlerImportNotes = function () {
     setImportNotesModalShow(true);
@@ -450,7 +321,6 @@ function NotesInfo(props: IProps) {
           userId={userId}
           notebookModalShow={notebookModalShow}
           handleNotebookCloseModal={() => setNotebookModalShow(false)}
-          // handleCheckNotebook={() => handleCheckNotebook}
           handleCheckNotebook={handleCheckNotebook}
         />
         <EditNotebookModal
@@ -466,7 +336,6 @@ function NotesInfo(props: IProps) {
             <Button
               id="buttonMenu"
               type="button"
-              //variant="success"
               variant="info"
               onClick={handleMenuButtonClick}
               className="menu__button"
@@ -474,13 +343,6 @@ function NotesInfo(props: IProps) {
               Меню
             </Button>
           </div>
-
-          {/* <div className = "menu-container">
-              <div className="sub-menu__button">
-            {menuVisible && ( <Button onClick={handleFirstOptionClick} type="button" variant="danger" className="sub-menu__button1">Первая кнопка</Button>
-            )}
-            </div>
-             </div> */}
           <div
             className="menu-container"
             onMouseEnter={handleMouseEnter}
@@ -488,8 +350,6 @@ function NotesInfo(props: IProps) {
           >
             {menuVisible && (
               <div className="main-menu-dropdown">
-                {/* <Button onClick={handleFirstOptionClick} type="button" className="main-menu-dropdown__button" variant="danger">Первая кнопка</Button> */}
-
                 <Button
                   onClick={handlerExportNotesFromServer}
                   id="buttonExportNotes"
@@ -510,17 +370,6 @@ function NotesInfo(props: IProps) {
                 >
                   Загрузить заметки
                 </Button>
-
-                {/* <div>
-              <input type="file" accept=".zip" onChange={handleFileChange} />
-                <button onClick={handlerImportNotesToServer}>Загрузить заметки</button>
-              </div> */}
-
-                {/* <Alert className="message__alert_center" variant="light" id="mainLabel">
-          {handlerLoading()}
-        </Alert> */}
-
-                {/* <Button onClick={handleSecondOptionClick} type="button" className="main-menu-dropdown__button" variant="light">Вторая кнопка</Button> */}
               </div>
             )}
           </div>
@@ -529,30 +378,19 @@ function NotesInfo(props: IProps) {
             handlerLoadFromServer={handlerLoadFromServer}
             importNotesModalShow={importNotesModalShow}
             handleImportNotesCloseModal={() => setImportNotesModalShow(false)}
-            // handlerImportNotesToServer={handlerImportNotesToServer}
           />
-
           <div className="main-info__page-capt">Мои заметки</div>
           <div>
             <Button
               id="buttonExit"
               type="button"
               variant="danger"
-              // block
               onClick={handleExitButtonClick}
               className="exit__button"
             >
               Выйти
             </Button>
           </div>
-          {/* <div className = "menu-container"> */}
-          {/* {menuVisible && (
-             <div className="dropdown-menu">
-               <Button onClick={handleFirstOptionClick} type="button" variant="danger" className="exit__button">Первая кнопка</Button>
-              <Button onClick={handleSecondOptionClick} type="button" variant="light">Вторая кнопка</Button>
-             </div> 
-          )} */}
-          {/* </div> */}
         </div>
 
         <DeleteModal
@@ -576,11 +414,8 @@ function NotesInfo(props: IProps) {
                 Добавить блокнот
               </Button>
             </div>
-
-            {/* <div>{currentNotebookId}</div> */}
             <div className="notebook-table-container">
               {" "}
-              {/* Оберните таблицу в новый div */}
               <Table responsive="sm">
                 <thead>
                   <tr>
@@ -592,8 +427,6 @@ function NotesInfo(props: IProps) {
                     onClick={() => {
                       handleCheckNotebook(-1, allnoteFilterName);
                     }}
-                    // <tr onClick={() => {setCurrentNotebookId(0)
-                    //     setCurrentNotebookName(allnoteFilterName)}}
                     className={
                       currentNotebookName === allnoteFilterName
                         ? "main-info__tr-selected"
@@ -606,8 +439,6 @@ function NotesInfo(props: IProps) {
                     onClick={() => {
                       handleCheckNotebook(-2, withoutnotebookFilterName);
                     }}
-                    // <tr  onClick={() => {setCurrentNotebookId(0)
-                    //     setCurrentNotebookName(withoutnotebookFilterName)}}
                     className={
                       currentNotebookName === withoutnotebookFilterName
                         ? "main-info__tr-selected"
@@ -616,15 +447,12 @@ function NotesInfo(props: IProps) {
                   >
                     <td>{withoutnotebookFilterName}</td>
                   </tr>
-                  {/* {notebooks.length > 0 && ( */}
                   {notebooks && notebooks.length > 0 && (
                     <>
                       {notebooks.map((notebook, index) => (
                         <tr
                           key={notebook.id}
                           onDoubleClick={() => handleEditNotebookButtonClick()}
-                          // onClick={() => {setCurrentNotebookId(notebook.id)
-                          //   setCurrentNotebookName(notebook.name)
                           onClick={() =>
                             handleCheckNotebook(notebook.id, notebook.name)
                           } // Устанавливаем выделенную строку
@@ -665,15 +493,23 @@ function NotesInfo(props: IProps) {
             </div>
           </div>
           <div className="main-form__notesinfo-container">
-
-          <div className="notebook-small-panel">
+            <div className="notebook-small-panel">
               <div className="notebook-small-panel__select">
                 <FormControl fullWidth>
-                  <InputLabel id="notes-notebook-select-label">Блокнот</InputLabel>
+                  <InputLabel id="notes-notebook-select-label">
+                    Блокнот
+                  </InputLabel>
                   <Select
                     labelId="notes-notebook-select-label"
                     value={currentNotebookId}
-                    onChange={(e) => handleCheckNotebook(Number(e.target.value), notebooksForSelect.find(notebook => notebook.id === Number(e.target.value))?.name || "")}
+                    onChange={(e) =>
+                      handleCheckNotebook(
+                        Number(e.target.value),
+                        notebooksForSelect.find(
+                          (notebook) => notebook.id === Number(e.target.value)
+                        )?.name || ""
+                      )
+                    }
                     MenuProps={{
                       PaperProps: {
                         style: {
@@ -683,10 +519,10 @@ function NotesInfo(props: IProps) {
                       },
                     }}
                   >
-                    {notebooksForSelect.length && notebooksForSelect.length > 0 ? (
+                    {notebooksForSelect.length &&
+                    notebooksForSelect.length > 0 ? (
                       notebooksForSelect.map((notebook) => (
                         <MenuItem key={notebook.id} value={notebook.id}>
-                        {/* <MenuItem key={notebook.name} value={notebook.id}> */}
                           {notebook.name}
                         </MenuItem>
                       ))
@@ -696,21 +532,22 @@ function NotesInfo(props: IProps) {
                   </Select>
                 </FormControl>
               </div>
-              <div className={
-                      currentNotebookName != withoutnotebookFilterName && currentNotebookName != allnoteFilterName
-                        ? "notebook-small-edit"
-                        : "hide__div"}>
-
+              <div
+                className={
+                  currentNotebookName != withoutnotebookFilterName &&
+                  currentNotebookName != allnoteFilterName
+                    ? "notebook-small-edit"
+                    : "hide__div"
+                }
+              >
                 <button
                   id="notebookEditButton"
                   type="button"
-                  // className="manual__button"
                   className="edit-notebook__button"
                   onClick={handleEditNotebookButtonClick}
                   onKeyDown={handleEditNotebookButtonClick}
                 >
                   <img
-                    // className="main-info__edit"
                     className="notebook-small-edit__img"
                     src="images/edit.svg"
                     alt="edit"
@@ -721,35 +558,17 @@ function NotesInfo(props: IProps) {
                 <button
                   id="notebookAddButton"
                   type="button"
-                  // className="manual__button"
                   className="edit-notebook__button"
                   onClick={handleAddNotebookButtonClick}
                   onKeyDown={handleAddNotebookButtonClick}
                 >
                   <img
-                    // className="main-info__edit"
                     className="notebook-small-add__img"
                     src="images/add.svg"
                     alt="add"
                   />
                 </button>
               </div>
-              {/* <div>
-                <button
-                  id="notebookEditButton"
-                  type="button"
-                  className="manual__button"
-                  onClick={handleEditNotebookButtonClick}
-                  onKeyDown={handleEditNotebookButtonClick}
-                >
-                  <img
-                    // className="main-info__edit"
-                    className="notebook-small-edit"
-                    src="images/edit.svg"
-                    alt="edit"
-                  />
-                </button>
-              </div> */}
             </div>
 
             <div className="main-form__add-container">
@@ -758,74 +577,12 @@ function NotesInfo(props: IProps) {
                 id="buttonAdd"
                 type="button"
                 variant="success"
-                size="lg" 
+                size="lg"
                 className="main-form__button-add"
               >
                 Добавить заметку
               </Button>
             </div>
-
-            {/* <div className="notebook-small-panel">
-              <div className="notebook-small-panel__select">
-                <FormControl fullWidth>
-                  <InputLabel id="notes-notebook-select-label">Блокнот</InputLabel>
-                  <Select
-                    labelId="notes-notebook-select-label"
-                    value={currentNotebookId}
-                    onChange={(e) => handleCheckNotebook(Number(e.target.value), notebooks.find(notebook => notebook.id === Number(e.target.value))?.name || "")}
-                    MenuProps={{
-                      PaperProps: {
-                        style: {
-                          maxHeight: 400, // Максимальная высота выпадающего меню
-                          overflowY: "auto", // Прокрутка
-                        },
-                      },
-                    }}
-                  >
-                    {notebooks.length > 0 ? (
-                      notebooks.map((notebook) => (
-                        <MenuItem key={notebook.id} value={notebook.id}>
-                          {notebook.name}
-                        </MenuItem>
-                      ))
-                    ) : (
-                      <MenuItem disabled>Нет доступных блокнотов</MenuItem>
-                    )}
-                  </Select>
-                </FormControl>
-              </div>
-              <div>
-                <button
-                  id="notebookAddButton"
-                  type="button"
-                  className="manual__button"
-                  onClick={handleAddNotebookButtonClick}
-                  onKeyDown={handleAddNotebookButtonClick}
-                >
-                  <img
-                    className="main-info__edit"
-                    src="images/add.svg"
-                    alt="add"
-                  />
-                </button>
-              </div>
-              <div>
-                <button
-                  id="notebookEditButton"
-                  type="button"
-                  className="manual__button"
-                  onClick={handleEditNotebookButtonClick}
-                  onKeyDown={handleEditNotebookButtonClick}
-                >
-                  <img
-                    className="main-info__edit"
-                    src="images/edit.svg"
-                    alt="edit"
-                  />
-                </button>
-              </div>
-            </div> */}
-
             <Table responsive="sm">
               <thead>
                 <tr>
@@ -841,11 +598,6 @@ function NotesInfo(props: IProps) {
                   >
                     Название {sortRowName}
                   </th>
-                  {/* <th className="main-info__th-text" onClick={() => handleSortClick('noteShortText')}>
-                Подробности
-                {' '}
-                {sortRowComm}
-              </th> */}
                   <th
                     className="main-info__th-date"
                     onClick={() => handleSortClick("lastChangeDate")}
@@ -858,18 +610,12 @@ function NotesInfo(props: IProps) {
                   >
                     Создано {sortRowDate}
                   </th>
-                  {/* <th className="main-info__th-period" onClick={() => handleSortClick('bdPeriod')}>
-                Период
-                {' '}
-                {sortRowPeriod}
-              </th> */}
                   <th className="main-info__th-edit"> </th>
                   <th className="main-info__th-delete"> </th>
                 </tr>
               </thead>
 
               <tbody>
-                {/* {noteRows.length > 0 && ( */}
                 {noteRows && noteRows.length > 0 && (
                   <>
                     {displayData.map((NoteRow, index) => (
@@ -877,7 +623,6 @@ function NotesInfo(props: IProps) {
                         key={NoteRow.id}
                         onDoubleClick={() => handleEditButtonClick(NoteRow.id)}
                         onClick={() => setSelectedRowId(NoteRow.id)} // Устанавливаем выделенную строку
-                        // style={{ backgroundColor: selectedRowId === NoteRow.id ? '#d3d3d3' : 'transparent' }}
                         className={
                           selectedRowId === NoteRow.id
                             ? "main-info__tr-selected"
@@ -892,8 +637,6 @@ function NotesInfo(props: IProps) {
                           <td>{index + 1 + currentPage * pageSize}</td>
                         )}
                         <td>{NoteRow.title}</td>
-                        {/* <td>{NoteRow.noteShortText}</td> */}
-                        {/* <td>{moment(NoteRow.lastChangeDate).format('DD.MM.YYYY HH:mm')}</td> */}
                         <td className="main-info-createDate__td">
                           {moment
                             .utc(NoteRow.lastChangeDate)
@@ -906,7 +649,6 @@ function NotesInfo(props: IProps) {
                             .tz(timeZone)
                             .format("DD.MM.YYYY HH:mm")}
                         </td>
-                        {/* <td>{NoteRow.bdPeriod}</td> */}
                         <td className="main-info__td-edit">
                           <div>
                             <button
@@ -956,7 +698,6 @@ function NotesInfo(props: IProps) {
                 )}
               </tbody>
             </Table>
-            {/* {noteRows.length > pageSize && ( */}
             {pageCount > 1 && ( // Условие для отображения пагинации
               <ReactPaginate
                 breakLabel="..."
