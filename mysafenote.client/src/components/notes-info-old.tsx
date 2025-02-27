@@ -23,10 +23,6 @@ import { exportNotesFromServer } from "../api/main-api";
 import { StateContext } from "../state/notes-context";
 import { ACTIONS, DispatchContext } from "../state/notes-context";
 
-import NotesTable from './notes-table';
-import NotebookList from './notebook-list';
-import Menu from './menu';
-
 interface IProps {
   handlerLoadFromServer: () => void;
 }
@@ -354,16 +350,7 @@ useEffect(() => {
         />
 
         <div className="main-info__capt-container">
-        <Menu 
-            handleMouseEnter={handleMouseEnter}
-            handleMouseLeave={handleMouseLeave}
-            handleMenuButtonClick={handleMenuButtonClick}
-            handlerExportNotesFromServer={handlerExportNotesFromServer}
-            handlerImportNotes={handlerImportNotes}
-            menuVisible = {menuVisible}
-        />
-
-          {/* <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+          <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
             <Button
               id="buttonMenu"
               type="button"
@@ -403,7 +390,7 @@ useEffect(() => {
                 </Button>
               </div>
             )}
-          </div> */}
+          </div>
           <NotesImport
             userId={userId}
             handlerLoadFromServer={handlerLoadFromServer}
@@ -430,24 +417,9 @@ useEffect(() => {
           handleDeleteRow={handleDeleteRow}
           deleteObjectName={"заметку"}
         />
-
         <TableSearch onSearch={searchHandler} />
-
         <div className="main-form__container">
-
-        <NotebookList
-          notebooks={notebooks}
-          currentNotebookId={currentNotebookId}
-          handleAddNotebookButtonClick={handleAddNotebookButtonClick}
-          handleCheckNotebook={handleCheckNotebook}
-          allnoteFilterName={allnoteFilterName}
-          withoutnotebookFilterName={withoutnotebookFilterName}
-          handleEditNotebookButtonClick={handleEditNotebookButtonClick}
-
-        />
-
-
-          {/* <div className="main-form__notebooks-container">
+          <div className="main-form__notebooks-container">
             <div className="notebook__add-container">
               <Button
                 onClick={handleAddNotebookButtonClick}
@@ -465,7 +437,7 @@ useEffect(() => {
               <Table responsive="sm">
                 <thead>
                   <tr>
-                    <th className="main-info-notebook__th">{}</th>
+                    <th className="main-info-notebook__th">{/* Блокноты */}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -537,8 +509,7 @@ useEffect(() => {
                 </tbody>
               </Table>
             </div>
-          </div> */}
-
+          </div>
           <div className="main-form__notesinfo-container">
             <div className="notebook-small-panel">
               <div className="notebook-small-panel__select">
