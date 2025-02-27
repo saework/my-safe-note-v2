@@ -9,10 +9,10 @@ export const getcurrentNoteId = (): number | undefined => {
   const currentNoteId = notesState?.currentNoteId;
   return currentNoteId;
 };
-export const getRowById = (NoteRowId: number): INoteRow => {
+export const getRowById = (noteRowId: number): INoteRow => {
   const notesState = useContext(StateContext);
   const noteRows = notesState?.noteRows;
-  const NoteRow = _find(noteRows as INoteRow[], { id: NoteRowId }) as INoteRow;
+  const NoteRow = _find(noteRows as INoteRow[], { id: noteRowId }) as INoteRow;
   return NoteRow;
 };
 export const validateEmail = (email: string): boolean => {

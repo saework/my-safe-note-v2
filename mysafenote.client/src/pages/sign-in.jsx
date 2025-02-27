@@ -8,7 +8,7 @@ import Container from "@mui/material/Container";
 import { Link, useNavigate } from "react-router-dom";
 import signInApi from "../api/signin-api";
 import Copyright from "../components/copyright";
-import { StateContext } from "../state/notes-context";
+// import { StateContext } from "../state/notes-context";
 import { ACTIONS, DispatchContext } from "../state/notes-context";
 import "../style.scss";
 

@@ -1,43 +1,29 @@
 import * as _ from "lodash";
-import React, { useState, useEffect, useContext } from "react";
+//import {_} from "lodash";
+import React, { useState, useEffect, useContext, useMemo, useCallback } from "react";
 import ReactPaginate from "react-paginate";
-import { Button, Form, Container, Row, Col, Table } from "react-bootstrap";
+import { Button, Row, Col, Table } from "react-bootstrap";
 import {
   FormControl,
   InputLabel,
   Select,
-  MenuItem,
-  TextField,
+  MenuItem
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import moment from "moment-timezone";
-import { getRowById } from "../functions";
-import { INoteRow, IStore } from "../interfaces";
+import { INoteRow, IRootReducer } from "../interfaces";
 import TableSearch from "./table-search";
 import DeleteModal from "./delete-modal";
 import CreateNotebookModal from "./createNotebook-modal";
 import EditNotebookModal from "./editNotebook-modal";
 import NotesImport from "./notes-import";
 import config from "../configs/config";
-import {
-  deleteNoteFromServer,
-  loadNoteBodyFromServer,
-  saveNoteToServer,
-} from "../api/note-api";
-import { exportNotesFromServer, importNotesToServer } from "../api/main-api";
+import { deleteNoteFromServer } from "../api/note-api";
+import { exportNotesFromServer } from "../api/main-api";
 import { StateContext } from "../state/notes-context";
 import { ACTIONS, DispatchContext } from "../state/notes-context";
 
 interface IProps {
-  delNoteRow: (NoteRowId: number) => void;
-  checkIdNoteRow: (NoteRowId: number) => void;
-  setButtonAddName: (buttonAddName: string) => void;
-  setStartDate: (startDate: Date) => void;
-  settitleVal: (titleVal: string) => void;
-  setnoteShortTextVal: (noteShortTextVal: string) => void;
-  setLastChangeDateVal: (lastChangeDateVal: string) => void;
-  resetStore: () => void;
-  setFormVisible: (formVisible: boolean) => void;
   handlerLoadFromServer: () => void;
 }
 
@@ -48,9 +34,14 @@ function NotesInfo(props: IProps) {
   const notesState = useContext(StateContext);
   const navigate = useNavigate();
 
+  if (!notesState) {
+    return <div>Загрузка...</div>; 
+  }
+
   const noteRows = notesState.noteRows;
   const notebooks = notesState.notebooks;
   const userId = notesState.userId;
+
   console.log("NotesInfo");
   console.log(notesState);
 
@@ -61,19 +52,27 @@ function NotesInfo(props: IProps) {
 
   const [needSave, setNeedSave] = useState<boolean>(false);
   const [datanoteRows, setDatanoteRows] = useState<INoteRow[]>(noteRows);
-  const [filteredData, setFilteredData] = useState<INoteRow[]>(noteRows);
-  const [displayData, setDisplayData] = useState<INoteRow[]>(noteRows);
+  // const [filteredData, setFilteredData] = useState<INoteRow[]>(noteRows);
+  // const [displayData, setDisplayData] = useState<INoteRow[]>(noteRows);
+    const [filteredData, setFilteredData] = useState<INoteRow[]>([]);
+  const [displayData, setDisplayData] = useState<INoteRow[]>([]);
   const [sort, setSort] = useState<any>("desc");
   const [search, setSearch] = useState<any>("");
+
   const [sortRowNum, setSortRowNum] = useState<string>("\u2193");
   const [sortRowName, setSortRowName] = useState<string>("");
-  const [sortRowComm, setSortRowComm] = useState<any>("");
+
+  //const [sortRowComm, setSortRowComm] = useState<any>("");
   const [sortRowDate, setSortRowDate] = useState<any>("");
   const [sortRowLastChangeDate, setSortRowLastChangeDate] = useState<any>("");
-  const [sortRowPeriod, setSortRowPeriod] = useState<any>("");
-  const [pageCount, setPageCount] = useState(
-    Math.ceil((noteRows || []).length / pageSize)
-  );
+  //const [sortRowPeriod, setSortRowPeriod] = useState<any>("");
+
+//!!!comm
+  // const [pageCount, setPageCount] = useState(
+  //   Math.ceil((noteRows || []).length / pageSize)
+  // );
+  //!!!comm
+
   const [currentPage, setCurrentPage] = useState(0);
   const [modalShow, setModalShow] = useState(false);
   const [notebookModalShow, setNotebookModalShow] = useState(false);
@@ -87,10 +86,12 @@ function NotesInfo(props: IProps) {
   const [sortField, setSortField] = useState("lastChangeDate");
   const [menuVisible, setMenuVisible] = useState(false);
   const [importNotesModalShow, setImportNotesModalShow] = useState(false);
-  const [notebooksForSelect, setNotebooksForSelect] = useState(notebooks);
+  // const [notebooksForSelect, setNotebooksForSelect] = useState(notebooks);
+  const [notebooksForSelect, setNotebooksForSelect] = useState<any[]>([]);
 
-  const getFinalFilteredData = () => {
-    let filteredNotes = datanoteRows;
+  //const getFinalFilteredData = () => {
+    const getFinalFilteredData = useMemo(() => {
+    let filteredNotes = datanoteRows || [];
     if (filteredNotes) {
       // Фильтрация по currentNotebookName
       if (currentNotebookName === allnoteFilterName) {
@@ -127,10 +128,19 @@ function NotesInfo(props: IProps) {
     // Сортировка
     filteredNotes = _.orderBy(filteredNotes, sortField, sort);
     return filteredNotes;
-  };
+  }, [datanoteRows, currentNotebookName, search, sort, currentNotebookId]);
+  // };
+
+  // useEffect(() => {
+  //   setDatanoteRows(noteRows);
+  // }, [noteRows]);
 
   useEffect(() => {
-    setDatanoteRows(noteRows);
+    if (noteRows && Array.isArray(noteRows)) {
+      setDatanoteRows(noteRows);
+    } else {
+      setDatanoteRows([]); // Установите пустой массив, если noteRows не является массивом
+    }
   }, [noteRows]);
 
   useEffect(() => {
@@ -144,97 +154,105 @@ function NotesInfo(props: IProps) {
     }
   }, [notebooks]);
 
-  const getPageCount = () => {
-    return Math.ceil((filteredData || []).length / pageSize);
-  };
+  //!!!comm
+  // const getPageCount = () => {
+  //   return Math.ceil((filteredData || []).length / pageSize);
+  // };
+  //!!!comm
 
+  // useEffect(() => {
+  //   const finalFilteredData = getFinalFilteredData();
+  //   setFilteredData(finalFilteredData);
+  //   //setDisplayData(getDisplayData(currentPage, finalFilteredData)); // Обновляем отображаемые данные
+  //   setCurrentPage(0); // Сброс текущей страницы при изменении фильтров
+  // }, [search, currentNotebookName, datanoteRows, sort]);
   useEffect(() => {
-    const finalFilteredData = getFinalFilteredData();
-    setFilteredData(finalFilteredData);
+    setFilteredData(getFinalFilteredData);
     setCurrentPage(0); // Сброс текущей страницы при изменении фильтров
-  }, [search, currentNotebookName, datanoteRows, sort]);
+  }, [getFinalFilteredData]);
 
-  useEffect(() => {
-    setPageCount(getPageCount());
-    setDisplayData(getDisplayData(currentPage, filteredData));
-  }, [filteredData, currentPage]);
+  const pageCount = useMemo(() => {
+    return Math.ceil((filteredData || []).length / pageSize);
+  }, [filteredData]);
+
+//!!!comm
+  // useEffect(() => {
+  //   setPageCount(getPageCount());
+  //   setDisplayData(getDisplayData(currentPage, filteredData));
+  // }, [filteredData, currentPage]);
+//!!!comm
+
+useEffect(() => {
+  setDisplayData(getDisplayData(currentPage, filteredData));
+}, [filteredData, currentPage]);
+
+  // const getDisplayData = (currPage: number, data: INoteRow[]) => {
+  //   if (data && data.length > 0) {
+  //     return _.chunk(data, pageSize)[currPage] || [];
+  //   }
+  //   return [];
+  // };
 
   const getDisplayData = (currPage: number, data: INoteRow[]) => {
-    if (data && data.length > 0) {
+    if (data && Array.isArray(data) && data.length > 0) {
       return _.chunk(data, pageSize)[currPage] || [];
     }
-    return [];
+    return []; // Возвращаем пустой массив, если данных нет
   };
 
-  const handleSortClick = (sortField) => {
-    const sortType = sort === "asc" ? "desc" : "asc";
+  //!!!comm
+  // const handleSortClick = (field: string) => {
+  //   const newSort = sort === "asc" ? "desc" : "asc"; // Переключаем направление сортировки
+  //   setSortField(field);
+  //   setSort(newSort);
+  //   setCurrentPage(0); // Сброс текущей страницы при изменении сортировки
+  
+  //   // Обновляем состояние стрелок сортировки
+  //   if (newSort === "asc") {
+  //     setSortRowNum(field === "id" ? "\u2191" : "");
+  //     setSortRowName(field === "title" ? "\u2191" : "");
+  //     setSortRowLastChangeDate(field === "lastChangeDate" ? "\u2191" : "");
+  //     setSortRowDate(field === "createDate" ? "\u2191" : "");
+  //   } else {
+  //     setSortRowNum(field === "id" ? "\u2193" : "");
+  //     setSortRowName(field === "title" ? "\u2193" : "");
+  //     setSortRowLastChangeDate(field === "lastChangeDate" ? "\u2193" : "");
+  //     setSortRowDate(field === "createDate" ? "\u2193" : "");
+  //   }
+  // };
 
-    setSortField(sortField);
-
-    // Обновляем данные сразу после изменения сортировки
-    const finalFilteredData = getFinalFilteredData();
-    setFilteredData(finalFilteredData);
+  // const pageChangeHandler = ({ selected }: any) => {
+  //   setCurrentPage(selected);
+  //   setDisplayData(getDisplayData(selected, filteredData));
+  // };
+  //!!!comm
+  //!!!
+  // const handleSortClick = (field: string) => {
+    const handleSortClick = useCallback((field: string) => {
+    const newSort = sort === "asc" ? "desc" : "asc"; // Переключаем направление сортировки
+    setSortField(field);
+    setSort(newSort);
     setCurrentPage(0); // Сброс текущей страницы при изменении сортировки
-    setSort(sortType);
-
-    if (sortField === "title") {
-      if (sortType === "asc") {
-        setSortRowName("\u2193");
-        setSortRowLastChangeDate("");
-        setSortRowDate("");
-        setSortRowNum("");
-      } else {
-        setSortRowName("\u2191");
-        setSortRowLastChangeDate("");
-        setSortRowDate("");
-        setSortRowNum("");
-      }
+  
+    // Обновляем состояние стрелок сортировки
+    if (newSort === "asc") {
+      setSortRowNum(field === "id" ? "\u2191" : "");
+      setSortRowName(field === "title" ? "\u2191" : "");
+      setSortRowLastChangeDate(field === "lastChangeDate" ? "\u2191" : "");
+      setSortRowDate(field === "createDate" ? "\u2191" : "");
+    } else {
+      setSortRowNum(field === "id" ? "\u2193" : "");
+      setSortRowName(field === "title" ? "\u2193" : "");
+      setSortRowLastChangeDate(field === "lastChangeDate" ? "\u2193" : "");
+      setSortRowDate(field === "createDate" ? "\u2193" : "");
     }
-    if (sortField === "lastChangeDate") {
-      if (sortType === "asc") {
-        setSortRowName("");
-        setSortRowLastChangeDate("\u2193");
-        setSortRowDate("");
-        setSortRowNum("");
-      } else {
-        setSortRowName("");
-        setSortRowLastChangeDate("\u2193");
-        setSortRowDate("");
-        setSortRowNum("");
-      }
-    }
-    if (sortField === "createDate") {
-      if (sortType === "asc") {
-        setSortRowName("");
-        setSortRowLastChangeDate("");
-        setSortRowDate("\u2193");
-        setSortRowNum("");
-      } else {
-        setSortRowName("");
-        setSortRowLastChangeDate("");
-        setSortRowDate("\u2191");
-        setSortRowNum("");
-      }
-    }
-    if (sortField === "id") {
-      if (sortType === "asc") {
-        setSortRowName("");
-        setSortRowLastChangeDate("");
-        setSortRowDate("");
-        setSortRowNum("\u2193");
-      } else {
-        setSortRowName("");
-        setSortRowLastChangeDate("");
-        setSortRowDate("");
-        setSortRowNum("\u2191");
-      }
-    }
-  };
+  }, [sort]);
 
   const pageChangeHandler = ({ selected }: any) => {
     setCurrentPage(selected);
-    setDisplayData(getDisplayData(selected, filteredData));
+    //setDisplayData(getDisplayData(selected, filteredData));
   };
+  //!!!
 
   const searchHandler = (searchText: string) => {
     setSearch(searchText);
@@ -247,14 +265,14 @@ function NotesInfo(props: IProps) {
     navigate("/login");
   };
 
-  const handleDelButtonClick = (NoteRowId: number) => {
-    setDelRowId(NoteRowId);
+  const handleDelButtonClick = (noteRowId: number) => {
+    setDelRowId(noteRowId);
     setModalShow(true);
   };
 
   const handleDeleteRow = async () => {
     if (delRowId !== 0) {
-      var delResult = await deleteNoteFromServer(delRowId);
+      await deleteNoteFromServer(delRowId);
       dispatch?.({ type: ACTIONS.NEED_LOAD_DATA, payload: true });
       setModalShow(false);
       navigate("/main");
@@ -618,7 +636,7 @@ function NotesInfo(props: IProps) {
               <tbody>
                 {noteRows && noteRows.length > 0 && (
                   <>
-                    {displayData.map((NoteRow, index) => (
+                    {displayData && displayData.length > 0 && displayData.map((NoteRow, index) => (
                       <tr
                         key={NoteRow.id}
                         onDoubleClick={() => handleEditButtonClick(NoteRow.id)}
