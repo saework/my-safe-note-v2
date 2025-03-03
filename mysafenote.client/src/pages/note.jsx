@@ -19,8 +19,11 @@ import { useNavigate } from "react-router-dom";
 import { encryptNote, decryptNote } from "../functions";
 import EncryptModal from "../components/encrypt-modal.tsx";
 import DecryptModal from "../components/decrypt-modal.tsx";
-import moment from "moment-timezone";
+// import moment from "moment-timezone";
 import noteConfig from "../configs/config";
+
+import NoteButtonsPanel from "../components/note-buttons-panel";
+import NoteDatePanel from "../components/note-date-panel";
 
 const Note = () => {
   const navigate = useNavigate();
@@ -42,7 +45,7 @@ const Note = () => {
   const [encryptModalShow, setEncryptModalShow] = useState(false);
   const [decryptModalShow, setDecryptModalShow] = useState(false);
   const [notePasswordHash, setNotePasswordHash] = useState("");
-  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  // const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const [notebooksForSelect, setNotebooksForSelect] = useState(notebooks);
   const withoutnotebookFilterName = noteConfig.WITHOUTNOTEBOOK_FILTER_NAME;
 
@@ -261,78 +264,14 @@ const Note = () => {
   return (
     <div className="container">
       <div className="note_main-container">
-        <div className="note-headpanel_container">
-          <Button
-            onClick={handleSaveNoteToServer}
-            id="buttonSaveNote"
-            type="button"
-            variant="success"
-            className="note-headpanel__button"
-          >
-            <label className="note-headpanel__label">Сохранить</label>
-            <img
-              className="note-headpanel__img"
-              src="images/save.svg"
-              alt="save"
-            />
-          </Button>
+        <NoteButtonsPanel
+          handleSaveNoteToServer={handleSaveNoteToServer}
+          handleLoadNoteDocxFromServer={handleLoadNoteDocxFromServer}
+          notePasswordHash={notePasswordHash}
+          handleEncryptDecryptClick={handleEncryptDecryptClick}
+          handleExitNote={handleExitNote}
+        />
 
-          <Button
-            onClick={handleLoadNoteDocxFromServer}
-            id="buttonSaveDocxNote"
-            type="button"
-            variant="success"
-            className="note-headpanel__button"
-            disabled={notePasswordHash}
-          >
-            <label className="note-headpanel__label">Скачать в docx</label>
-            <img
-              className="note-headpanel__img"
-              src="images/download.svg"
-              alt="download"
-            />
-          </Button>
-
-          <Button
-            onClick={handleEncryptDecryptClick}
-            id="buttonEncryptNote"
-            type="button"
-            variant="success"
-            className="note-headpanel__button"
-          >
-            <label className="note-headpanel__label">
-              {notePasswordHash ? "Расшифровать" : "Зашифровать"}
-            </label>
-            {notePasswordHash ? (
-              <img
-                className="note-headpanel__img"
-                src="images/key.svg"
-                alt="key"
-              />
-            ) : (
-              <img
-                className="note-headpanel__img"
-                src="images/lock.svg"
-                alt="lock"
-              />
-            )}
-          </Button>
-
-          <Button
-            onClick={handleExitNote}
-            id="buttonExitNote"
-            type="button"
-            variant="danger"
-            className="note-headpanel__button"
-          >
-            <label className="note-headpanel__label">Выйти</label>
-            <img
-              className="note-headpanel__img"
-              src="images/exit.svg"
-              alt="exit"
-            />
-          </Button>
-        </div>
         <TextField
           label="Название"
           variant="outlined"
@@ -368,26 +307,12 @@ const Note = () => {
           </Select>
         </FormControl>
 
-        {lastChangeDate && createDate && (
-          <div className="notebook-date-container">
-            <div className="notebook-lastChangeDate__div">
-              <label className="notebook-date-text__label">Изменено: </label>
-              <label>
-                {moment
-                  .utc(lastChangeDate)
-                  .tz(timeZone)
-                  .format("DD.MM.YYYY HH:mm")}
-              </label>
-            </div>
-            <div className="notebook-createDate__div">
-              <label className="notebook-date-text__label">Создано: </label>
-              <label>
-                {moment.utc(createDate).tz(timeZone).format("DD.MM.YYYY HH:mm")}
-              </label>
-            </div>
-          </div>
-        )}
+        <NoteDatePanel
+          lastChangeDate={lastChangeDate}
+          createDate={createDate}
+        />
       </div>
+
       <EncryptModal
         modalShow={encryptModalShow}
         handleCloseModal={() => setEncryptModalShow(false)}
@@ -399,6 +324,7 @@ const Note = () => {
         handleCloseModal={() => setDecryptModalShow(false)}
         handleDecrypt={handleDecrypt}
       />
+
       <div className="jodit-main-container">
         <JoditEditor
           ref={editor}
@@ -417,6 +343,7 @@ const Note = () => {
           </div>
         )}
       </div>
+      
     </div>
   );
 };

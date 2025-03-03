@@ -1,16 +1,22 @@
 import * as _ from "lodash";
 //import {_} from "lodash";
-import React, { useState, useEffect, useContext, useMemo, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useMemo,
+  useCallback,
+} from "react";
 import ReactPaginate from "react-paginate";
 import { Button, Row, Col, Table } from "react-bootstrap";
-import {
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem
-} from "@mui/material";
+// import {
+//   FormControl,
+//   InputLabel,
+//   Select,
+//   MenuItem
+// } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import moment from "moment-timezone";
+// import moment from "moment-timezone";
 import { INoteRow, IRootReducer } from "../interfaces";
 import TableSearch from "./table-search";
 import DeleteModal from "./delete-modal";
@@ -23,9 +29,11 @@ import { exportNotesFromServer } from "../api/main-api";
 import { StateContext } from "../state/notes-context";
 import { ACTIONS, DispatchContext } from "../state/notes-context";
 
-import NotesTable from './notes-table';
-import NotebookList from './notebook-list';
-import Menu from './menu';
+import NotesTable from "./notes-tabel";
+import NotebookList from "./notebook-list";
+import NotebookSmallPanel from "./notebook-small-panel";
+import Header from "./header";
+import Menu from "./menu";
 
 interface IProps {
   handlerLoadFromServer: () => void;
@@ -39,7 +47,7 @@ function NotesInfo(props: IProps) {
   const navigate = useNavigate();
 
   if (!notesState) {
-    return <div>Загрузка...</div>; 
+    return <div>Загрузка...</div>;
   }
 
   const noteRows = notesState.noteRows;
@@ -58,7 +66,7 @@ function NotesInfo(props: IProps) {
   const [datanoteRows, setDatanoteRows] = useState<INoteRow[]>(noteRows);
   // const [filteredData, setFilteredData] = useState<INoteRow[]>(noteRows);
   // const [displayData, setDisplayData] = useState<INoteRow[]>(noteRows);
-    const [filteredData, setFilteredData] = useState<INoteRow[]>([]);
+  const [filteredData, setFilteredData] = useState<INoteRow[]>([]);
   const [displayData, setDisplayData] = useState<INoteRow[]>([]);
   const [sort, setSort] = useState<any>("desc");
   const [search, setSearch] = useState<any>("");
@@ -71,7 +79,7 @@ function NotesInfo(props: IProps) {
   const [sortRowLastChangeDate, setSortRowLastChangeDate] = useState<any>("");
   //const [sortRowPeriod, setSortRowPeriod] = useState<any>("");
 
-//!!!comm
+  //!!!comm
   // const [pageCount, setPageCount] = useState(
   //   Math.ceil((noteRows || []).length / pageSize)
   // );
@@ -94,7 +102,7 @@ function NotesInfo(props: IProps) {
   const [notebooksForSelect, setNotebooksForSelect] = useState<any[]>([]);
 
   //const getFinalFilteredData = () => {
-    const getFinalFilteredData = useMemo(() => {
+  const getFinalFilteredData = useMemo(() => {
     let filteredNotes = datanoteRows || [];
     if (filteredNotes) {
       // Фильтрация по currentNotebookName
@@ -179,16 +187,16 @@ function NotesInfo(props: IProps) {
     return Math.ceil((filteredData || []).length / pageSize);
   }, [filteredData]);
 
-//!!!comm
+  //!!!comm
   // useEffect(() => {
   //   setPageCount(getPageCount());
   //   setDisplayData(getDisplayData(currentPage, filteredData));
   // }, [filteredData, currentPage]);
-//!!!comm
+  //!!!comm
 
-useEffect(() => {
-  setDisplayData(getDisplayData(currentPage, filteredData));
-}, [filteredData, currentPage]);
+  useEffect(() => {
+    setDisplayData(getDisplayData(currentPage, filteredData));
+  }, [filteredData, currentPage]);
 
   // const getDisplayData = (currPage: number, data: INoteRow[]) => {
   //   if (data && data.length > 0) {
@@ -210,7 +218,7 @@ useEffect(() => {
   //   setSortField(field);
   //   setSort(newSort);
   //   setCurrentPage(0); // Сброс текущей страницы при изменении сортировки
-  
+
   //   // Обновляем состояние стрелок сортировки
   //   if (newSort === "asc") {
   //     setSortRowNum(field === "id" ? "\u2191" : "");
@@ -232,25 +240,28 @@ useEffect(() => {
   //!!!comm
   //!!!
   // const handleSortClick = (field: string) => {
-    const handleSortClick = useCallback((field: string) => {
-    const newSort = sort === "asc" ? "desc" : "asc"; // Переключаем направление сортировки
-    setSortField(field);
-    setSort(newSort);
-    setCurrentPage(0); // Сброс текущей страницы при изменении сортировки
-  
-    // Обновляем состояние стрелок сортировки
-    if (newSort === "asc") {
-      setSortRowNum(field === "id" ? "\u2191" : "");
-      setSortRowName(field === "title" ? "\u2191" : "");
-      setSortRowLastChangeDate(field === "lastChangeDate" ? "\u2191" : "");
-      setSortRowDate(field === "createDate" ? "\u2191" : "");
-    } else {
-      setSortRowNum(field === "id" ? "\u2193" : "");
-      setSortRowName(field === "title" ? "\u2193" : "");
-      setSortRowLastChangeDate(field === "lastChangeDate" ? "\u2193" : "");
-      setSortRowDate(field === "createDate" ? "\u2193" : "");
-    }
-  }, [sort]);
+  const handleSortClick = useCallback(
+    (field: string) => {
+      const newSort = sort === "asc" ? "desc" : "asc"; // Переключаем направление сортировки
+      setSortField(field);
+      setSort(newSort);
+      setCurrentPage(0); // Сброс текущей страницы при изменении сортировки
+
+      // Обновляем состояние стрелок сортировки
+      if (newSort === "asc") {
+        setSortRowNum(field === "id" ? "\u2191" : "");
+        setSortRowName(field === "title" ? "\u2191" : "");
+        setSortRowLastChangeDate(field === "lastChangeDate" ? "\u2191" : "");
+        setSortRowDate(field === "createDate" ? "\u2191" : "");
+      } else {
+        setSortRowNum(field === "id" ? "\u2193" : "");
+        setSortRowName(field === "title" ? "\u2193" : "");
+        setSortRowLastChangeDate(field === "lastChangeDate" ? "\u2193" : "");
+        setSortRowDate(field === "createDate" ? "\u2193" : "");
+      }
+    },
+    [sort]
+  );
 
   const pageChangeHandler = ({ selected }: any) => {
     setCurrentPage(selected);
@@ -309,7 +320,7 @@ useEffect(() => {
     dispatch?.({ type: ACTIONS.CHECK_NOTEBOOK_NAME, payload: notebookName });
   };
 
-  const handleAddButtonClick = (e) => {
+  const handleAddButtonClick = () => {
     //e.preventDefault();
     dispatch?.({ type: ACTIONS.CHECK_ID_ROW, payload: 0 });
     const url = "/note";
@@ -354,74 +365,21 @@ useEffect(() => {
         />
 
         <div className="main-info__capt-container">
-        <Menu 
+          <Menu
             handleMouseEnter={handleMouseEnter}
             handleMouseLeave={handleMouseLeave}
             handleMenuButtonClick={handleMenuButtonClick}
             handlerExportNotesFromServer={handlerExportNotesFromServer}
             handlerImportNotes={handlerImportNotes}
-            menuVisible = {menuVisible}
-        />
-
-          {/* <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-            <Button
-              id="buttonMenu"
-              type="button"
-              variant="info"
-              onClick={handleMenuButtonClick}
-              className="menu__button"
-            >
-              Меню
-            </Button>
-          </div>
-          <div
-            className="menu-container"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-          >
-            {menuVisible && (
-              <div className="main-menu-dropdown">
-                <Button
-                  onClick={handlerExportNotesFromServer}
-                  id="buttonExportNotes"
-                  type="button"
-                  variant="info"
-                  size="lg"
-                  className="main-menu-export__button"
-                >
-                  Сохранить заметки
-                </Button>
-                <Button
-                  onClick={handlerImportNotes}
-                  id="buttonImportNotes"
-                  type="button"
-                  variant="info"
-                  size="lg"
-                  className="main-menu-import__button"
-                >
-                  Загрузить заметки
-                </Button>
-              </div>
-            )}
-          </div> */}
+            menuVisible={menuVisible}
+          />
           <NotesImport
             userId={userId}
             handlerLoadFromServer={handlerLoadFromServer}
             importNotesModalShow={importNotesModalShow}
             handleImportNotesCloseModal={() => setImportNotesModalShow(false)}
           />
-          <div className="main-info__page-capt">Мои заметки</div>
-          <div>
-            <Button
-              id="buttonExit"
-              type="button"
-              variant="danger"
-              onClick={handleExitButtonClick}
-              className="exit__button"
-            >
-              Выйти
-            </Button>
-          </div>
+          <Header handleExitButtonClick={handleExitButtonClick} />
         </div>
 
         <DeleteModal
@@ -434,317 +392,48 @@ useEffect(() => {
         <TableSearch onSearch={searchHandler} />
 
         <div className="main-form__container">
-
-        <NotebookList
-          notebooks={notebooks}
-          currentNotebookId={currentNotebookId}
-          handleAddNotebookButtonClick={handleAddNotebookButtonClick}
-          handleCheckNotebook={handleCheckNotebook}
-          allnoteFilterName={allnoteFilterName}
-          withoutnotebookFilterName={withoutnotebookFilterName}
-          handleEditNotebookButtonClick={handleEditNotebookButtonClick}
-
-        />
-
-
-          {/* <div className="main-form__notebooks-container">
-            <div className="notebook__add-container">
-              <Button
-                onClick={handleAddNotebookButtonClick}
-                id="buttonAdd"
-                type="button"
-                variant="success"
-                size="sm"
-                className="notebook__button-add"
-              >
-                Добавить блокнот
-              </Button>
-            </div>
-            <div className="notebook-table-container">
-              {" "}
-              <Table responsive="sm">
-                <thead>
-                  <tr>
-                    <th className="main-info-notebook__th">{}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr
-                    onClick={() => {
-                      handleCheckNotebook(-1, allnoteFilterName);
-                    }}
-                    className={
-                      currentNotebookName === allnoteFilterName
-                        ? "main-info__tr-selected"
-                        : "main-info__tr"
-                    }
-                  >
-                    <td>{allnoteFilterName}</td>
-                  </tr>
-                  <tr
-                    onClick={() => {
-                      handleCheckNotebook(-2, withoutnotebookFilterName);
-                    }}
-                    className={
-                      currentNotebookName === withoutnotebookFilterName
-                        ? "main-info__tr-selected"
-                        : "main-info__tr"
-                    }
-                  >
-                    <td>{withoutnotebookFilterName}</td>
-                  </tr>
-                  {notebooks && notebooks.length > 0 && (
-                    <>
-                      {notebooks.map((notebook, index) => (
-                        <tr
-                          key={notebook.id}
-                          onDoubleClick={() => handleEditNotebookButtonClick()}
-                          onClick={() =>
-                            handleCheckNotebook(notebook.id, notebook.name)
-                          } // Устанавливаем выделенную строку
-                          className={
-                            currentNotebookId === notebook.id
-                              ? "main-info__tr-selected"
-                              : "main-info__tr"
-                          }
-                        >
-                          <td className="main-info-notebook__td">
-                            {notebook.name}
-                          </td>
-                          <td className="main-info-notebook__td-edit">
-                            <div>
-                              <button
-                                id="editNotebook-button"
-                                type="button"
-                                className="manual__button"
-                                onClick={() => handleEditNotebookButtonClick()}
-                                onKeyDown={() =>
-                                  handleEditNotebookButtonClick()
-                                }
-                              >
-                                <img
-                                  className="main-info__edit"
-                                  src="images/edit.svg"
-                                  alt="edit"
-                                />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </>
-                  )}
-                </tbody>
-              </Table>
-            </div>
-          </div> */}
+          <NotebookList
+            notebooks={notebooks}
+            currentNotebookId={currentNotebookId}
+            currentNotebookName={currentNotebookName}
+            handleAddNotebookButtonClick={handleAddNotebookButtonClick}
+            handleCheckNotebook={handleCheckNotebook}
+            allnoteFilterName={allnoteFilterName}
+            withoutnotebookFilterName={withoutnotebookFilterName}
+            handleEditNotebookButtonClick={handleEditNotebookButtonClick}
+          />
 
           <div className="main-form__notesinfo-container">
-            <div className="notebook-small-panel">
-              <div className="notebook-small-panel__select">
-                <FormControl fullWidth>
-                  <InputLabel id="notes-notebook-select-label">
-                    Блокнот
-                  </InputLabel>
-                  <Select
-                    labelId="notes-notebook-select-label"
-                    value={currentNotebookId}
-                    onChange={(e) =>
-                      handleCheckNotebook(
-                        Number(e.target.value),
-                        notebooksForSelect.find(
-                          (notebook) => notebook.id === Number(e.target.value)
-                        )?.name || ""
-                      )
-                    }
-                    MenuProps={{
-                      PaperProps: {
-                        style: {
-                          maxHeight: 400, // Максимальная высота выпадающего меню
-                          overflowY: "auto", // Прокрутка
-                        },
-                      },
-                    }}
-                  >
-                    {notebooksForSelect.length &&
-                    notebooksForSelect.length > 0 ? (
-                      notebooksForSelect.map((notebook) => (
-                        <MenuItem key={notebook.id} value={notebook.id}>
-                          {notebook.name}
-                        </MenuItem>
-                      ))
-                    ) : (
-                      <MenuItem disabled>Нет доступных блокнотов</MenuItem>
-                    )}
-                  </Select>
-                </FormControl>
-              </div>
-              <div
-                className={
-                  currentNotebookName != withoutnotebookFilterName &&
-                  currentNotebookName != allnoteFilterName
-                    ? "notebook-small-edit"
-                    : "hide__div"
-                }
-              >
-                <button
-                  id="notebookEditButton"
-                  type="button"
-                  className="edit-notebook__button"
-                  onClick={handleEditNotebookButtonClick}
-                  onKeyDown={handleEditNotebookButtonClick}
-                >
-                  <img
-                    className="notebook-small-edit__img"
-                    src="images/edit.svg"
-                    alt="edit"
-                  />
-                </button>
-              </div>
-              <div className="notebook-small-add">
-                <button
-                  id="notebookAddButton"
-                  type="button"
-                  className="edit-notebook__button"
-                  onClick={handleAddNotebookButtonClick}
-                  onKeyDown={handleAddNotebookButtonClick}
-                >
-                  <img
-                    className="notebook-small-add__img"
-                    src="images/add.svg"
-                    alt="add"
-                  />
-                </button>
-              </div>
-            </div>
+            <NotebookSmallPanel
+              handleCheckNotebook={handleCheckNotebook}
+              handleEditNotebookButtonClick={handleEditNotebookButtonClick}
+              handleAddNotebookButtonClick={handleAddNotebookButtonClick}
+              notebooksForSelect={notebooksForSelect}
+              currentNotebookId={currentNotebookId}
+              currentNotebookName={currentNotebookName}
+              withoutnotebookFilterName={withoutnotebookFilterName}
+              allnoteFilterName={allnoteFilterName}
+            />
 
-            <div className="main-form__add-container">
-              <Button
-                onClick={handleAddButtonClick}
-                id="buttonAdd"
-                type="button"
-                variant="success"
-                size="lg"
-                className="main-form__button-add"
-              >
-                Добавить заметку
-              </Button>
-            </div>
-            <Table responsive="sm">
-              <thead>
-                <tr>
-                  <th
-                    className="main-info__th-num"
-                    onClick={() => handleSortClick("id")}
-                  >
-                    №{sortRowNum}
-                  </th>
-                  <th
-                    className="main-info__th-name"
-                    onClick={() => handleSortClick("title")}
-                  >
-                    Название {sortRowName}
-                  </th>
-                  <th
-                    className="main-info__th-date"
-                    onClick={() => handleSortClick("lastChangeDate")}
-                  >
-                    Изменено {sortRowLastChangeDate}
-                  </th>
-                  <th
-                    className="main-info__th-date"
-                    onClick={() => handleSortClick("createDate")}
-                  >
-                    Создано {sortRowDate}
-                  </th>
-                  <th className="main-info__th-edit"> </th>
-                  <th className="main-info__th-delete"> </th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {noteRows && noteRows.length > 0 && (
-                  <>
-                    {displayData && displayData.length > 0 && displayData.map((NoteRow, index) => (
-                      <tr
-                        key={NoteRow.id}
-                        onDoubleClick={() => handleEditButtonClick(NoteRow.id)}
-                        onClick={() => setSelectedRowId(NoteRow.id)} // Устанавливаем выделенную строку
-                        className={
-                          selectedRowId === NoteRow.id
-                            ? "main-info__tr-selected"
-                            : "main-info__tr"
-                        }
-                      >
-                        {sort !== "asc" && sortRowNum !== "" ? (
-                          <td>
-                            {noteRows.length - (index + currentPage * pageSize)}
-                          </td>
-                        ) : (
-                          <td>{index + 1 + currentPage * pageSize}</td>
-                        )}
-                        <td>{NoteRow.title}</td>
-                        <td className="main-info-createDate__td">
-                          {moment
-                            .utc(NoteRow.lastChangeDate)
-                            .tz(timeZone)
-                            .format("DD.MM.YYYY HH:mm")}
-                        </td>
-                        <td className="main-info-lastChangeDate__td">
-                          {moment
-                            .utc(NoteRow.createDate)
-                            .tz(timeZone)
-                            .format("DD.MM.YYYY HH:mm")}
-                        </td>
-                        <td className="main-info__td-edit">
-                          <div>
-                            <button
-                              id="edit-button"
-                              type="button"
-                              className="manual__button"
-                              onClick={() => handleEditButtonClick(NoteRow.id)}
-                              onKeyDown={() =>
-                                handleEditButtonClick(NoteRow.id)
-                              }
-                            >
-                              <img
-                                className="main-info__edit"
-                                src="images/edit.svg"
-                                alt="edit"
-                              />
-                            </button>
-                          </div>
-                        </td>
-                        <td className="main-info__td-edit">
-                          <div>
-                            <button
-                              id="del-button"
-                              type="button"
-                              className="manual__button"
-                              onClick={() => handleDelButtonClick(NoteRow.id)}
-                              onKeyDown={() => handleDelButtonClick(NoteRow.id)}
-                            >
-                              <img
-                                className="main-info__edit"
-                                src="images/trash.svg"
-                                alt="del"
-                              />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </>
-                )}
-                {noteRows && noteRows.length === 0 && (
-                  <tr>
-                    <td colSpan={7}>
-                      <div className="main-page__bd-nodata">Список пуст</div>
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </Table>
+            <NotesTable
+              handleAddButtonClick={handleAddButtonClick}
+              handleSortClick={handleSortClick}
+              handleEditButtonClick={handleEditButtonClick}
+              handleDelButtonClick={handleDelButtonClick}
+              setSelectedRowId={setSelectedRowId}
+              sortRowNum={sortRowNum}
+              sortRowName={sortRowName}
+              sortRowLastChangeDate={sortRowLastChangeDate}
+              sortRowDate={sortRowDate}
+              noteRows={noteRows}
+              displayData={displayData}
+              selectedRowId={selectedRowId}
+              sort={sort}
+              currentPage={currentPage}
+              pageSize={pageSize}
+              timeZone={timeZone}
+            />
+            
             {pageCount > 1 && ( // Условие для отображения пагинации
               <ReactPaginate
                 breakLabel="..."
