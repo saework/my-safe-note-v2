@@ -42,7 +42,8 @@ function NoteButtonsPanel(props: IProps) {
           type="button"
           variant="success"
           className="note-headpanel__button"
-          disabled={notePasswordHash}
+          // disabled={notePasswordHash}
+          disabled={notePasswordHash !== ""}
         >
           <label className="note-headpanel__label">Скачать в docx</label>
           <img

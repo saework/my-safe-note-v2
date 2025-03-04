@@ -1,11 +1,11 @@
 import React, { useState, useRef, useMemo, useContext, useEffect } from "react";
 import JoditEditor from "jodit-react";
-import { Button } from "react-bootstrap";
+// import { Button } from "react-bootstrap";
 import {
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
+  // FormControl,
+  // InputLabel,
+  // Select,
+  // MenuItem,
   TextField,
 } from "@mui/material";
 import { StateContext } from "../state/notes-context";
@@ -24,6 +24,8 @@ import noteConfig from "../configs/config";
 
 import NoteButtonsPanel from "../components/note-buttons-panel";
 import NoteDatePanel from "../components/note-date-panel";
+import NoteNotebookSelect from "../components/note-notebook-select";
+
 
 const Note = () => {
   const navigate = useNavigate();
@@ -280,32 +282,11 @@ const Note = () => {
           className="note-name__textfield"
         />
 
-        <FormControl fullWidth>
-          <InputLabel id="note-notebook-select-label">Блокнот</InputLabel>
-          <Select
-            labelId="note-notebook-select-label"
-            value={notebookId}
-            onChange={(e) => handleCheckNotebook(Number(e.target.value))}
-            MenuProps={{
-              PaperProps: {
-                style: {
-                  maxHeight: 400, // Максимальная высота выпадающего меню
-                  overflowY: "auto", // Прокрутка
-                },
-              },
-            }}
-          >
-            {notebooksForSelect.length > 0 ? (
-              notebooksForSelect.map((notebook) => (
-                <MenuItem key={notebook.id} value={notebook.id}>
-                  {notebook.name}
-                </MenuItem>
-              ))
-            ) : (
-              <MenuItem disabled>Нет доступных блокнотов</MenuItem>
-            )}
-          </Select>
-        </FormControl>
+        <NoteNotebookSelect 
+          handleCheckNotebook={handleCheckNotebook}
+          notebookId={notebookId}
+          notebooksForSelect={notebooksForSelect}
+        />
 
         <NoteDatePanel
           lastChangeDate={lastChangeDate}
@@ -338,7 +319,7 @@ const Note = () => {
         />
 
         {notePasswordHash && (
-          <div class="jodit-block-container">
+          <div className="jodit-block-container">
             <img src="images/lock.svg" alt="lock" />
           </div>
         )}

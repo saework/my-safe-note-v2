@@ -31,7 +31,7 @@ function NotesImport(props: IProps) {
       handleImportNotesCloseModal();
     }
   };
-  const handleFileChange = (event) => {
+  const handleFileChange = (event: any) => {
     setFile(event.target.files[0]);
   };
 

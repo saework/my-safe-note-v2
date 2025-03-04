@@ -18,13 +18,19 @@ function Main() {
   const userId = notesState.userId;
   const needLoadData = notesState.needLoadData;
 
+  // if (process.env.NODE_ENV === 'development') {
+  //   console.log('Приложение работает в режиме разработки');
+  // } else {
+  //   console.log('Приложение работает в режиме производства');
+  // }
+
   useEffect(() => {
     if (!userId) {
       navigate("/login");
     }
   }, [userId, navigate]);
 
-  const fetchData = async () => {
+  const loadDataFromServer = async () => {
     if (userId && needLoadData) {
       setLoading(true);
       try {
@@ -49,13 +55,13 @@ function Main() {
   };
 
   useEffect(() => {
-    fetchData();
+    loadDataFromServer();
   }, [userId, needLoadData, dispatch]);
 
   return (
     <div>
       <Container>
-        {loading ? <div>Загрузка...</div> : <NotesInfo handlerLoadFromServer={fetchData} />}
+        {loading ? <div>Загрузка...</div> : <NotesInfo handlerLoadFromServer={loadDataFromServer} />}
       </Container>
     </div>
   );
