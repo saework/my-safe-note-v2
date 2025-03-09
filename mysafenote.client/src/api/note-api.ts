@@ -1,7 +1,8 @@
 import _ from "lodash";
 import { getLoginData } from "../functions";
+import { INoteDto, IResponseNoteDto } from "../interfaces";
 
-export const loadNoteBodyFromServer = async (userId, noteId) => {
+export const loadNoteBodyFromServer = async (userId: number, noteId: number): Promise<IResponseNoteDto | undefined> => {
   const url = `api/note/notebody`;
   const jwtToken = getLoginData("jwtToken");
   if (!_.isEmpty(jwtToken)) {
@@ -24,7 +25,7 @@ export const loadNoteBodyFromServer = async (userId, noteId) => {
       const responseData = await response.json();
 
       var noteData = {
-        noteName: responseData.title,
+        title: responseData.title,
         createDate: responseData.createDate,
         lastChangeDate: responseData.lastChangeDate,
         notebookName: responseData.notebookName,
@@ -44,7 +45,8 @@ export const loadNoteBodyFromServer = async (userId, noteId) => {
   }
 };
 
-export const saveNoteToServer = async (noteData) => {
+export const saveNoteToServer = async (noteData: INoteDto): Promise<boolean> => {
+  let result = false;
   const url = `api/note/savenote`;
   const jwtToken = getLoginData("jwtToken");
   if (!_.isEmpty(jwtToken)) {
@@ -69,7 +71,7 @@ export const saveNoteToServer = async (noteData) => {
     });
     if (response.ok === true) {
       console.log("saveNoteToServer - Заметка сохранена на сервера");
-      return true;
+      result = true;
     } else {
       console.log(
         `saveNoteToServer - Ошибка при сохранении заметки на сервер - ${response.statusText}`
@@ -78,9 +80,10 @@ export const saveNoteToServer = async (noteData) => {
   } else {
     console.log("saveNoteToServer - Не определен jwtAuthHeader!");
   }
+  return result;
 };
 
-export const deleteNoteFromServer = async (noteId) => {
+export const deleteNoteFromServer = async (noteId: number): Promise<boolean> => {
   const url = `api/note/${noteId}`;
   const jwtToken = getLoginData("jwtToken"); 
 
@@ -113,8 +116,9 @@ export const deleteNoteFromServer = async (noteId) => {
   }
 };
 
-export const loadNoteDocxFromServer = async (noteId, noteName) => {
+export const loadNoteDocxFromServer = async (noteId: number, title: string): Promise<boolean> => {
   const url = "api/note/notedocx";
+  let result = false;
   try {
     const jwtToken = getLoginData("jwtToken");
     if (!_.isEmpty(jwtToken)) {
@@ -127,7 +131,7 @@ export const loadNoteDocxFromServer = async (noteId, noteName) => {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${jwtToken}`,
         },
-        body: noteId,
+        body: noteId.toString(),
       });
 
       if (!response.ok) {
@@ -137,17 +141,17 @@ export const loadNoteDocxFromServer = async (noteId, noteName) => {
       const docUrl = window.URL.createObjectURL(blob); // Создаем URL для скачивания
       const link = document.createElement("a");
       link.href = docUrl;
-      const fileName = noteName + ".docx";
+      const fileName = title + ".docx";
       link.setAttribute("download", fileName); // Имя файла для скачивания
       document.body.appendChild(link);
       link.click(); // Имитируем клик для скачивания
       link.remove(); // Удаляем ссылку из DOM
-      return true;
+      result = true;
     } else {
       console.log("loadNoteDocxFromServer - Не определен jwtAuthHeader!");
-      return false; 
     }
   } catch (error) {
     console.error("loadNoteDocxFromServer - Ошибка при скачивании файла:", error);
   }
+  return result;
 };

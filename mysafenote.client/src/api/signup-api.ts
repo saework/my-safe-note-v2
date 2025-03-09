@@ -1,12 +1,13 @@
 import React from "react";
 import { validateEmail } from "../functions";
+import { ILoginData } from "../interfaces";
 
 const signUpApi = async (
   email: string,
   password: string,
   passwordRpt: string,
   setReqMessage: React.Dispatch<React.SetStateAction<string>>
-) => {
+): Promise<ILoginData | undefined> => {
   if (email && password && passwordRpt) {
     if (password === passwordRpt) {
       const validEmail = validateEmail(email);
@@ -26,7 +27,7 @@ const signUpApi = async (
         });
         if (response.ok === true) {
           const responseData = await response.json();
-          var loginData = {
+          let loginData = {
             currentUser: email,
             userId: responseData.userId,
             jwtToken: responseData.accessToken,

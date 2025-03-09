@@ -298,7 +298,7 @@ function NotesInfo(props: IProps) {
     setNotebookModalShow(true);
   };
 
-  const handleEditButtonClick = async (currentNoteId) => {
+  const handleEditButtonClick = async (currentNoteId: number) => {
     dispatch?.({ type: ACTIONS.CHECK_ID_ROW, payload: currentNoteId });
     const url = "/note";
     navigate(url);

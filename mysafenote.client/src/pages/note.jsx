@@ -40,7 +40,7 @@ const Note = () => {
   const [noteBody, setNoteBody] = useState("");
   const [createDate, setCreateDate] = useState("");
   const [lastChangeDate, setLastChangeDate] = useState("");
-  const [noteName, setNoteName] = useState("");
+  const [title, setTitle] = useState("");
   const [notebookName, setNotebookName] = useState("");
   const [notebookId, setNotebookId] = useState(currentNotebookId);
   const [needLoadNoteBody, setNeedLoadNoteBody] = useState(true);
@@ -95,7 +95,7 @@ const Note = () => {
     );
     console.log("loadNoteBodyFromServer");
     if (noteDataFromServer) {
-      setNoteName(noteDataFromServer.noteName);
+      setTitle(noteDataFromServer.title);
       setCreateDate(noteDataFromServer.createDate);
       setLastChangeDate(noteDataFromServer.lastChangeDate);
       setNoteBody(noteDataFromServer.noteBody);
@@ -116,7 +116,7 @@ const Note = () => {
       //если новая заметка
       note = {
         noteId: currentNoteId,
-        title: noteName,
+        title: title,
         createDate: date,
         lastChangeDate: date,
         notebookId: notebookIdVal,
@@ -128,7 +128,7 @@ const Note = () => {
       //если редактирование заметки
       note = {
         noteId: currentNoteId,
-        title: noteName,
+        title: title,
         createDate: createDate,
         lastChangeDate: date,
         notebookId: notebookIdVal,
@@ -148,7 +148,7 @@ const Note = () => {
   };
 
   const handleLoadNoteDocxFromServer = async () => {
-    await loadNoteDocxFromServer(currentNoteId, noteName);
+    await loadNoteDocxFromServer(currentNoteId, title);
   };
 
   // Функция для шифрования заметки
@@ -160,7 +160,7 @@ const Note = () => {
     setNotePasswordHash(notePasswordHash);
     var note = {
       noteId: currentNoteId,
-      title: noteName,
+      title: title,
       createDate: createDate,
       lastChangeDate: date,
       notebookId: notebookId,
@@ -181,7 +181,7 @@ const Note = () => {
       const date = new Date();
       var note = {
         noteId: currentNoteId,
-        title: noteName,
+        title: title,
         createDate: createDate,
         lastChangeDate: date,
         notebookId: notebookId,
@@ -248,8 +248,8 @@ const Note = () => {
     i18n: "ru",
   };
 
-  const noteNameChangeHandler = (e) => {
-    setNoteName(e.target.value);
+  const titleChangeHandler = (e) => {
+    setTitle(e.target.value);
   };
   const onBlurHandle = (newNoteBody) => {
     setNoteBody(newNoteBody);
@@ -277,8 +277,8 @@ const Note = () => {
         <TextField
           label="Название"
           variant="outlined"
-          value={noteName}
-          onChange={noteNameChangeHandler}
+          value={title}
+          onChange={titleChangeHandler}
           className="note-name__textfield"
         />
 

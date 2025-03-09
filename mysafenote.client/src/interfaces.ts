@@ -36,12 +36,13 @@ export interface ILoginData {
   userId: number;
   jwtToken: string;
 }
-export interface INotebookData {
-  id: number;
-  name: string;
-  userId: number;
-}
-export type TActionPayload = number | INoteRow | INoteRows | ILoginData | boolean | INotebookData| string;
+export interface INotebookDto {
+    id: number;
+    name: string;
+    userId: number;
+  }
+export type TActionPayload = number | INoteRow | INoteRows | ILoginData | boolean | INotebookDto| string;
+
 export interface IAction {
   type: string;
   payload: TActionPayload;
@@ -58,4 +59,22 @@ export interface ISendData {
 export interface INotebook {
   id: number;
   name: string;
+}
+export interface INoteDto {
+  noteId?: string;
+  title: string;
+  createDate: string;
+  lastChangeDate: string;
+  notebookId: string;
+  noteBody: string;
+  notePasswordHash?: string;
+  userId: string;
+}
+export interface IResponseNoteDto {
+  title: string;
+  createDate: string;
+  lastChangeDate: string;
+  notebookId: string;
+  noteBody: string;
+  notePasswordHash?: string;
 }

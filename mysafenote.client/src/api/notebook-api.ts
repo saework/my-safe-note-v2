@@ -1,7 +1,8 @@
 import _ from "lodash";
 import { getLoginData } from "../functions";
+import { INotebookDto } from "../interfaces";
 
-export const saveNotebookToServer = async (notebookData) => {
+export const saveNotebookToServer = async (notebookData: INotebookDto): Promise<number> => {
   const url = `api/notebook/savenotebook`;
   const jwtToken = getLoginData("jwtToken");
   let result = 0;
@@ -13,6 +14,7 @@ export const saveNotebookToServer = async (notebookData) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        Authorization: "Bearer " + jwtToken
       },
       body: JSON.stringify({
         id: notebookData.id,
@@ -37,7 +39,7 @@ export const saveNotebookToServer = async (notebookData) => {
   return result;
 };
 
-export const deleteNotebookFromServer = async (notebookId) => {
+export const deleteNotebookFromServer = async (notebookId: number): Promise<boolean> => {
   const url = `api/notebook/${notebookId}`;
   const jwtToken = getLoginData("jwtToken");
   let result = false;
@@ -50,7 +52,7 @@ export const deleteNotebookFromServer = async (notebookId) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
-        Authorization: "Bearer " + jwtToken,
+        Authorization: "Bearer " + jwtToken
       },
     });
     if (response.ok) {
