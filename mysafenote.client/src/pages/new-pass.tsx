@@ -16,8 +16,7 @@ function NewPass() {
   const updatePasswordHandler = () => {
     //newPassApi(email, setReqMessage); //TODO реализовать в новой версии.
   };
-  const emailInputHandler = (e: React.SyntheticEvent) => {
-    e.preventDefault();
+  const emailInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const emailEl = e.currentTarget as HTMLInputElement;
     setEmailVal(emailEl.value);
   };
@@ -50,7 +49,8 @@ function NewPass() {
           >
             Сменить пароль
           </Button>
-          <div className="sign-up__reqMessage-label">{reqMessage}</div>
+          {/* <div className="sign-up__reqMessage-label">{reqMessage}</div> */}
+          {reqMessage && <div className="sign-up__reqMessage-label">{reqMessage}</div>}
           <Box>
             <Link to="/login">На главную</Link>
           </Box>

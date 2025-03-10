@@ -1,5 +1,4 @@
 import * as _ from "lodash";
-//import {_} from "lodash";
 import React, {
   useState,
   useEffect,
@@ -9,14 +8,7 @@ import React, {
 } from "react";
 import ReactPaginate from "react-paginate";
 import { Button, Row, Col, Table } from "react-bootstrap";
-// import {
-//   FormControl,
-//   InputLabel,
-//   Select,
-//   MenuItem
-// } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-// import moment from "moment-timezone";
 import { INoteRow, IRootReducer } from "../interfaces";
 import TableSearch from "./table-search";
 import DeleteModal from "./delete-modal";
@@ -47,7 +39,7 @@ function NotesInfo(props: IProps) {
   const navigate = useNavigate();
 
   if (!notesState) {
-    return <div>Загрузка...</div>;
+    return <div className="notes-loading-data">Загрузка...</div>;
   }
 
   const noteRows = notesState.noteRows;
@@ -64,26 +56,20 @@ function NotesInfo(props: IProps) {
 
   const [needSave, setNeedSave] = useState<boolean>(false);
   const [datanoteRows, setDatanoteRows] = useState<INoteRow[]>(noteRows);
-  // const [filteredData, setFilteredData] = useState<INoteRow[]>(noteRows);
-  // const [displayData, setDisplayData] = useState<INoteRow[]>(noteRows);
   const [filteredData, setFilteredData] = useState<INoteRow[]>([]);
   const [displayData, setDisplayData] = useState<INoteRow[]>([]);
-  const [sort, setSort] = useState<any>("desc");
-  const [search, setSearch] = useState<any>("");
+  const [sort, setSort] = useState<"asc" | "desc">("desc");
+  // const [search, setSearch] = useState<any>("");
+  const [search, setSearch] = useState<string>("");
 
   const [sortRowNum, setSortRowNum] = useState<string>("\u2193");
   const [sortRowName, setSortRowName] = useState<string>("");
 
-  //const [sortRowComm, setSortRowComm] = useState<any>("");
-  const [sortRowDate, setSortRowDate] = useState<any>("");
-  const [sortRowLastChangeDate, setSortRowLastChangeDate] = useState<any>("");
-  //const [sortRowPeriod, setSortRowPeriod] = useState<any>("");
-
-  //!!!comm
-  // const [pageCount, setPageCount] = useState(
-  //   Math.ceil((noteRows || []).length / pageSize)
-  // );
-  //!!!comm
+  // const [sortRowDate, setSortRowDate] = useState<any>("");
+  const [sortRowDate, setSortRowDate] = useState<string>("");
+  //const [sortRowLastChangeDate, setSortRowLastChangeDate] = useState<any>("");
+  const [sortRowLastChangeDate, setSortRowLastChangeDate] =
+    useState<string>("");
 
   const [currentPage, setCurrentPage] = useState(0);
   const [modalShow, setModalShow] = useState(false);
@@ -98,10 +84,11 @@ function NotesInfo(props: IProps) {
   const [sortField, setSortField] = useState("lastChangeDate");
   const [menuVisible, setMenuVisible] = useState(false);
   const [importNotesModalShow, setImportNotesModalShow] = useState(false);
-  // const [notebooksForSelect, setNotebooksForSelect] = useState(notebooks);
-  const [notebooksForSelect, setNotebooksForSelect] = useState<any[]>([]);
+  // const [notebooksForSelect, setNotebooksForSelect] = useState<any[]>([]);
+  const [notebooksForSelect, setNotebooksForSelect] = useState<
+    { id: number; name: string }[]
+  >([]);
 
-  //const getFinalFilteredData = () => {
   const getFinalFilteredData = useMemo(() => {
     let filteredNotes = datanoteRows || [];
     if (filteredNotes) {
@@ -141,11 +128,6 @@ function NotesInfo(props: IProps) {
     filteredNotes = _.orderBy(filteredNotes, sortField, sort);
     return filteredNotes;
   }, [datanoteRows, currentNotebookName, search, sort, currentNotebookId]);
-  // };
-
-  // useEffect(() => {
-  //   setDatanoteRows(noteRows);
-  // }, [noteRows]);
 
   useEffect(() => {
     if (noteRows && Array.isArray(noteRows)) {
@@ -166,18 +148,6 @@ function NotesInfo(props: IProps) {
     }
   }, [notebooks]);
 
-  //!!!comm
-  // const getPageCount = () => {
-  //   return Math.ceil((filteredData || []).length / pageSize);
-  // };
-  //!!!comm
-
-  // useEffect(() => {
-  //   const finalFilteredData = getFinalFilteredData();
-  //   setFilteredData(finalFilteredData);
-  //   //setDisplayData(getDisplayData(currentPage, finalFilteredData)); // Обновляем отображаемые данные
-  //   setCurrentPage(0); // Сброс текущей страницы при изменении фильтров
-  // }, [search, currentNotebookName, datanoteRows, sort]);
   useEffect(() => {
     setFilteredData(getFinalFilteredData);
     setCurrentPage(0); // Сброс текущей страницы при изменении фильтров
@@ -187,23 +157,9 @@ function NotesInfo(props: IProps) {
     return Math.ceil((filteredData || []).length / pageSize);
   }, [filteredData]);
 
-  //!!!comm
-  // useEffect(() => {
-  //   setPageCount(getPageCount());
-  //   setDisplayData(getDisplayData(currentPage, filteredData));
-  // }, [filteredData, currentPage]);
-  //!!!comm
-
   useEffect(() => {
     setDisplayData(getDisplayData(currentPage, filteredData));
   }, [filteredData, currentPage]);
-
-  // const getDisplayData = (currPage: number, data: INoteRow[]) => {
-  //   if (data && data.length > 0) {
-  //     return _.chunk(data, pageSize)[currPage] || [];
-  //   }
-  //   return [];
-  // };
 
   const getDisplayData = (currPage: number, data: INoteRow[]) => {
     if (data && Array.isArray(data) && data.length > 0) {
@@ -212,34 +168,6 @@ function NotesInfo(props: IProps) {
     return []; // Возвращаем пустой массив, если данных нет
   };
 
-  //!!!comm
-  // const handleSortClick = (field: string) => {
-  //   const newSort = sort === "asc" ? "desc" : "asc"; // Переключаем направление сортировки
-  //   setSortField(field);
-  //   setSort(newSort);
-  //   setCurrentPage(0); // Сброс текущей страницы при изменении сортировки
-
-  //   // Обновляем состояние стрелок сортировки
-  //   if (newSort === "asc") {
-  //     setSortRowNum(field === "id" ? "\u2191" : "");
-  //     setSortRowName(field === "title" ? "\u2191" : "");
-  //     setSortRowLastChangeDate(field === "lastChangeDate" ? "\u2191" : "");
-  //     setSortRowDate(field === "createDate" ? "\u2191" : "");
-  //   } else {
-  //     setSortRowNum(field === "id" ? "\u2193" : "");
-  //     setSortRowName(field === "title" ? "\u2193" : "");
-  //     setSortRowLastChangeDate(field === "lastChangeDate" ? "\u2193" : "");
-  //     setSortRowDate(field === "createDate" ? "\u2193" : "");
-  //   }
-  // };
-
-  // const pageChangeHandler = ({ selected }: any) => {
-  //   setCurrentPage(selected);
-  //   setDisplayData(getDisplayData(selected, filteredData));
-  // };
-  //!!!comm
-  //!!!
-  // const handleSortClick = (field: string) => {
   const handleSortClick = useCallback(
     (field: string) => {
       const newSort = sort === "asc" ? "desc" : "asc"; // Переключаем направление сортировки
@@ -265,9 +193,7 @@ function NotesInfo(props: IProps) {
 
   const pageChangeHandler = ({ selected }: any) => {
     setCurrentPage(selected);
-    //setDisplayData(getDisplayData(selected, filteredData));
   };
-  //!!!
 
   const searchHandler = (searchText: string) => {
     setSearch(searchText);
@@ -287,10 +213,14 @@ function NotesInfo(props: IProps) {
 
   const handleDeleteRow = async () => {
     if (delRowId !== 0) {
-      await deleteNoteFromServer(delRowId);
-      dispatch?.({ type: ACTIONS.NEED_LOAD_DATA, payload: true });
-      setModalShow(false);
-      navigate("/main");
+      try {
+        await deleteNoteFromServer(delRowId);
+        dispatch?.({ type: ACTIONS.NEED_LOAD_DATA, payload: true });
+        setModalShow(false);
+        navigate("/main");
+      } catch (error) {
+        console.error("handleDeleteRow - Ошибка при удалении заметки:", error);
+      }
     }
   };
 
@@ -321,7 +251,6 @@ function NotesInfo(props: IProps) {
   };
 
   const handleAddButtonClick = () => {
-    //e.preventDefault();
     dispatch?.({ type: ACTIONS.CHECK_ID_ROW, payload: 0 });
     const url = "/note";
     navigate(url);
@@ -332,7 +261,14 @@ function NotesInfo(props: IProps) {
   };
 
   const handlerExportNotesFromServer = async () => {
-    await exportNotesFromServer(userId);
+    try {
+      await exportNotesFromServer(userId);
+    } catch (error) {
+      console.error(
+        "handlerExportNotesFromServer - Ошибка при экспорте заметок:",
+        error
+      );
+    }
   };
 
   const handlerImportNotes = function () {
@@ -433,7 +369,7 @@ function NotesInfo(props: IProps) {
               pageSize={pageSize}
               timeZone={timeZone}
             />
-            
+
             {pageCount > 1 && ( // Условие для отображения пагинации
               <ReactPaginate
                 breakLabel="..."

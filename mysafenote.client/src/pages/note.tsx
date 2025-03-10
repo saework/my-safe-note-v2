@@ -17,8 +17,8 @@ import {
 } from "../api/note-api";
 import { useNavigate } from "react-router-dom";
 import { encryptNote, decryptNote } from "../functions";
-import EncryptModal from "../components/encrypt-modal.tsx";
-import DecryptModal from "../components/decrypt-modal.tsx";
+import EncryptModal from "../components/encrypt-modal";
+import DecryptModal from "../components/decrypt-modal";
 // import moment from "moment-timezone";
 import noteConfig from "../configs/config";
 

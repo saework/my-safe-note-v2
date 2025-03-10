@@ -10,8 +10,7 @@ interface IProps {
 }
 
 function DeleteModal(props: IProps) {
-  const { modalShow, deleteObjectName, handleCloseModal, handleDeleteRow } =
-    props;
+  const { modalShow, deleteObjectName, handleCloseModal, handleDeleteRow } = props;
 
   return (
     <Modal

@@ -13,7 +13,6 @@ interface IProps {
 }
 
 const NotebookSmallPanel = React.memo((props: IProps) => {
-  // function NotebookSmallPanel(props: IProps) {
   const {
     handleCheckNotebook,
     handleEditNotebookButtonClick,
@@ -51,7 +50,7 @@ const NotebookSmallPanel = React.memo((props: IProps) => {
                 },
               }}
             >
-              {notebooksForSelect.length && notebooksForSelect.length > 0 ? (
+              {notebooksForSelect && notebooksForSelect.length > 0 ? (
                 notebooksForSelect.map((notebook) => (
                   <MenuItem key={notebook.id} value={notebook.id}>
                     {notebook.name}

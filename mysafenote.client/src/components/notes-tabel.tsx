@@ -131,7 +131,7 @@ const NotesTable = React.memo((props: IProps) => {
                           type="button"
                           className="manual__button"
                           onClick={() => handleEditButtonClick(NoteRow.id)}
-                          onKeyDown={() => handleEditButtonClick(NoteRow.id)}
+                          // onKeyDown={() => handleEditButtonClick(NoteRow.id)}
                         >
                           <img
                             className="main-info__edit"
@@ -148,7 +148,7 @@ const NotesTable = React.memo((props: IProps) => {
                           type="button"
                           className="manual__button"
                           onClick={() => handleDelButtonClick(NoteRow.id)}
-                          onKeyDown={() => handleDelButtonClick(NoteRow.id)}
+                          // onKeyDown={() => handleDelButtonClick(NoteRow.id)}
                         >
                           <img
                             className="main-info__edit"

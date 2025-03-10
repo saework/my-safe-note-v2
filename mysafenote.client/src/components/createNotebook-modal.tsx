@@ -33,19 +33,27 @@ function CreateNotebookModal(props: IProps) {
       name: notebookName,
       userId,
     };
-    let savedNotebookId = await saveNotebookToServer(notebookData);
-    if (savedNotebookId > 0) {
-      if (dispatch) {
-        let resNotebookData = {
-          id: savedNotebookId,
-          name: notebookName,
-          userId,
-        };
-        dispatch({ type: ACTIONS.ADD_NOTEBOOK, payload: resNotebookData });
-        handleCheckNotebook(resNotebookData.id, resNotebookData.name);
+    try {
+      let savedNotebookId = await saveNotebookToServer(notebookData);
+      if (savedNotebookId > 0) {
+        if (dispatch) {
+          let resNotebookData = {
+            id: savedNotebookId,
+            name: notebookName,
+            userId,
+          };
+          dispatch({ type: ACTIONS.ADD_NOTEBOOK, payload: resNotebookData });
+          handleCheckNotebook(resNotebookData.id, resNotebookData.name);
+        }
       }
+    } catch (error) {
+      console.error(
+        "handleCreateNotebookClick - Ошибка при сохранении блокнота:",
+        error
+      );
+    } finally {
+      handleNotebookCloseModal();
     }
-    handleNotebookCloseModal();
   };
 
   return (

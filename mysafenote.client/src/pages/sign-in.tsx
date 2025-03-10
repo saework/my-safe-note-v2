@@ -14,29 +14,31 @@ import "../style.scss";
 
 function SignIn() {
   const dispatch = useContext(DispatchContext);
-  const [reqMessage, setReqMessage] = useState("");
-  const [email, setEmailVal] = useState("");
-  const [password, setPasswordVal] = useState("");
+  const [reqMessage, setReqMessage] = useState<string>("");
+  const [email, setEmailVal] = useState<string>("");
+  const [password, setPasswordVal] = useState<string>("");
   const navigate = useNavigate();
 
   // Войти по логину и паролю
   const signInHandler = async () => {
-    let loginData = await signInApi(email, password, setReqMessage);
-    if (loginData) {
-      dispatch({ type: ACTIONS.LOGIN_SAVE_STORE, payload: loginData });
-      dispatch({ type: ACTIONS.NEED_LOAD_DATA, payload: true });
-      const url = "/main";
-      navigate(url);
+    try {
+      let loginData = await signInApi(email, password, setReqMessage);
+      if (loginData) {
+        dispatch?.({ type: ACTIONS.LOGIN_SAVE_STORE, payload: loginData });
+        dispatch?.({ type: ACTIONS.NEED_LOAD_DATA, payload: true });
+        const url = "/main";
+        navigate(url);
+      }
+    } catch (error) {
+      setReqMessage("Ошибка аутентификации. Пожалуйста, попробуйте еще раз.");
     }
   };
 
-  const emailInputHandler = (e) => {
-    e.preventDefault();
+  const emailInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const emailEl = e.currentTarget;
     setEmailVal(emailEl.value);
   };
-  const passInputHandler = (e) => {
-    e.preventDefault();
+  const passInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const passwordEl = e.currentTarget;
     setPasswordVal(passwordEl.value);
   };

@@ -41,11 +41,12 @@ export interface INotebookDto {
     name: string;
     userId: number;
   }
-export type TActionPayload = number | INoteRow | INoteRows | ILoginData | boolean | INotebookDto| string;
+// export type TActionPayload = number | INoteRow |INoteRow[] | INoteRows | ILoginData | boolean | INotebookDto| string;
 
 export interface IAction {
   type: string;
-  payload: TActionPayload;
+  // payload: TActionPayload;
+  payload: any;
 }
 export interface ItmzObj {
   timeZoneValue: string;

@@ -40,11 +40,18 @@ function EditNotebookModal(props: IProps) {
       name: notebookName,
       userId,
     };
-    let savedNotebookId = await saveNotebookToServer(notebookData);
-    if (savedNotebookId > 0) {
-      if (dispatch != null) {
-        dispatch({ type: ACTIONS.NEED_LOAD_DATA, payload: true });
+    try {
+      let savedNotebookId = await saveNotebookToServer(notebookData);
+      if (savedNotebookId > 0) {
+        if (dispatch != null) {
+          dispatch({ type: ACTIONS.NEED_LOAD_DATA, payload: true });
+        }
       }
+    } catch (error) {
+      console.error(
+        "handleEditNotebookClick - Ошибка при сохранении блокнота:",
+        error
+      );
     }
     handleNotebookEditCloseModal();
   };
@@ -54,12 +61,18 @@ function EditNotebookModal(props: IProps) {
   };
 
   const handleDeleteNotebook = async () => {
-    let deleteResult = await deleteNotebookFromServer(currentNotebookId);
-    console.log(`handleDeleteNotebook deleteNotebookFromServer result = ${deleteResult}`);
-    if (deleteResult === true) {
-      if (dispatch != null) {
-        dispatch({ type: ACTIONS.NEED_LOAD_DATA, payload: true });
+    try {
+      let deleteResult = await deleteNotebookFromServer(currentNotebookId);
+      console.log(
+        `handleDeleteNotebook deleteNotebookFromServer result = ${deleteResult}`
+      );
+      if (deleteResult === true) {
+        if (dispatch != null) {
+          dispatch({ type: ACTIONS.NEED_LOAD_DATA, payload: true });
+        }
       }
+    } catch (error) {
+      console.error("handleDeleteNotebook - Ошибка при удалении блокнота:", error);
     }
     setDeleteModalShow(false);
     handleNotebookEditCloseModal();

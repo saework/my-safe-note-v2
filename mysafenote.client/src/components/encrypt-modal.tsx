@@ -20,14 +20,18 @@ function EncryptModal(props: IProps) {
       setAlertMessage("Заполните обязательные поля!");
       return;
     }
-    if (password === passwordRpt) {
-      // Хешируем пароль
-      const salt = await bcrypt.genSalt(10);
-      const notePasswordHash = await bcrypt.hash(password, salt);
-      handleEncrypt(password, notePasswordHash);
-      setPassword("");
-      setPasswordRpt("");
-      setAlertMessage("");
+    if (password === passwordRpt) { 
+      try {
+        // Хешируем пароль
+        const salt = await bcrypt.genSalt(10);
+        const notePasswordHash = await bcrypt.hash(password, salt);
+        handleEncrypt(password, notePasswordHash);
+        setPassword("");
+        setPasswordRpt("");
+        setAlertMessage("");
+      } catch (error) {
+        setAlertMessage("Ошибка при шифровании пароля. Попробуйте еще раз.");
+      }
     } else {
       setAlertMessage("Пароли не совпадают!");
     }

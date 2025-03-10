@@ -13,42 +13,40 @@ import { ACTIONS, DispatchContext } from "../state/notes-context";
 
 function SignUp() {
   const dispatch = useContext(DispatchContext);
-  const [reqMessage, setReqMessage] = useState("");
-  const [email, setEmailVal] = useState("");
-  const [password, setPasswordVal] = useState("");
-  const [passwordRpt, setPasswordRptVal] = useState("");
+  const [reqMessage, setReqMessage] = useState<string>("");
+  const [email, setEmailVal] = useState<string>("");
+  const [password, setPasswordVal] = useState<string>("");
+  const [passwordRpt, setPasswordRptVal] = useState<string>("");
   const navigate = useNavigate();
 
   // Регистрация пользователя
   const signUpHandler = async () => {
-    let loginData = await signUpApi(
-      email,
-      password,
-      passwordRpt,
-      setReqMessage
-    );
-    if (loginData) {
-      dispatch({ type: ACTIONS.LOGIN_SAVE_STORE, payload: loginData });
-      dispatch({ type: ACTIONS.NEED_LOAD_DATA, payload: true });
-      const url = "/main";
-      navigate(url);
+    try {
+      let loginData = await signUpApi(
+        email,
+        password,
+        passwordRpt,
+        setReqMessage
+      );
+      if (loginData) {
+        dispatch?.({ type: ACTIONS.LOGIN_SAVE_STORE, payload: loginData });
+        dispatch?.({ type: ACTIONS.NEED_LOAD_DATA, payload: true });
+        const url = "/main";
+        navigate(url);
+      }
+    } catch (error) {
+      setReqMessage("Ошибка регистрации. Пожалуйста, попробуйте еще раз.");
     }
   };
 
-  const emailInputHandler = (e) => {
-    e.preventDefault();
-    const emailEl = e.currentTarget;
-    setEmailVal(emailEl.value);
+  const emailInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmailVal(e.currentTarget.value);
   };
-  const passInputHandler = (e) => {
-    e.preventDefault();
-    const passwordEl = e.currentTarget;
-    setPasswordVal(passwordEl.value);
+  const passInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPasswordVal(e.currentTarget.value);
   };
-  const passInputRptHandler = (e) => {
-    e.preventDefault();
-    const passwordRptEl = e.currentTarget;
-    setPasswordRptVal(passwordRptEl.value);
+  const passInputRptHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPasswordRptVal(e.currentTarget.value);
   };
 
   return (

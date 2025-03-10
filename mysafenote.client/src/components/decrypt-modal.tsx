@@ -22,14 +22,21 @@ function DecryptModal(props: IProps) {
       setAlertMessage("Введите пароль!");
       return;
     }
-    // Проверяем введенный пароль с хешем
-    const isMatch = await bcrypt.compare(password, notePasswordHash);
-    if (isMatch) {
-      handleDecrypt(password, notePasswordHash); // Если пароли совпадают, вызываем handleDecrypt
-      setPassword("");
-      setAlertMessage("");
-    } else {
-      setAlertMessage("Неверный пароль!");
+    try {
+      // Проверяем введенный пароль с хешем
+      const isMatch = await bcrypt.compare(password, notePasswordHash);
+      if (isMatch) {
+        handleDecrypt(password, notePasswordHash); // Если пароли совпадают, вызываем handleDecrypt
+        setPassword("");
+        setAlertMessage("");
+      } else {
+        setAlertMessage("Неверный пароль!");
+      }
+    } catch (error) {
+      console.error("handleDecryptClick - Ошибка при проверке пароля:", error);
+      setAlertMessage(
+        "Ошибка при проверке пароля. Пожалуйста, повторите попытку."
+      );
     }
   };
   const handleButtonClose = () => {

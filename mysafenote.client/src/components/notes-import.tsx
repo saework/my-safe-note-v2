@@ -16,7 +16,8 @@ function NotesImport(props: IProps) {
     handleImportNotesCloseModal,
     handlerLoadFromServer,
   } = props;
-  const [file, setFile] = useState(null);
+  // const [file, setFile] = useState(null);
+  const [file, setFile] = useState<File | null>(null);
 
   const handlerImportNotesToServer = async () => {
     console.log("handlerImportNotesToServer");
@@ -24,11 +25,18 @@ function NotesImport(props: IProps) {
     if (!file) {
       return;
     }
-    var result = await importNotesToServer(userId, file);
-    if (result === true) {
-      handlerLoadFromServer();
-      setFile(null);
-      handleImportNotesCloseModal();
+    try {
+      let result = await importNotesToServer(userId, file);
+      if (result === true) {
+        handlerLoadFromServer();
+        setFile(null);
+        handleImportNotesCloseModal();
+      }
+    } catch (error) {
+      console.error(
+        "handlerImportNotesToServer - Ошибка при импорте заметок:",
+        error
+      );
     }
   };
   const handleFileChange = (event: any) => {
