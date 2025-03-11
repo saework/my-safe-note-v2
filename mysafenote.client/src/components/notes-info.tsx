@@ -115,10 +115,13 @@ function NotesInfo(props: IProps) {
             item.title.toLowerCase().includes(search.toLowerCase());
           const lastChangeDateMatch =
             item.lastChangeDate &&
-            item.lastChangeDate.toLowerCase().includes(search.toLowerCase());
+            // item.lastChangeDate.toLowerCase().includes(search.toLowerCase());
+            item.lastChangeDate.toISOString().toLowerCase().includes(search.toLowerCase());
           const createDateMatch =
             item.createDate &&
-            item.createDate.toLowerCase().includes(search.toLowerCase());
+            // item.createDate.toLowerCase().includes(search.toLowerCase());
+            item.createDate.toISOString().toLowerCase().includes(search.toLowerCase());
+            
           return titleMatch || lastChangeDateMatch || createDateMatch;
         });
       }

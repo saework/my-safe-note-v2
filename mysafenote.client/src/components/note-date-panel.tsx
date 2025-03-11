@@ -2,8 +2,10 @@ import React from "react";
 import moment from "moment-timezone";
 
 interface IProps {
-  lastChangeDate: string;
-  createDate: string;
+  // lastChangeDate: string;
+  // createDate: string;
+  lastChangeDate: Date | null;
+  createDate: Date | null;
 }
 
 function NoteDatePanel(props: IProps) {

@@ -4,7 +4,7 @@ import { INotebook } from "../interfaces";
 
 interface IProps {
   handleCheckNotebook: (value: number) => void;
-  notebookId: number;
+  notebookId: number | null;
   notebooksForSelect: INotebook[];
 }
 

@@ -25,6 +25,7 @@ import noteConfig from "../configs/config";
 import NoteButtonsPanel from "../components/note-buttons-panel";
 import NoteDatePanel from "../components/note-date-panel";
 import NoteNotebookSelect from "../components/note-notebook-select";
+import { INoteDto } from "../interfaces";
 
 
 const Note = () => {
@@ -32,23 +33,56 @@ const Note = () => {
   const dispatch = useContext(DispatchContext);
   const notesState = useContext(StateContext);
 
+  if (!notesState) {
+    return <div className="notes-loading-data">Загрузка...</div>;
+  }
+
   const userId = notesState.userId;
   const currentNoteId = notesState.currentNoteId;
   const currentNotebookId = notesState.currentNotebookId;
   const notebooks = notesState.notebooks;
-  const editor = useRef(null);
-  const [noteBody, setNoteBody] = useState("");
-  const [createDate, setCreateDate] = useState("");
-  const [lastChangeDate, setLastChangeDate] = useState("");
-  const [title, setTitle] = useState("");
-  const [notebookName, setNotebookName] = useState("");
-  const [notebookId, setNotebookId] = useState(currentNotebookId);
-  const [needLoadNoteBody, setNeedLoadNoteBody] = useState(true);
-  const [encryptModalShow, setEncryptModalShow] = useState(false);
-  const [decryptModalShow, setDecryptModalShow] = useState(false);
-  const [notePasswordHash, setNotePasswordHash] = useState("");
-  // const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const [notebooksForSelect, setNotebooksForSelect] = useState(notebooks);
+
+  // const editor = useRef(null);
+  // const [noteBody, setNoteBody] = useState("");
+  // const [createDate, setCreateDate] = useState("");
+  // const [lastChangeDate, setLastChangeDate] = useState("");
+  // const [title, setTitle] = useState("");
+  // const [notebookName, setNotebookName] = useState("");
+  // const [notebookId, setNotebookId] = useState(currentNotebookId);
+  // const [needLoadNoteBody, setNeedLoadNoteBody] = useState(true);
+  // const [encryptModalShow, setEncryptModalShow] = useState(false);
+  // const [decryptModalShow, setDecryptModalShow] = useState(false);
+  // const [notePasswordHash, setNotePasswordHash] = useState("");
+  // // const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  // const [notebooksForSelect, setNotebooksForSelect] = useState(notebooks);
+
+  // const editor = useRef<any>(null);
+  // const [noteBody, setNoteBody] = useState<string>("");
+  // const [createDate, setCreateDate] = useState<string>("");
+  // const [lastChangeDate, setLastChangeDate] = useState<string>("");
+  // const [title, setTitle] = useState<string>("");
+  // const [notebookName, setNotebookName] = useState<string>("");
+  // const [notebookId, setNotebookId] = useState<number>(currentNotebookId);
+  // const [needLoadNoteBody, setNeedLoadNoteBody] = useState<boolean>(true);
+  // const [encryptModalShow, setEncryptModalShow] = useState<boolean>(false);
+  // const [decryptModalShow, setDecryptModalShow] = useState<boolean>(false);
+  // const [notePasswordHash, setNotePasswordHash] = useState<string>("");
+  // const [notebooksForSelect, setNotebooksForSelect] = useState<any[]>(notebooks);
+
+
+  const editor = useRef<any>(null);
+  const [noteBody, setNoteBody] = useState<string>("");
+  const [createDate, setCreateDate] = useState<Date | null>(null);
+  const [lastChangeDate, setLastChangeDate] = useState<Date | null>(null);
+  const [title, setTitle] = useState<string>("");
+  const [notebookName, setNotebookName] = useState<string>("");
+  const [notebookId, setNotebookId] = useState<number | null>(currentNotebookId);
+  const [needLoadNoteBody, setNeedLoadNoteBody] = useState<boolean>(true);
+  const [encryptModalShow, setEncryptModalShow] = useState<boolean>(false);
+  const [decryptModalShow, setDecryptModalShow] = useState<boolean>(false);
+  const [notePasswordHash, setNotePasswordHash] = useState<string>("");
+  const [notebooksForSelect, setNotebooksForSelect] = useState<any[]>(notebooks);
+
   const withoutnotebookFilterName = noteConfig.WITHOUTNOTEBOOK_FILTER_NAME;
 
   useEffect(() => {
@@ -56,7 +90,7 @@ const Note = () => {
       const loginDataJSON = localStorage.getItem("loginData");
       if (loginDataJSON) {
         const loginData = JSON.parse(loginDataJSON);
-        dispatch({ type: ACTIONS.LOGIN_SAVE_STORE, payload: loginData });
+        dispatch?.({ type: ACTIONS.LOGIN_SAVE_STORE, payload: loginData });
         navigate("/main");
       }
     }
@@ -84,7 +118,7 @@ const Note = () => {
     }
   }, [notebooks]);
 
-  const handleCheckNotebook = (notebookIdCheckedVal) => {
+  const handleCheckNotebook = (notebookIdCheckedVal: number) => {
     setNotebookId(notebookIdCheckedVal);
   };
 
@@ -98,16 +132,16 @@ const Note = () => {
       setTitle(noteDataFromServer.title);
       setCreateDate(noteDataFromServer.createDate);
       setLastChangeDate(noteDataFromServer.lastChangeDate);
-      setNoteBody(noteDataFromServer.noteBody);
-      setNotebookName(noteDataFromServer.notebookName);
-      setNotebookId(noteDataFromServer.notebookId);
-      setNotePasswordHash(noteDataFromServer.notePasswordHash);
+      setNoteBody(noteDataFromServer.noteBody || "");
+      setNotebookName(noteDataFromServer.notebookName || "");
+      setNotebookId(noteDataFromServer.notebookId || null);
+      setNotePasswordHash(noteDataFromServer.notePasswordHash || "");
     }
   };
 
   const handleSaveNoteToServer = async () => {
     console.log("handleSaveNoteToServer");
-    let note;
+    let note: INoteDto;
     const date = new Date();
     let notebookIdVal = notebookId;
     if (notebookId === -1 || notebookId === -2) notebookIdVal = null;
@@ -129,7 +163,7 @@ const Note = () => {
       note = {
         noteId: currentNoteId,
         title: title,
-        createDate: createDate,
+        createDate: createDate || date,
         lastChangeDate: date,
         notebookId: notebookIdVal,
         noteBody: noteBody,
@@ -141,8 +175,8 @@ const Note = () => {
   };
 
   const handleExitNote = () => {
-    dispatch({ type: ACTIONS.CHECK_ID_ROW, payload: 0 });
-    dispatch({ type: "NEED_LOAD_DATA", payload: true }); //!!!можно  оптимизировать - обновить state вместо загрузи из бд!
+    dispatch?.({ type: ACTIONS.CHECK_ID_ROW, payload: 0 });
+    dispatch?.({ type: "NEED_LOAD_DATA", payload: true }); //!!!можно  оптимизировать - обновить state вместо загрузи из бд!
     const url = "/main";
     navigate(url);
   };
@@ -152,16 +186,16 @@ const Note = () => {
   };
 
   // Функция для шифрования заметки
-  const handleEncrypt = async (password, notePasswordHash) => {
+  const handleEncrypt = async (password: string, notePasswordHash: string) => {
     const encryptedBody = encryptNote(noteBody, password);
     setNoteBody(encryptedBody);
     setEncryptModalShow(false);
     const date = new Date();
     setNotePasswordHash(notePasswordHash);
-    var note = {
+    let note : INoteDto = {
       noteId: currentNoteId,
       title: title,
-      createDate: createDate,
+      createDate: createDate || date,
       lastChangeDate: date,
       notebookId: notebookId,
       noteBody: encryptedBody,
@@ -171,7 +205,7 @@ const Note = () => {
     await saveNoteToServer(note);
   };
 
-  const handleDecrypt = async (password) => {
+  const handleDecrypt = async (password: string) => {
     try {
       const decryptedBody = decryptNote(noteBody, password);
       setNoteBody(decryptedBody);
@@ -179,10 +213,10 @@ const Note = () => {
       setDecryptModalShow(false);
 
       const date = new Date();
-      var note = {
+      let note: INoteDto = {
         noteId: currentNoteId,
         title: title,
-        createDate: createDate,
+        createDate: createDate || date,
         lastChangeDate: date,
         notebookId: notebookId,
         noteBody: decryptedBody,
@@ -196,7 +230,7 @@ const Note = () => {
     }
   };
 
-  const config = {
+  const config : any = {
     buttons: [
       "bold",
       "italic",
@@ -248,10 +282,10 @@ const Note = () => {
     i18n: "ru",
   };
 
-  const titleChangeHandler = (e) => {
+  const titleChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
   };
-  const onBlurHandle = (newNoteBody) => {
+  const onBlurHandle = (newNoteBody: string) => {
     setNoteBody(newNoteBody);
   };
 
@@ -311,7 +345,7 @@ const Note = () => {
           ref={editor}
           value={noteBody}
           config={config}
-          tabIndex={1} // tabIndex textarea
+          // tabIndex={1} // tabIndex textarea
           onBlur={(newNoteBody) => onBlurHandle(newNoteBody)}
           className={
             notePasswordHash ? "jodit-note-editor-block" : "jodit-note-editor"

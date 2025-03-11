@@ -1,13 +1,26 @@
+// export interface INoteRow {
+//   id: number;
+//   title: string;
+//   notebookName: string;
+//   notebookId: number;
+//   createDate: string;
+//   lastChangeDate: string;
+//   noteShortText: string;
+//   noteHashPassword: string;
+// }
+
 export interface INoteRow {
   id: number;
   title: string;
   notebookName: string;
-  notebookId: number;
-  createDate: string;
-  lastChangeDate: string;
+  notebookId?: number | null;
+  createDate: Date; // Изменено на Date
+  lastChangeDate: Date; // Изменено на Date
   noteShortText: string;
-  noteHashPassword: string;
+  noteHashPassword?: string; // Добавлено ?
 }
+
+
 export interface INoteRows {
   noteRows: INoteRow[];
 }
@@ -16,10 +29,11 @@ export interface IRootReducer {
   userId: number;
   needLoadData: boolean;
   currentNoteId: number;
-  currentNotebookId: number;
+  currentNotebookId: number | null;
   currentNotebookName: string;
   noteBody: string;
-  jwtToken: {};
+  // jwtToken: {};
+  jwtToken: string;
   noteRows: INoteRow[];
   notebooks: INotebook[];
 }
@@ -55,27 +69,60 @@ export interface ItmzObj {
 export interface ISendData {
   rootReducer: IRootReducer
   currentUser: string;
-  jwtToken: {};
+  // jwtToken: {};
+  jwtToken: string;
 }
 export interface INotebook {
   id: number;
   name: string;
 }
+// export interface INoteDto {
+//   noteId?: string;
+//   title: string;
+//   createDate: string;
+//   lastChangeDate: string;
+//   notebookId: string;
+//   noteBody: string;
+//   notePasswordHash?: string;
+//   userId: string;
+// }
+
 export interface INoteDto {
-  noteId?: string;
+  noteId: number;
   title: string;
-  createDate: string;
-  lastChangeDate: string;
-  notebookId: string;
+  createDate: Date; // Изменено на Date
+  lastChangeDate: Date; // Изменено на Date
+  notebookId?: number | null;
   noteBody: string;
-  notePasswordHash?: string;
-  userId: string;
+  notePasswordHash?: string; // Добавлено ?
+  userId: number;
 }
+
+// export interface IResponseNoteDto {
+//   title: string;
+//   createDate: string;
+//   lastChangeDate: string;
+//   notebookId: string;
+//   noteBody: string;
+//   notePasswordHash?: string;
+// }
+
+// export interface IResponseNoteDto {
+//   title: string;
+//   createDate: string;
+//   lastChangeDate: string;
+//   notebookId: string;
+//   notebookName: string;
+//   noteBody: string;
+//   notePasswordHash?: string;
+// }
+
 export interface IResponseNoteDto {
-  title: string;
-  createDate: string;
-  lastChangeDate: string;
-  notebookId: string;
-  noteBody: string;
+  title: string; 
+  createDate: Date; 
+  lastChangeDate: Date; 
+  notebookId?: number | null; 
+  notebookName?: string; 
+  noteBody?: string;
   notePasswordHash?: string;
 }

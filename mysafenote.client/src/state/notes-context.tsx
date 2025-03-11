@@ -1,5 +1,5 @@
-import React, { useReducer, createContext } from "react";
-import { IAction, IRootReducer, INoteRow, ILoginData } from "../interfaces";
+import React, { useReducer, createContext, ReactNode } from "react";
+import { IAction, IRootReducer, INoteRow, ILoginData, INotebook } from "../interfaces";
 import config from "../configs/config";
 
 const allnoteFilterName = config.ALLNOTES_FILTER_NAME;
@@ -34,26 +34,27 @@ export const initialState: IRootReducer = {
   notebooks: [],
 };
 
-const reducer = (state, action) => {
+// const reducer = (state, action) => {
+  const reducer = (state: IRootReducer, action: IAction): IRootReducer => {
   const { payload, type } = action;
   switch (type) {
     case ACTIONS.DRAW_ROWS: {
-      return { ...state, noteRows: payload };
+      return { ...state, noteRows: payload as INoteRow[] };
     }
     case ACTIONS.CHECK_ID_ROW: {
-      return { ...state, currentNoteId: payload };
+      return { ...state, currentNoteId: payload as number };
     }
     case ACTIONS.CHECK_NOTEBOOK_ID: {
-      return { ...state, currentNotebookId: payload };
+      return { ...state, currentNotebookId: payload as number | null };
     }
     case ACTIONS.CHECK_NOTEBOOK_NAME: {
-      return { ...state, currentNotebookName: payload };
+      return { ...state, currentNotebookName: payload as string };
     }
     case ACTIONS.ADD_BD_ROW: {
       return {
         ...state,
         currentNoteId: state.currentNoteId + 1,
-        noteRows: [...state.noteRows, payload],
+        noteRows: [...state.noteRows, payload as INoteRow],
       };
     }
     case ACTIONS.DEL_BD_ROW: {
@@ -84,15 +85,15 @@ const reducer = (state, action) => {
       };
     }
     case ACTIONS.LOAD_BD: {
-      return { ...state, noteRows: payload };
+      return { ...state, noteRows: payload as INoteRow[] };
     }
     case ACTIONS.LOAD_NOTEBOOKS: {
-      return { ...state, notebooks: payload };
+      return { ...state, notebooks: payload as INotebook[] };
     }
     case ACTIONS.ADD_NOTEBOOK: {
       return {
         ...state,
-        notebooks: [...state.notebooks, payload],
+        notebooks: [...state.notebooks, payload as INotebook],
       };
     }
     case ACTIONS.LOGIN_SAVE_STORE: {
@@ -108,7 +109,7 @@ const reducer = (state, action) => {
       return initialState;
     }
     case ACTIONS.NEED_LOAD_DATA: {
-      return { ...state, needLoadData: payload };
+      return { ...state, needLoadData: payload as boolean };
     }
     default:
       return state;
@@ -118,7 +119,11 @@ const reducer = (state, action) => {
 export const DispatchContext = createContext<React.Dispatch<IAction> | undefined>(undefined);
 export const StateContext = createContext<IRootReducer | undefined>(undefined);
 
-export const NotesProvider = ({ children }) => {
+interface NotesProviderProps {
+  children: ReactNode;
+}
+
+export const NotesProvider: React.FC<NotesProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer<React.Reducer<IRootReducer, IAction>>(
     reducer,
     initialState
