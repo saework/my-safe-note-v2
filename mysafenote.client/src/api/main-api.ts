@@ -1,8 +1,11 @@
 import _ from "lodash";
 import { getLoginData } from "../functions";
 import { INoteRow, INotebook } from "../interfaces";
+import moment from 'moment-timezone'; //!!!
 
-export const loadNotesDataFromServer = async (userId: number): Promise<INoteRow[] | undefined> => {
+export const loadNotesDataFromServer = async (
+  userId: number
+): Promise<INoteRow[] | undefined> => {
   const jwtToken = getLoginData("jwtToken");
   if (userId === 0 || !userId) userId = Number(getLoginData("userId"));
 
@@ -24,7 +27,16 @@ export const loadNotesDataFromServer = async (userId: number): Promise<INoteRow[
     if (response.ok === true) {
       const data: INoteRow[] = await response.json();
       console.log("loadNotesDataFromServer - Получены данные с сервера");
-      return data;
+      // Преобразуем строки в объекты Date
+      const resultData: INoteRow[] = data.map((note) => ({
+        ...note,
+        //createDate: new Date(note.createDate),
+        //lastChangeDate: new Date(note.lastChangeDate),
+        createDate: moment.utc(note.createDate).local().toDate(), // Преобразуем в локальное время
+        lastChangeDate: moment.utc(note.lastChangeDate).local().toDate(),
+      }));
+      return resultData;
+      //return data;
     } else {
       console.log(
         `loadNotesDataFromServer - Ошибка при получении данных с сервера - ${response.statusText}`
@@ -37,7 +49,9 @@ export const loadNotesDataFromServer = async (userId: number): Promise<INoteRow[
   }
 };
 
-export const loadNotebooksDataFromServer = async (userId: number): Promise<INotebook[] | undefined> => {
+export const loadNotebooksDataFromServer = async (
+  userId: number
+): Promise<INotebook[] | undefined> => {
   const jwtToken = getLoginData("jwtToken");
   if (userId === 0 || !userId) userId = Number(getLoginData("userId"));
 
@@ -118,7 +132,10 @@ export const exportNotesFromServer = async (userId: number): Promise<void> => {
   }
 };
 
-export const importNotesToServer = async (userId: number, file: File): Promise<boolean> => {
+export const importNotesToServer = async (
+  userId: number,
+  file: File
+): Promise<boolean> => {
   let result = false;
   try {
     const jwtToken = getLoginData("jwtToken");
@@ -133,7 +150,6 @@ export const importNotesToServer = async (userId: number, file: File): Promise<b
 
       const formData = new FormData();
       formData.append("file", file);
-      
 
       const response = await fetch(`/api/Note/import/${userId}`, {
         method: "POST",

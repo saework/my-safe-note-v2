@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { importNotesToServer } from "../api/main-api";
+import { ACTIONS, DispatchContext } from "../state/notes-context";
 
 interface IProps {
   handleImportNotesCloseModal: () => void;
@@ -19,6 +20,8 @@ function NotesImport(props: IProps) {
   // const [file, setFile] = useState(null);
   const [file, setFile] = useState<File | null>(null);
 
+  const dispatch = useContext(DispatchContext);
+
   const handlerImportNotesToServer = async () => {
     console.log("handlerImportNotesToServer");
 
@@ -28,6 +31,7 @@ function NotesImport(props: IProps) {
     try {
       let result = await importNotesToServer(userId, file);
       if (result === true) {
+        dispatch?.({ type: ACTIONS.NEED_LOAD_DATA, payload: true });
         handlerLoadFromServer();
         setFile(null);
         handleImportNotesCloseModal();

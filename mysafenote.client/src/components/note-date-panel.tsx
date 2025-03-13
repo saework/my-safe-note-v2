@@ -19,13 +19,15 @@ function NoteDatePanel(props: IProps) {
         <div className="notebook-lastChangeDate__div">
           <label className="notebook-date-text__label">Изменено: </label>
           <label>
-            {moment.utc(lastChangeDate).tz(timeZone).format("DD.MM.YYYY HH:mm")}
+            {/* {moment.utc(lastChangeDate).tz(timeZone).format("DD.MM.YYYY HH:mm")} */}
+            {moment(lastChangeDate).format("DD.MM.YYYY HH:mm")}
           </label>
         </div>
         <div className="notebook-createDate__div">
           <label className="notebook-date-text__label">Создано: </label>
           <label>
-            {moment.utc(createDate).tz(timeZone).format("DD.MM.YYYY HH:mm")}
+            {/* {moment.utc(createDate).tz(timeZone).format("DD.MM.YYYY HH:mm")} */}
+            {moment(createDate).format("DD.MM.YYYY HH:mm")}
           </label>
         </div>
       </div>

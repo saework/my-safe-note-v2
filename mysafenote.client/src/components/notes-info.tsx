@@ -116,11 +116,13 @@ function NotesInfo(props: IProps) {
           const lastChangeDateMatch =
             item.lastChangeDate &&
             // item.lastChangeDate.toLowerCase().includes(search.toLowerCase());
-            item.lastChangeDate.toISOString().toLowerCase().includes(search.toLowerCase());
+            //item.lastChangeDate.toISOString().toLowerCase().includes(search.toLowerCase());
+            item.lastChangeDate.toLocaleString().toLowerCase().includes(search.toLowerCase());
           const createDateMatch =
             item.createDate &&
             // item.createDate.toLowerCase().includes(search.toLowerCase());
-            item.createDate.toISOString().toLowerCase().includes(search.toLowerCase());
+            //item.createDate.toISOString().toLowerCase().includes(search.toLowerCase());
+            item.createDate.toLocaleString().toLowerCase().includes(search.toLowerCase());
             
           return titleMatch || lastChangeDateMatch || createDateMatch;
         });

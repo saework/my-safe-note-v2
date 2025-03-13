@@ -1,6 +1,7 @@
 import _ from "lodash";
 import { getLoginData } from "../functions";
 import { INoteDto, IResponseNoteDto } from "../interfaces";
+import moment from 'moment-timezone'; //!!!
 
 export const loadNoteBodyFromServer = async (userId: number, noteId: number): Promise<IResponseNoteDto | undefined> => {
   const url = `api/note/notebody`;
@@ -26,8 +27,12 @@ export const loadNoteBodyFromServer = async (userId: number, noteId: number): Pr
 
       var noteData = {
         title: responseData.title,
-        createDate: responseData.createDate,
-        lastChangeDate: responseData.lastChangeDate,
+        // createDate: responseData.createDate,
+        // lastChangeDate: responseData.lastChangeDate,
+        //createDate: new Date(responseData.createDate), 
+        //lastChangeDate: new Date(responseData.lastChangeDate),
+        createDate: moment.utc(responseData.createDate).local().toDate(), // Преобразуем в локальное время
+        lastChangeDate: moment.utc(responseData.lastChangeDate).local().toDate(),
         notebookName: responseData.notebookName,
         notebookId: responseData.notebookId,
         noteBody: responseData.noteBody,
@@ -52,6 +57,26 @@ export const saveNoteToServer = async (noteData: INoteDto): Promise<boolean> => 
   if (!_.isEmpty(jwtToken)) {
     console.log(`saveNoteToServer - jwtToken - ${JSON.stringify(jwtToken)}`);
 
+    //!!!убрать!!
+    // console.log(noteData.lastChangeDate);
+    // console.log(JSON.stringify({
+    //   noteId: noteData.noteId,
+    //   title: noteData.title,
+    //   createDate: noteData.createDate,
+    //   lastChangeDate: noteData.lastChangeDate,
+    //   notebookId: noteData.notebookId,
+    //   noteBody: noteData.noteBody,
+    //   notePasswordHash: noteData.notePasswordHash,
+    //   userId: noteData.userId,
+    // }));
+    // const createDateISO = noteData.createDate instanceof Date ? noteData.createDate.toISOString() : noteData.createDate;
+    // const lastChangeDateISO = noteData.lastChangeDate instanceof Date ? noteData.lastChangeDate.toISOString() : noteData.lastChangeDate;
+ 
+    // // Преобразуем даты в строку с учетом часового пояса
+    // const createDateLocal = moment(noteData.createDate).tz('Asia/Yekaterinburg').format(); // Локальное время
+    // const lastChangeDateLocal = moment(noteData.lastChangeDate).tz('Asia/Yekaterinburg').format();
+//!!!убрать!!
+
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -63,6 +88,8 @@ export const saveNoteToServer = async (noteData: INoteDto): Promise<boolean> => 
         title: noteData.title,
         createDate: noteData.createDate,
         lastChangeDate: noteData.lastChangeDate,
+        //createDate: moment(noteData.createDate).tz('Asia/Yekaterinburg').format(),
+        //lastChangeDate: moment(noteData.lastChangeDate).tz('Asia/Yekaterinburg').format(),
         notebookId: noteData.notebookId,
         noteBody: noteData.noteBody,
         notePasswordHash: noteData.notePasswordHash,

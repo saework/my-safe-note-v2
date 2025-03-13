@@ -1,4 +1,4 @@
-﻿namespace MySafeNote.Server.Model
+﻿ namespace MySafeNote.Server.Model
 {
     public class NoteDtoGet
     {

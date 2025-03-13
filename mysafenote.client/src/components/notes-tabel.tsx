@@ -42,6 +42,41 @@ const NotesTable = React.memo((props: IProps) => {
     timeZone,
   } = props;
 
+  //!!!убрать!!
+  function isDate(obj: any): obj is Date {
+    return obj instanceof Date;
+}
+
+  console.log("!!!");
+  if (displayData)
+  {
+  console.log(displayData[0]?.lastChangeDate);
+  console.log(isDate(displayData[0]?.lastChangeDate));
+  console.log(isDate(displayData[0]?.lastChangeDate));
+  console.log(moment
+                        .utc(displayData[0]?.lastChangeDate)
+                        .tz(timeZone)
+                        .format("DD.MM.YYYY HH:mm"))
+  }
+
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    // timeZoneName: 'short', // Для отображения часового пояса
+    timeZone: 'UTC', // Указываем нужный часовой пояс
+};
+
+// Форматируем дату с учетом часового пояса
+const formattedDate = displayData[0]?.lastChangeDate.toLocaleString('ru-RU', options);
+
+console.log(formattedDate);
+  //moment(NoteRow.lastChangeDate)
+ //!!!убрать!!
+
   return (
     <>
       <div className="main-form__add-container">
@@ -113,15 +148,17 @@ const NotesTable = React.memo((props: IProps) => {
                     )}
                     <td>{NoteRow.title}</td>
                     <td className="main-info-createDate__td">
-                      {moment
-                        .utc(NoteRow.lastChangeDate)
-                        .tz(timeZone)
+                      {//moment
+                        // .utc(NoteRow.lastChangeDate)
+                        moment(NoteRow.lastChangeDate)
+                        //.tz(timeZone)
                         .format("DD.MM.YYYY HH:mm")}
                     </td>
                     <td className="main-info-lastChangeDate__td">
-                      {moment
-                        .utc(NoteRow.createDate)
-                        .tz(timeZone)
+                      {//moment
+                        // .utc(NoteRow.createDate)
+                        moment(NoteRow.createDate)
+                        //.tz(timeZone)
                         .format("DD.MM.YYYY HH:mm")}
                     </td>
                     <td className="main-info__td-edit">
