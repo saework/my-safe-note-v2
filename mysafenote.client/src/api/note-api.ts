@@ -25,7 +25,7 @@ export const loadNoteBodyFromServer = async (userId: number, noteId: number): Pr
     if (response.ok === true) {
       const responseData = await response.json();
 
-      var noteData = {
+      let noteData = {
         title: responseData.title,
         // createDate: responseData.createDate,
         // lastChangeDate: responseData.lastChangeDate,

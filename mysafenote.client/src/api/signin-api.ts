@@ -37,6 +37,8 @@ const signInApi = async (
         return loginData;
       } else if (response.status === 401) {
         setReqMessage("Не верный логин или пароль!");
+      } else if (response.status === 404) {
+        setReqMessage("Пользователь с таким логином не найден");
       } else {
         console.log(`signInApi - Ошибка соединения:${response.statusText}`);
         setReqMessage("Ошибка сервера");

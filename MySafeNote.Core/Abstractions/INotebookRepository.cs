@@ -13,5 +13,6 @@ namespace MySafeNote.Core.Abstractions
         Task<List<Notebook>> GetNotebooksByUserIdAsync(int userId);
         Task<string> GetNotebookNameByIdAsync(int? notebookId);
         //Task<Notebook> GetByIdAsync(int? notebookId);
+        Task<Notebook> GetNotebookByNameAndUserIdAsync(string name, int userId);
     }
 }

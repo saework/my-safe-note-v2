@@ -23,6 +23,12 @@ namespace MySafeNote.DataAccess.Repositories
             return notebooks;
         }
 
+        public async Task<Notebook> GetNotebookByNameAndUserIdAsync(string name, int userId)
+        {
+            var notebook = await DbSet.Where(x => x.UserId == userId && x.Name == name).FirstOrDefaultAsync();
+            return notebook;
+        }
+
         public async Task<string> GetNotebookNameByIdAsync(int? notebookId)
         {
             //string notebookName = null;

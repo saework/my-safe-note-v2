@@ -131,7 +131,8 @@ function EditNotebookModal(props: IProps) {
         modalShow={deleteModalShow}
         handleCloseModal={() => setDeleteModalShow(false)}
         handleDeleteRow={handleDeleteNotebook}
-        deleteObjectName={"блокнот и все заметки в нем"}
+        // deleteObjectName={"блокнот и все заметки в нем"}
+        deleteObjectName={"блокнот"}
       />
     </>
   );

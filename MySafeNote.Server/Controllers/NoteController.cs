@@ -485,10 +485,19 @@ namespace my_safe_note.Controllers
             {
                 foreach (var note in notes)
                 {
+                    var notebookName = string.Empty;
+                    if (note.NotebookId.HasValue)
+                    {
+                        var notebook = await _notebookRepository.GetByIdAsync(note.NotebookId.Value);
+                        if  (notebook != null)
+                            notebookName = notebook.Name;
+                    }
                     var notebookIdString = (note.NotebookId != null && note.NotebookId != 0) ? note.NotebookId.ToString() : string.Empty;
                     var createDateString = note.CreateDate.ToString("yyyyMMdd_HHmmss");
                     var lastChangeDateString = note.LastChangeDate.ToString("yyyyMMdd_HHmmss");
-                    var fileName = $"{note.Title}__{createDateString}__{lastChangeDateString}__{notebookIdString}.html";
+                    //var fileName = $"{note.Title}__{createDateString}__{lastChangeDateString}__{notebookIdString}.html";
+                    var fileName = $"{note.Title}__{createDateString}__{lastChangeDateString}__{notebookIdString}__{notebookName}.html";
+                    
                     var filePath = Path.Combine(tempDir, fileName);
                     var htmlContent = note.NoteBody ?? "<p>Нет содержимого</p>";
 
@@ -641,11 +650,35 @@ namespace my_safe_note.Controllers
                     var createDate = DateTime.ParseExact(parts[1], "yyyyMMdd_HHmmss", CultureInfo.InvariantCulture);
                     var lastChangeDate = DateTime.ParseExact(parts[2], "yyyyMMdd_HHmmss", CultureInfo.InvariantCulture);
                     var notebookId = parts.Length > 3 && int.TryParse(parts[3], out var id) ? id : (int?)null;
+                    var notebookName = parts.Length > 4 ? parts[4] : string.Empty;
+
+                    // Проверяем, существует ли блокнот
+                    Notebook ? notebook = null;
+                    if (notebookId.HasValue && notebookId != 0 && !string.IsNullOrWhiteSpace(notebookName))
+                    {
+                        notebook = await _notebookRepository.GetByIdAsync(notebookId.Value);
+                        if (notebook == null)
+                        {
+                            notebook = await _notebookRepository.GetNotebookByNameAndUserIdAsync(notebookName, userId);
+                            if (notebook == null)
+                            {
+                                // Если блокнот не найден, создаем новый
+                                notebook = new Notebook
+                                {
+                                    Name = notebookName,
+                                    UserId = userId
+                                };
+                                var newNotebookId = await _notebookRepository.CreateAsync(notebook);
+                                //notebook.Id = newNotebookId; // Устанавливаем ID нового блокнота
+                            }
+                        }
+                    }
 
                     var newNote = new Note
                     {
                         Title = noteTitle,
-                        NotebookId = notebookId,
+                        //NotebookId = notebookId,
+                        NotebookId = notebook != null ? notebook.Id : null,
                         CreateDate = createDate,
                         LastChangeDate = lastChangeDate,
                         NoteBody = noteContent,
