@@ -3,6 +3,9 @@ import { getLoginData } from "../functions";
 import { INoteRow, INotebook } from "../interfaces";
 import moment from 'moment-timezone'; //!!!
 
+
+//const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));  //!!!убрать!!
+
 export const loadNotesDataFromServer = async (
   userId: number
 ): Promise<INoteRow[] | undefined> => {
@@ -15,6 +18,8 @@ export const loadNotesDataFromServer = async (
         jwtToken
       )}`
     );
+
+    //await delay(3000); //!!!убрать!!
 
     const url = `api/note/userid/${userId}`;
     const response = await fetch(url, {

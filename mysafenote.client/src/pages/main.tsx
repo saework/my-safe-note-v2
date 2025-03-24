@@ -9,6 +9,7 @@ import NotesInfo from "../components/notes-info";
 import { StateContext } from "../state/notes-context";
 import { ACTIONS, DispatchContext } from "../state/notes-context";
 import { useNavigate } from "react-router-dom";
+import Loader from '../components/loader';
 
 function Main() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -16,9 +17,14 @@ function Main() {
   const dispatch = useContext(DispatchContext);
   const notesState = useContext(StateContext);
 
-  if (!notesState) {
-    return <div className="notes-loading-data">Загрузка...</div>;
+  // if (!notesState) {
+  //   return <div className="notes-loading-data">Загрузка...</div>;
+  // }
+
+  if (!notesState || notesState.userId === undefined) {
+    return <Loader />;
   }
+
   const userId = notesState.userId;
   const needLoadData = notesState.needLoadData;
 
@@ -59,7 +65,18 @@ function Main() {
   return (
     <div>
       <Container>
-        {loading ? <div>Загрузка...</div> : <NotesInfo handlerLoadFromServer={loadDataFromServer} />}
+        {/* {loading ? <div>Загрузка...</div> : <NotesInfo handlerLoadFromServer={loadDataFromServer} />} */}
+        {/* <Loader />
+        <NotesInfo handlerLoadFromServer={loadDataFromServer} /> */}
+
+        {/* {loading ? <Loader /> : <NotesInfo handlerLoadFromServer={loadDataFromServer} />} */}
+
+        <NotesInfo handlerLoadFromServer={loadDataFromServer} />
+        {loading && (
+          <div className="loader-overlay">
+            <Loader />
+          </div>
+        )}
       </Container>
     </div>
   );

@@ -26,15 +26,20 @@ import NoteButtonsPanel from "../components/note-buttons-panel";
 import NoteDatePanel from "../components/note-date-panel";
 import NoteNotebookSelect from "../components/note-notebook-select";
 import { INoteDto } from "../interfaces";
-
+import Loader from "../components/loader";
 
 const Note = () => {
   const navigate = useNavigate();
   const dispatch = useContext(DispatchContext);
   const notesState = useContext(StateContext);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  // if (!notesState) {
+  //   return <div className="notes-loading-data">Загрузка...</div>;
+  // }
 
   if (!notesState) {
-    return <div className="notes-loading-data">Загрузка...</div>;
+    return <Loader />;
   }
 
   const userId = notesState.userId;
@@ -69,19 +74,21 @@ const Note = () => {
   // const [notePasswordHash, setNotePasswordHash] = useState<string>("");
   // const [notebooksForSelect, setNotebooksForSelect] = useState<any[]>(notebooks);
 
-
   const editor = useRef<any>(null);
   const [noteBody, setNoteBody] = useState<string>("");
   const [createDate, setCreateDate] = useState<Date | null>(null);
   const [lastChangeDate, setLastChangeDate] = useState<Date | null>(null);
   const [title, setTitle] = useState<string>("");
   const [notebookName, setNotebookName] = useState<string>("");
-  const [notebookId, setNotebookId] = useState<number | null>(currentNotebookId);
+  const [notebookId, setNotebookId] = useState<number | null>(
+    currentNotebookId
+  );
   const [needLoadNoteBody, setNeedLoadNoteBody] = useState<boolean>(true);
   const [encryptModalShow, setEncryptModalShow] = useState<boolean>(false);
   const [decryptModalShow, setDecryptModalShow] = useState<boolean>(false);
   const [notePasswordHash, setNotePasswordHash] = useState<string>("");
-  const [notebooksForSelect, setNotebooksForSelect] = useState<any[]>(notebooks);
+  const [notebooksForSelect, setNotebooksForSelect] =
+    useState<any[]>(notebooks);
 
   const withoutnotebookFilterName = noteConfig.WITHOUTNOTEBOOK_FILTER_NAME;
 
@@ -123,19 +130,26 @@ const Note = () => {
   };
 
   const handlerLoadNoteBodyFromServer = async () => {
-    let noteDataFromServer = await loadNoteBodyFromServer(
-      userId,
-      currentNoteId
-    );
-    console.log("loadNoteBodyFromServer");
-    if (noteDataFromServer) {
-      setTitle(noteDataFromServer.title);
-      setCreateDate(noteDataFromServer.createDate);
-      setLastChangeDate(noteDataFromServer.lastChangeDate);
-      setNoteBody(noteDataFromServer.noteBody || "");
-      setNotebookName(noteDataFromServer.notebookName || "");
-      setNotebookId(noteDataFromServer.notebookId || null);
-      setNotePasswordHash(noteDataFromServer.notePasswordHash || "");
+    setLoading(true);
+    try {
+      let noteDataFromServer = await loadNoteBodyFromServer(
+        userId,
+        currentNoteId
+      );
+      console.log("loadNoteBodyFromServer");
+      if (noteDataFromServer) {
+        setTitle(noteDataFromServer.title);
+        setCreateDate(noteDataFromServer.createDate);
+        setLastChangeDate(noteDataFromServer.lastChangeDate);
+        setNoteBody(noteDataFromServer.noteBody || "");
+        setNotebookName(noteDataFromServer.notebookName || "");
+        setNotebookId(noteDataFromServer.notebookId || null);
+        setNotePasswordHash(noteDataFromServer.notePasswordHash || "");
+      }
+    } catch (error) {
+      console.error("Ошибка при загрузке данных заметки:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -171,12 +185,19 @@ const Note = () => {
         userId,
       };
     }
-    await saveNoteToServer(note);
+    let savedNoteId = await saveNoteToServer(note);
+    if (
+      (!currentNoteId || currentNoteId === 0) &&
+      savedNoteId &&
+      savedNoteId != 0
+    ) {
+      dispatch?.({ type: ACTIONS.CHECK_ID_ROW, payload: savedNoteId });
+    }
   };
 
   const handleExitNote = () => {
     dispatch?.({ type: ACTIONS.CHECK_ID_ROW, payload: 0 });
-    dispatch?.({ type: "NEED_LOAD_DATA", payload: true }); //!!!можно  оптимизировать - обновить state вместо загрузи из бд!
+    dispatch?.({ type: "NEED_LOAD_DATA", payload: true });
     const url = "/main";
     navigate(url);
   };
@@ -192,7 +213,7 @@ const Note = () => {
     setEncryptModalShow(false);
     const date = new Date();
     setNotePasswordHash(notePasswordHash);
-    let note : INoteDto = {
+    let note: INoteDto = {
       noteId: currentNoteId,
       title: title,
       createDate: createDate || date,
@@ -230,7 +251,7 @@ const Note = () => {
     }
   };
 
-  const config : any = {
+  const config: any = {
     buttons: [
       "bold",
       "italic",
@@ -306,6 +327,7 @@ const Note = () => {
           notePasswordHash={notePasswordHash}
           handleEncryptDecryptClick={handleEncryptDecryptClick}
           handleExitNote={handleExitNote}
+          currentNoteId={currentNoteId}
         />
 
         <TextField
@@ -316,7 +338,7 @@ const Note = () => {
           className="note-name__textfield"
         />
 
-        <NoteNotebookSelect 
+        <NoteNotebookSelect
           handleCheckNotebook={handleCheckNotebook}
           notebookId={notebookId}
           notebooksForSelect={notebooksForSelect}
@@ -358,7 +380,12 @@ const Note = () => {
           </div>
         )}
       </div>
-      
+
+      {loading && (
+        <div className="loader-overlay">
+          <Loader />
+        </div>
+      )}
     </div>
   );
 };

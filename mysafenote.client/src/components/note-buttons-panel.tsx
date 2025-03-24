@@ -7,15 +7,17 @@ interface IProps {
   handleEncryptDecryptClick: () => void;
   handleExitNote: () => void;
   notePasswordHash: string;
+  currentNoteId: number;
 }
 
 function NoteButtonsPanel(props: IProps) {
   const {
     handleSaveNoteToServer,
     handleLoadNoteDocxFromServer,
-    notePasswordHash,
     handleEncryptDecryptClick,
-    handleExitNote
+    handleExitNote,
+    notePasswordHash,
+    currentNoteId
   } = props;
 
   return (
@@ -43,7 +45,7 @@ function NoteButtonsPanel(props: IProps) {
           variant="success"
           className="note-headpanel__button"
           // disabled={notePasswordHash}
-          disabled={notePasswordHash !== ""}
+          disabled={notePasswordHash !== "" || (!currentNoteId || currentNoteId === 0)}
         >
           <label className="note-headpanel__label">Скачать в docx</label>
           <img
@@ -59,6 +61,7 @@ function NoteButtonsPanel(props: IProps) {
           type="button"
           variant="success"
           className="note-headpanel__button"
+          disabled={(!currentNoteId || currentNoteId === 0)}
         >
           <label className="note-headpanel__label">
             {notePasswordHash ? "Расшифровать" : "Зашифровать"}

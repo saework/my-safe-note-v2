@@ -577,6 +577,74 @@ button.btn-info:hover{
   }
 }
 
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный фон */
+  display: flex;
+  justify-content: center; /* Центрирование по горизонтали */
+  align-items: center; /* Центрирование по вертикали */
+  z-index: 9999; /* Высокий z-index для отображения поверх приложения */
+}
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border: 5px dotted #FFF; /* Белая пунктирная граница */
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  box-sizing: border-box;
+  animation: rotation 2s linear infinite; /* Анимация вращения */
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// .loader-overlay {
+//   position: fixed;
+//   top: 0;
+//   left: 0;
+//   right: 0;
+//   bottom: 0;
+//   background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный фон */
+//   display: flex;
+//   justify-content: center; /* Центрирование по горизонтали */
+//   align-items: center; /* Центрирование по вертикали */
+//   z-index: 9999; /* Высокий z-index для отображения поверх приложения */
+// }
+
+// .loader {
+//   font-size: 10px;
+//   width: 1em;
+//   height: 1em;
+//   border-radius: 50%;
+//   position: relative;
+//   text-indent: -9999em;
+//   animation: mulShdSpin 1.1s infinite ease;
+//   transform: translateZ(0);
+// }
+
+// @keyframes mulShdSpin {
+//   0%,
+//   100% {
+//     box-shadow: 0em -2.6em 0em 0em #ffffff, 1.8em -1.8em 0 0em rgba(255,255,255, 0.2), 2.5em 0em 0 0em rgba(255,255,255, 0.2), 1.75em 1.75em 0 0em rgba(255,255,255, 0.2), 0em 2.5em 0 0em rgba(255,255,255, 0.2), -1.8em 1.8em 0 0em rgba(255,255,255, 0.2), -2.6em 0em 0 0em rgba(255,255,255, 0.5), -1.8em -1.8em 0 0em rgba(255,255,255, 0.7);
+//   }
+//   12.5% {
+//     box-shadow: 0em -2.6em 0em 0em rgba(255,255,255, 0.7), 1.8em -1.8em 0 0em #ffffff, 2.5em 0em 0 0em rgba(255,255,255, 0.2), 1.75em 1.75em 0 0em rgba(255,255,255, 0.2), 0em 2.5em 0 0em rgba(255,255,255, 0.2), -1.8em 1.8em 0 0em rgba(255,255,255, 0.2), -2.6em 0em 0 0em rgba(255,255,255, 0.2), -1.8em -1.8em 0 0em rgba(255,255,255, 0.5);
+//   }
+// }
+
+
 @media screen and (min-width: 780px) and (max-width: 1200px) {
   .table th {
     padding-top: 0.75rem;

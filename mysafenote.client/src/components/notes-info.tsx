@@ -26,6 +26,7 @@ import NotebookList from "./notebook-list";
 import NotebookSmallPanel from "./notebook-small-panel";
 import Header from "./header";
 import Menu from "./menu";
+import Loader from '../components/loader';
 
 interface IProps {
   handlerLoadFromServer: () => void;
@@ -39,7 +40,7 @@ function NotesInfo(props: IProps) {
   const navigate = useNavigate();
 
   if (!notesState) {
-    return <div className="notes-loading-data">Загрузка...</div>;
+    return <Loader />;
   }
 
   const noteRows = notesState.noteRows;

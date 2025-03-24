@@ -1,9 +1,14 @@
 import _ from "lodash";
 import { getLoginData } from "../functions";
 import { INoteDto, IResponseNoteDto } from "../interfaces";
-import moment from 'moment-timezone'; //!!!
+import moment from 'moment-timezone';
+
+//const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));  //!!!убрать!!
 
 export const loadNoteBodyFromServer = async (userId: number, noteId: number): Promise<IResponseNoteDto | undefined> => {
+  
+  //await delay(3000); //!!!убрать!!
+  
   const url = `api/note/notebody`;
   const jwtToken = getLoginData("jwtToken");
   if (!_.isEmpty(jwtToken)) {
@@ -50,8 +55,10 @@ export const loadNoteBodyFromServer = async (userId: number, noteId: number): Pr
   }
 };
 
-export const saveNoteToServer = async (noteData: INoteDto): Promise<boolean> => {
-  let result = false;
+// export const saveNoteToServer = async (noteData: INoteDto): Promise<boolean> => {
+  export const saveNoteToServer = async (noteData: INoteDto): Promise<number> => {
+  // let result = false;
+  let result = 0;
   const url = `api/note/savenote`;
   const jwtToken = getLoginData("jwtToken");
   if (!_.isEmpty(jwtToken)) {
@@ -98,7 +105,8 @@ export const saveNoteToServer = async (noteData: INoteDto): Promise<boolean> => 
     });
     if (response.ok === true) {
       console.log("saveNoteToServer - Заметка сохранена на сервера");
-      result = true;
+      const responseData = await response.json();
+      result = responseData;
     } else {
       console.log(
         `saveNoteToServer - Ошибка при сохранении заметки на сервер - ${response.statusText}`
