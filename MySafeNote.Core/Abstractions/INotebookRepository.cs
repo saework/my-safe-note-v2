@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MySafeNote.Core.Abstractions
@@ -12,7 +10,6 @@ namespace MySafeNote.Core.Abstractions
         Task<int> DeleteAllNotebooksByUserEmailAsync(string email);
         Task<List<Notebook>> GetNotebooksByUserIdAsync(int userId);
         Task<string> GetNotebookNameByIdAsync(int? notebookId);
-        //Task<Notebook> GetByIdAsync(int? notebookId);
         Task<Notebook> GetNotebookByNameAndUserIdAsync(string name, int userId);
     }
 }

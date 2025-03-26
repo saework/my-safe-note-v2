@@ -4,18 +4,22 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MySafeNote.Core;
 using MySafeNote.Core.Abstractions;
-using MySafeNote.WebHost.Model;
-using MySafeNote.DataAccess.Repositories;
-using Microsoft.IdentityModel.Tokens;
-using MySafeNote.Server.Auth;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
+//using MySafeNote.WebHost.Model;
+//using MySafeNote.DataAccess.Repositories;
+//using Microsoft.IdentityModel.Tokens;
+//using MySafeNote.Server.Auth;
+//using System.IdentityModel.Tokens.Jwt;
+//using System.Security.Claims;
 using MySafeNote.Server.Model;
 using Microsoft.AspNetCore.Identity;
-using MySafeNote.Server.Controllers.my_safe_note.Controllers;
-using DocumentFormat.OpenXml.Spreadsheet;
+//using MySafeNote.Server.Controllers.my_safe_note.Controllers;
+//using MySafeNote.Server;
+//using DocumentFormat.OpenXml.Spreadsheet;
+using Microsoft.AspNetCore.Authorization;
+//using  MySafeNote.Server.Controllers.Services;
 
-namespace my_safe_note.Controllers
+namespace MySafeNote.Server.Controllers
+//namespace my_safe_note.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -38,6 +42,7 @@ namespace my_safe_note.Controllers
 
         // GET: api/User
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<List<User>>> GetUsersAsync()
         {
             var users = await _userRepository.GetAllAsync();
@@ -46,6 +51,7 @@ namespace my_safe_note.Controllers
 
         // GET api/User/5
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<User>> GetUserByIdAsync(int id)
         {
             var user = await _userRepository.GetByIdAsync(id);
@@ -58,6 +64,7 @@ namespace my_safe_note.Controllers
 
         // GET api/User/email/{email}
         [HttpGet("email/{email}")]
+        [Authorize]
         public async Task<ActionResult<User>> GetUserByEmailAsync(string email)
         {
             var user = await _userRepository.GetUserByEmailAsync(email);
@@ -69,20 +76,22 @@ namespace my_safe_note.Controllers
         }
 
         [HttpPost("signup/")]
-        public async Task<IActionResult> CreateUserAsync(UserDto userDto)
+        //public async Task<IActionResult> CreateUserAsync(UserDto userDto)
+        public async Task<IActionResult> CreateUserAsync([FromBody] UserDto userDto)
         {
             // Проверяем, что данные в данные валидны
             if (userDto == null || string.IsNullOrEmpty(userDto.Email) || string.IsNullOrEmpty(userDto.Password))
             {
                 return BadRequest("Некорректные данные.");
             }
-            var userExists = await _userRepository.CheckUserExists(userDto.Email.Trim());
+            var userExists = await _userRepository.CheckUserExistsAsync(userDto.Email.Trim());
             if (userExists)
             {
                 //return NotFound($"User с Email: {userDto.Email} уже создан.");
                 //return BadRequest("Пользователь с таким Email уже создан.");
                 //return Ok("Пользователь с таким Email уже создан.");
-                return Unauthorized("Пользователь с таким Email уже создан.");
+                //return Unauthorized("Пользователь с таким Email уже создан.");
+                return Conflict("Пользователь с таким Email уже создан.");
             }
             try
             {
@@ -98,16 +107,21 @@ namespace my_safe_note.Controllers
             }
             catch (ArgumentException ex)
             {
-                return BadRequest(ex.Message);
+                string errMessage = ex.Message;
+                _logger.LogError("Ошибка при создании пользователя. {errMessage}", errMessage);
+                return BadRequest(errMessage);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Внутренняя ошибка сервера. {ex.Message}");
+                string errMessage = $"Внутренняя ошибка сервера. {ex.Message}";
+                _logger.LogError(errMessage);
+                return StatusCode(500, errMessage);
             }
         }
 
         // PUT api/User/5
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<ActionResult<User>> ChangeUserByIdAsync(int id, [FromBody] UserDto changedUser)
         {
             if (changedUser is null)
@@ -135,6 +149,7 @@ namespace my_safe_note.Controllers
 
         // DELETE api/User/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<ActionResult<int>> DeleteUserByIdAsync(int id)
         {
             var deletedId = await _userRepository.RemoveAsync(id);
@@ -143,6 +158,7 @@ namespace my_safe_note.Controllers
 
         // DELETE api/User/email/{email}
         [HttpDelete("email/{email}")]
+        [Authorize]
         public async Task<ActionResult<int>> DeleteUserByEmailAsync(string email)
         {
             var user = await _userRepository.GetUserByEmailAsync(email);
@@ -155,16 +171,17 @@ namespace my_safe_note.Controllers
             var deleteUserNotebooks = await _notebookRepository.DeleteAllNotebooksByUserEmailAsync(email);
             _logger.LogInformation("deleteUserNotebooks = {deleteUserNotebooks}", deleteUserNotebooks);
             var deletedId = await _userRepository.RemoveAsync(user.Id);
-
+            return Ok(deletedId);
             //if (deleteUserNotes == 0 || deletedId == 0)
-            if (deletedId == 0)
-                return Ok(0);
-            else
-                return Ok(deletedId);
+            //if (deletedId == 0)
+            //    return Ok(0);
+            //else
+            //    return Ok(deletedId);
         }
 
         [HttpPost("login/")]
-        public async Task<IActionResult> LoginUserByEmail(UserDto userLoginData)
+        //public async Task<IActionResult> LoginUserByEmail(UserDto userLoginData)
+        public async Task<IActionResult> LoginUserByEmail([FromBody] UserDto userLoginData)
         {
             if (userLoginData == null)
             {

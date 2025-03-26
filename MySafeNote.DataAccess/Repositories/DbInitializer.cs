@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using MySafeNote.DataAccess.Data;
 using System.Linq;
 
@@ -17,7 +15,6 @@ namespace MySafeNote.DataAccess.Repositories
                 await dbContext.Notebooks.AddRangeAsync(FakeDataFactory.Notebooks);
                 await dbContext.SaveChangesAsync();
             }
-
         }
     }
 }

@@ -53,7 +53,6 @@ namespace MySafeNote.DataAccess.Repositories
             DbSet.Update(entity);
             await SaveChanges();
             return entity;
-            //return await DbSet.FirstOrDefaultAsync(e => e.Id == entity.Id);
         }
 
         private async Task SaveChanges()

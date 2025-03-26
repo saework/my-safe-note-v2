@@ -10,7 +10,8 @@ using System.Threading.Tasks;
 using MySafeNote.Server.Model;
 //using Microsoft.AspNetCore.Identity;
 
-namespace my_safe_note
+//namespace my_safe_note
+namespace MySafeNote.Server
 {
     public class Services
     {

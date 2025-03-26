@@ -31,9 +31,9 @@ namespace MySafeNote.DataAccess.Repositories
 
         public async Task<string> GetNotebookNameByIdAsync(int? notebookId)
         {
-            //string notebookName = null;
             var notebookName = string.Empty;
-            if (notebookId != null)
+            //if (notebookId != null)
+            if (notebookId.HasValue)
             {
                 var notebook = await DbSet.Where(x => x.Id == notebookId).FirstOrDefaultAsync();
                 if (notebook != null)
@@ -46,7 +46,8 @@ namespace MySafeNote.DataAccess.Repositories
         {
             var notebooks = new List<Notebook>();
             var userId = await _userRepository.GetUserIdByEmailAsync(email);
-            if (userId != 0)
+            //if (userId != 0)
+            if (userId > 0)
                 notebooks = await DbSet.Where(x => x.UserId == userId).ToListAsync();
             return notebooks;
         }
@@ -54,7 +55,8 @@ namespace MySafeNote.DataAccess.Repositories
         public async Task<int> DeleteAllNotebooksByUserEmailAsync(string email)
         {
             var notebooksToDelete = await GetAllNotebooksByUserEmailAsync(email);
-            if (notebooksToDelete.Any())
+            //if (notebooksToDelete.Any())
+            if (notebooksToDelete.Count > 0)
             {
                 DbSet.RemoveRange(notebooksToDelete);
                 return await Context.SaveChangesAsync(); // Возвращаем количество удалённых записей

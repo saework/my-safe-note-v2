@@ -18,7 +18,8 @@ namespace MySafeNote.DataAccess.Repositories
         {
             var notes = new List<Note>();
             var userId = await _userRepository.GetUserIdByEmailAsync(email);
-            if (userId != 0)
+            //if (userId != 0)
+            if (userId > 0)
                 notes = await DbSet.Where(x => x.UserId == userId).ToListAsync();
             return notes;
         }
@@ -26,7 +27,8 @@ namespace MySafeNote.DataAccess.Repositories
         public async Task<int> DeleteAllNotesByUserEmailAsync(string email)
         {
             var notesToDelete = await GetAllNotesByUserEmailAsync(email);
-            if (notesToDelete.Any())
+            //if (notesToDelete.Any())
+            if (notesToDelete.Count > 0)
             {
                 DbSet.RemoveRange(notesToDelete);
                 return await Context.SaveChangesAsync(); // Возвращаем количество удалённых записей
