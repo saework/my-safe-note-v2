@@ -18,10 +18,6 @@ namespace MySafeNote
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // добавление сервисов аутентификации
-            //builder.Services.AddAuthentication("Bearer")  // схема аутентификации - с помощью jwt-токенов
-            //    .AddJwtBearer();      // подключение аутентификации с помощью jwt-токенов
-
             builder.Services.AddAuthorization();
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -51,6 +47,8 @@ namespace MySafeNote
 
             // Настройка контекста базы данных
             var connection = builder.Configuration.GetConnectionString("Default");
+
+            // TODO поменять на postgee перед запуском в prod !!!
             builder.Services.AddDbContext<DataContext>(options => options.UseSqlite(connection));
 
             // Регистрация репозиториев
@@ -58,50 +56,17 @@ namespace MySafeNote
             builder.Services.AddScoped<INoteRepository, NoteRepository>();
             builder.Services.AddScoped<INotebookRepository, NotebookRepository>();
 
-            //// Установка статических файлов для SPA
-            //builder.Services.AddSpaStaticFiles(configuration =>
-            //{
-            //    configuration.RootPath = "ClientApp/build";
-            //});
-
             var app = builder.Build();
 
-            //app.UseAuthentication();   // добавление middleware аутентификации
             app.UseAuthentication();
             app.UseAuthorization();
 
-            //// Настройка конвейера обработки HTTP-запросов
-            //if (app.Environment.IsDevelopment())
-            //{
-            //    app.UseDeveloperExceptionPage();
-            //}
-            //else
-            //{
-            //    app.UseExceptionHandler("/Error");
-            //    app.UseHsts();
-            //}
-
-            // Инициализация базы данных (если это требуется в вашем проекте)
-            //DbInitializer.Initialize(app.Services.CreateScope().ServiceProvider.GetRequiredService<DataContext>());
             // Инициализация базы данных
             using (var scope = app.Services.CreateScope())
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<DataContext>();
                 DbInitializer.Initialize(dbContext);
             }
-
-            //// Настройка Swagger
-            //app.UseSwagger();
-            //app.UseSwaggerUI(c =>
-            //{
-            //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-            //});
-
-            //app.UseHttpsRedirection();
-            //app.UseStaticFiles();
-            //app.UseSpaStaticFiles();
-
-            //app.UseRouting();
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
@@ -115,19 +80,9 @@ namespace MySafeNote
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
+            //pp.UseAuthorization();
             app.MapControllers(); // Настройка маршрутов контроллеров
 
-            // Настройка SPA
-            //app.UseSpa(spa =>
-            //{
-            //    spa.Options.SourcePath = "ClientApp";
-
-            //    if (app.Environment.IsDevelopment())
-            //    {
-            //        spa.UseReactDevelopmentServer(npmScript: "start");
-            //    }
-            //});
             app.MapFallbackToFile("/index.html");
 
             app.Run(); // Запуск приложения
@@ -135,36 +90,3 @@ namespace MySafeNote
     }
 }
 
-
-/*
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-app.UseDefaultFiles();
-app.UseStaticFiles();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.MapFallbackToFile("/index.html");
-
-app.Run();
-*/
