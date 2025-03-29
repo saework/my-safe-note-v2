@@ -1,10 +1,9 @@
-﻿using MySafeNote.Core;
-
-namespace MySafeNote.Server.Model
+﻿using System;
+//namespace MySafeNote.Server.Model
+namespace MySafeNote.Core.Dtos
 {
-    public class NoteDto
+    public class NoteDataWithBodyDto
     {
-        public int NoteId { get; set; }
         public required string Title { get; set; }
         public string? NotebookName { get; set; }
         public int? NotebookId { get; set; }
@@ -12,6 +11,5 @@ namespace MySafeNote.Server.Model
         public DateTime LastChangeDate { get; set; }
         public string? NoteBody { get; set; }
         public string? NotePasswordHash { get; set; }
-        public int UserId { get; set; }
     }
 }

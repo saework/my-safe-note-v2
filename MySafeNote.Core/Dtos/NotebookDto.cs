@@ -1,4 +1,5 @@
-﻿namespace MySafeNote.Server.Model
+﻿//namespace MySafeNote.Server.Model
+namespace MySafeNote.Core.Dtos
 {
     public class NotebookDto
     {

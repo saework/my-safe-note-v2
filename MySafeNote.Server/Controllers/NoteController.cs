@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MySafeNote.Core;
 using MySafeNote.Core.Abstractions;
-using MySafeNote.WebHost.Model;
+//using MySafeNote.WebHost.Model;
 using MySafeNote.DataAccess.Repositories;
 using MySafeNote.Server;
 using System.Collections.Generic;
 using System.Linq;
 using MySafeNote.Server.Controllers;
-using MySafeNote.Server.Model;
+//using MySafeNote.Server.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 //using Xceed.Words.NET;
@@ -26,6 +26,7 @@ using MySafeNote.DataAccess;
 using System.Globalization;
 //using Xceed.Words.NET;
 //using Newtonsoft.Json;
+using MySafeNote.Core.Dtos;
 
 //namespace my_safe_note.Controllers
 namespace MySafeNote.Server.Controllers

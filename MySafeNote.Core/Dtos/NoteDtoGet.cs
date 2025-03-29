@@ -1,4 +1,6 @@
-﻿ namespace MySafeNote.Server.Model
+﻿using System;
+//namespace MySafeNote.Server.Model
+namespace MySafeNote.Core.Dtos
 {
     public class NoteDtoGet
     {

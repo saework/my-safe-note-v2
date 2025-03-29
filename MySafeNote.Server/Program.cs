@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.IdentityModel.Tokens;
 using MySafeNote.Server.Auth;
+using MySafeNote.Server.Services;
 
 namespace MySafeNote
 {
@@ -55,6 +56,10 @@ namespace MySafeNote
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<INoteRepository, NoteRepository>();
             builder.Services.AddScoped<INotebookRepository, NotebookRepository>();
+
+            // Регистрация сервисов
+            builder.Services.AddScoped<INotebookService, NotebookService>();
+            builder.Services.AddScoped<IUserService, UserService>();
 
             var app = builder.Build();
 

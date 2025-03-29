@@ -10,13 +10,17 @@ using MySafeNote.Core.Abstractions;
 //using MySafeNote.Server.Auth;
 //using System.IdentityModel.Tokens.Jwt;
 //using System.Security.Claims;
-using MySafeNote.Server.Model;
+
+//using MySafeNote.Server.Model;
+using MySafeNote.Server.Services;
 using Microsoft.AspNetCore.Identity;
 //using MySafeNote.Server.Controllers.my_safe_note.Controllers;
 //using MySafeNote.Server;
 //using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Authorization;
 //using  MySafeNote.Server.Controllers.Services;
+using MySafeNote.Core.Dtos;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace MySafeNote.Server.Controllers
 //namespace my_safe_note.Controllers
@@ -30,13 +34,15 @@ namespace MySafeNote.Server.Controllers
         private readonly IUserRepository _userRepository;
         private readonly INoteRepository _noteRepository;
         private readonly INotebookRepository _notebookRepository;
-        public UserController(ILogger<UserController> logger, IUserRepository userRepository, INoteRepository noteRepository, INotebookRepository notebookRepository)
+        private readonly IUserService  _userService;
+        public UserController(ILogger<UserController> logger, IUserRepository userRepository, INoteRepository noteRepository, INotebookRepository notebookRepository, IUserService  userService)
         {
             _logger = logger;
             _passwordHasher = new PasswordHasher<User>();
             _userRepository = userRepository;
             _noteRepository = noteRepository;
             _notebookRepository = notebookRepository;
+            _userService = userService;
 
         }
 
@@ -101,7 +107,8 @@ namespace MySafeNote.Server.Controllers
                 var newUser = new User { Email = userDto.Email, PasswordHash = passwordHash };
                 var newUserId = await _userRepository.CreateAsync(newUser);
 
-                var response = Services.CreateJwtToken(newUserId, email);
+                //var response = Services.CreateJwtToken(newUserId, email);
+                var response = _userService.CreateJwtToken(newUserId, email);
                 return Ok(response);
                 //return CreatedAtAction(nameof(GetUserByIdAsync), new { id = newUserId }, newUserId);
             }
@@ -214,7 +221,8 @@ namespace MySafeNote.Server.Controllers
                 return Unauthorized("Не верный пароль.");
             }
 
-            var response = Services.CreateJwtToken(user.Id, email);
+            //var response = Services.CreateJwtToken(user.Id, email);
+            var response = _userService.CreateJwtToken(user.Id, email);
             return Ok(response);
         }
 

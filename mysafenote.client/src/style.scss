@@ -583,7 +583,7 @@ button.btn-info:hover{
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный фон */
+  // background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный фон */
   display: flex;
   justify-content: center; /* Центрирование по горизонтали */
   align-items: center; /* Центрирование по вертикали */
@@ -593,7 +593,8 @@ button.btn-info:hover{
 .loader {
   width: 48px;
   height: 48px;
-  border: 5px dotted #FFF; /* Белая пунктирная граница */
+  // border: 5px dotted #FFF; /* Белая пунктирная граница */
+  border: 5px dotted #9b9494;
   border-radius: 50%;
   display: inline-block;
   position: relative;

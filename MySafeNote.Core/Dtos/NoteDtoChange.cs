@@ -1,6 +1,7 @@
 ﻿using System;
 
-namespace MySafeNote.WebHost.Model
+//namespace MySafeNote.WebHost.Model
+namespace MySafeNote.Core.Dtos
 {
     public class NoteDtoChange
     {

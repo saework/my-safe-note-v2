@@ -3,11 +3,11 @@ import { getLoginData } from "../functions";
 import { INoteDto, IResponseNoteDto } from "../interfaces";
 import moment from 'moment-timezone';
 
-//const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));  //!!!убрать!!
+// const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));  //!!!убрать!!
 
 export const loadNoteBodyFromServer = async (userId: number, noteId: number): Promise<IResponseNoteDto | undefined> => {
   
-  //await delay(3000); //!!!убрать!!
+  // await delay(3000); //!!!убрать!!
   
   const url = `api/note/notebody`;
   const jwtToken = getLoginData("jwtToken");
