@@ -328,6 +328,7 @@ const Note = () => {
           handleEncryptDecryptClick={handleEncryptDecryptClick}
           handleExitNote={handleExitNote}
           currentNoteId={currentNoteId}
+          noteBody={noteBody}
         />
 
         <TextField

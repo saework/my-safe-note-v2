@@ -55,6 +55,7 @@ export const validateEmail = (email: string): boolean => {
 export const encryptNote = (note: string, password: string): string => {
   if (!note || !password) {
     throw new Error("Пожалуйста, введите заметку и пароль.");
+    // return "Пожалуйста, введите заметку и пароль.";
   }
   return CryptoJS.AES.encrypt(note, password).toString();
 };
