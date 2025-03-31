@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.IdentityModel.Tokens;
 using MySafeNote.Server.Auth;
 using MySafeNote.Server.Services;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 
 namespace MySafeNote
 {
@@ -58,6 +59,7 @@ namespace MySafeNote
             builder.Services.AddScoped<INotebookRepository, NotebookRepository>();
 
             // Регистрация сервисов
+            builder.Services.AddScoped<INoteService, NoteService>();
             builder.Services.AddScoped<INotebookService, NotebookService>();
             builder.Services.AddScoped<IUserService, UserService>();
 
