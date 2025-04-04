@@ -28,6 +28,8 @@ using Microsoft.AspNetCore.Authorization;
 //using Newtonsoft.Json;
 using MySafeNote.Core.Dtos;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using MySafeNote.Server.Services;
+using System.Text.Json;
 //using MySafeNote.Server.Services;
 
 
@@ -48,10 +50,12 @@ namespace MySafeNote.Server.Controllers
     public class NoteController : ControllerBase
     {
         private readonly INoteService _noteService;
+        private readonly ILogger<NoteService> _logger;
 
-        public NoteController(INoteService noteService)
+        public NoteController(ILogger<NoteService> logger, INoteService noteService)
         {
             _noteService = noteService;
+            _logger = logger;
         }
 
         // GET: api/Note
@@ -59,8 +63,16 @@ namespace MySafeNote.Server.Controllers
         [Authorize]
         public async Task<ActionResult<List<NoteDtoGet>>> GetAllNotesAsync()
         {
-            var notesDto = await _noteService.GetAllNotesAsync();
-            return Ok(notesDto);
+            try
+            {
+                var notesDto = await _noteService.GetAllNotesAsync();
+                return Ok(notesDto);
+            }
+            catch (Exception ex)
+            {
+                // Логирование ошибки будет выполнено в middleware
+                return StatusCode(500, "Internal Server Error.");
+            }
         }
 
         // GET: api/Note/userid/{userId}
@@ -68,8 +80,23 @@ namespace MySafeNote.Server.Controllers
         [Authorize]
         public async Task<ActionResult<List<NoteDtoGet>>> GetNotesByUserIdAsync(int userId)
         {
-            var notesDto = await _noteService.GetNotesByUserIdAsync(userId);
-            return Ok(notesDto);
+            //var notesDto = await _noteService.GetNotesByUserIdAsync(userId);
+            //return Ok(notesDto);
+
+            try
+            {
+                var notesDto = await _noteService.GetNotesByUserIdAsync(userId);
+                return Ok(notesDto);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                // Логирование ошибки будет выполнено в middleware
+                return StatusCode(500, "Internal Server Error.");
+            }
         }
 
         // GET api/Note/5
@@ -77,12 +104,29 @@ namespace MySafeNote.Server.Controllers
         [Authorize]
         public async Task<ActionResult<Note>> GetNoteByIdAsync(int id)
         {
-            var note = await _noteService.GetNoteByIdAsync(id);
-            if (note == null)
+            //var note = await _noteService.GetNoteByIdAsync(id);
+            //if (note == null)
+            //{
+            //    return NotFound($"Note с ID: {id} не найден.");
+            //}
+            //return Ok(note);
+            try
             {
-                return NotFound($"Note с ID: {id} не найден.");
+                var note = await _noteService.GetNoteByIdAsync(id);
+                if (note == null)
+                {
+                    return NotFound($"Note with ID: {id} not found.");
+                }
+                return Ok(note);
             }
-            return Ok(note);
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error.");
+            }
         }
 
         // Post: api/Note/notebody/
@@ -90,9 +134,19 @@ namespace MySafeNote.Server.Controllers
         [Authorize]
         public async Task<ActionResult<NoteDataWithBodyDto>> GetNoteBodyByIdAsync(NoteBodyDto noteDto)
         {
-            var noteData = await _noteService.GetNoteBodyByIdAsync(noteDto);
-            return Ok(noteData);
-            
+            try
+            {
+                var noteData = await _noteService.GetNoteBodyByIdAsync(noteDto);
+                return Ok(noteData);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error.");
+            }
 
             //if (noteDto == null)
             //{
@@ -133,8 +187,32 @@ namespace MySafeNote.Server.Controllers
         [Authorize]
         public async Task<ActionResult<int>> CreateNoteAsync([FromBody] NoteDto noteDto)
         {
-            var noteId = await _noteService.CreateOrUpdateNoteAsync(noteDto);
-            return Ok(noteId);
+            //var noteId = await _noteService.CreateOrUpdateNoteAsync(noteDto);
+            //return Ok(noteId);
+
+            try
+            {
+                var noteId = await _noteService.CreateOrUpdateNoteAsync(noteDto);
+                return Ok(noteId);
+            }
+            //catch (ArgumentException ex)
+            //{
+            //    _logger.LogError(ex, "CreateNoteAsync. noteDto: {noteDto}. Error:", noteDto?.ToString());
+            //    return BadRequest(ex.Message);
+            //}
+            catch (Exception ex)
+            {
+                var userId = noteDto?.UserId.ToString() ?? "null";
+                var noteId = noteDto?.NoteId.ToString() ?? "null";
+                _logger.LogError(ex, "CreateNoteAsync. UserId: {UserId}, NoteId: {NoteId}. Error:", userId, noteId);
+
+                //var noteDtoString = noteDto != null ? JsonSerializer.Serialize(noteDto) : "noteDto is null";
+                //_logger.LogError(ex, "CreateNoteAsync. noteDto: {noteDto}. Error:", noteDtoString);
+
+                //_logger.LogError(ex, "CreateNoteAsync. noteDto: {noteDto}. Error:", noteDto?.ToString());
+                //_logger.LogError("CreateNoteAsync. Ошибка: {errorMessage}", errorMessage);
+                return StatusCode(500, "Internal Server Error.");
+            }
         }
 
         // PUT api/Note/5
@@ -142,8 +220,19 @@ namespace MySafeNote.Server.Controllers
         [Authorize]
         public async Task<ActionResult<Note>> ChangeNoteByIdAsync(int id, [FromBody] NoteDtoChange changedNote)
         {
-            var note = await _noteService.ChangeNoteByIdAsync(id, changedNote);
-            return Ok(note);
+            try
+            {
+                var note = await _noteService.ChangeNoteByIdAsync(id, changedNote);
+                return Ok(note);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error.");
+            }
         }
 
         // DELETE api/Note/5
@@ -151,8 +240,19 @@ namespace MySafeNote.Server.Controllers
         [Authorize]
         public async Task<ActionResult<int>> DeleteNoteByIdAsync(int id)
         {
-            var deletedId = await _noteService.DeleteNoteByIdAsync(id);
-            return Ok(deletedId);
+            try
+            {
+                var deletedId = await _noteService.DeleteNoteByIdAsync(id);
+                return Ok(deletedId);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error.");
+            }
         }
 
         //Post: api/Note/notedocx
@@ -173,7 +273,7 @@ namespace MySafeNote.Server.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Внутренняя ошибка сервера. {ex.Message}");
+                return StatusCode(500, $"Internal Server Error. {ex.Message}");
             }
 
             //try
@@ -247,6 +347,14 @@ namespace MySafeNote.Server.Controllers
 
                 return File(zipBytes, contentType, zipFileName);
                 //return File(zipBytes, "application/zip", $"UserNotes_{userId}.zip");
+            }
+            //catch (Exception ex)
+            //{
+            //    return StatusCode(500, $"Внутренняя ошибка сервера. {ex.Message}");
+            //}
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception ex)
             {

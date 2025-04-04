@@ -144,6 +144,9 @@ namespace MySafeNote.Server.Services
 
             var noteId = noteDto.NoteId;
             var user = await _userRepository.GetByIdAsync(noteDto.UserId);
+
+            user = null; //!!!убрать!!
+
             if (user == null)
                 throw new ArgumentException($"Пользователя с ИД: {noteDto.UserId} не существует.");
 
