@@ -56,10 +56,14 @@ namespace MySafeNote.Server.Services
                 else // Обновляем данные заметки
                 {
                     var notebook = await _notebookRepository.GetByIdAsync(notebookDto.Id);
+
+                notebook = null; //!!!убрать!!
+
                     if (notebook == null)
                     {
-                        throw new ArgumentException($"Notebook с ID: {notebookDto.Id} не найден.");
-                    }
+                    //throw new ArgumentException($"Notebook с ID: {notebookDto.Id} не найден.");
+                    throw new ArgumentException($"Notebook with ID: {notebookDto.Id} not found.");
+                }
 
                     notebook.Name = notebookDto.Name;
                     await _notebookRepository.UpdateAsync(notebook);

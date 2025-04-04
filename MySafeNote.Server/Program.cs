@@ -12,8 +12,8 @@ using MySafeNote.Server.Auth;
 using MySafeNote.Server.Services;
 using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using Microsoft.AspNetCore.Http;
-using MySafeNote.Server.Middlewares;
-using MySafeNote.Server.Configs;
+//using MySafeNote.Server.Middlewares;
+//using MySafeNote.Server.Configs;
 using Serilog;
 
 namespace MySafeNote
@@ -92,7 +92,7 @@ namespace MySafeNote
                 var app = builder.Build();
 
                 // Middleware для обработки ошибок
-                app.UseMiddleware<ErrorHandlingMiddleware>();
+                //app.UseMiddleware<ErrorHandlingMiddleware>();
 
                 app.UseAuthentication();
                 app.UseAuthorization();
