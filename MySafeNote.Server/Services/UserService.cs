@@ -59,7 +59,9 @@ namespace MySafeNote.Server.Services
         public async Task<User> UpdateUserAsync(int id, UserDto changedUser)
         {
             var user = await _userRepository.GetByIdAsync(id);
-            if (user == null) throw new ArgumentException($"User с ID: {id} не найден.");
+            if (user == null)
+                //throw new ArgumentException($"User с ID: {id} не найден.");
+                throw new ArgumentException($"User with ID: {id} not found.");
 
             user.Email = changedUser.Email;
             var passwordHash = _passwordHasher.HashPassword(user, changedUser.Password);
@@ -76,7 +78,9 @@ namespace MySafeNote.Server.Services
         public async Task<int> DeleteUserByEmailAsync(string email)
         {
             var user = await _userRepository.GetUserByEmailAsync(email);
-            if (user == null) throw new ArgumentException($"User с Email: {email} не найден.");
+            if (user == null)
+                //throw new ArgumentException($"User с Email: {email} не найден.");
+                throw new ArgumentException($"User with Email: {email} not found.");
 
             var deleteUserNotes = await _noteRepository.DeleteAllNotesByUserEmailAsync(email);
             _logger.LogInformation("deleteUserNotes = {deleteUserNotes}", deleteUserNotes);

@@ -34,13 +34,15 @@ namespace MySafeNote.Server.Services
             {
                 if (notebookDto == null)
                 {
-                    throw new ArgumentException("Некорректные данные.");
+                    //throw new ArgumentException("Некорректные данные.");
+                    throw new ArgumentException("Incorrect notebookDto data.");
                 }
 
                 var user = await _userRepository.GetByIdAsync(notebookDto.UserId);
                 if (user == null)
                 {
-                    throw new ArgumentException($"Пользователя с ИД: {notebookDto.UserId} не существует.");
+                    //throw new ArgumentException($"Пользователя с ИД: {notebookDto.UserId} не существует.");
+                    throw new ArgumentException($"User with ID: {notebookDto.UserId} not found.");
                 }
 
                 if (notebookDto.Id == 0) // Создаем новый блокнот
@@ -57,7 +59,7 @@ namespace MySafeNote.Server.Services
                 {
                     var notebook = await _notebookRepository.GetByIdAsync(notebookDto.Id);
 
-                notebook = null; //!!!убрать!!
+                    //notebook = null; //!!!убрать!!
 
                     if (notebook == null)
                     {

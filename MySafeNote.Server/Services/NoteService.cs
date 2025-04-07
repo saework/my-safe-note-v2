@@ -14,6 +14,7 @@ using System.Text;
 using System.Globalization;
 using DocumentFormat.OpenXml.Packaging;
 using HtmlToOpenXml;
+using DocumentFormat.OpenXml.Office2010.Excel;
 
 //--
 //using MySafeNote.Core;
@@ -114,7 +115,8 @@ namespace MySafeNote.Server.Services
             var note = await _noteRepository.GetByIdAsync(noteId);
             if (note == null)
             {
-                throw new KeyNotFoundException($"Note с ID: {noteId} не найден.");
+                //throw new KeyNotFoundException($"Note с ID: {noteId} не найден.");
+                throw new KeyNotFoundException($"Note with ID: {noteId} not found.");
             }
 
             var notebookId = note.NotebookId;
@@ -139,16 +141,18 @@ namespace MySafeNote.Server.Services
             // Проверяем, что данные валидны
             if (noteDto == null)
             {
-                throw new ArgumentException("Некорректные данные.");
+                //throw new ArgumentException("Некорректные данные.");
+                throw new ArgumentException("Incorrect noteDto data.");    
             }
 
             var noteId = noteDto.NoteId;
             var user = await _userRepository.GetByIdAsync(noteDto.UserId);
 
-            user = null; //!!!убрать!!
+            //user = null; //!!!убрать!!
 
             if (user == null)
-                throw new ArgumentException($"Пользователя с ИД: {noteDto.UserId} не существует.");
+                //throw new ArgumentException($"Пользователя с ИД: {noteDto.UserId} не существует.");
+                throw new KeyNotFoundException($"User with ID: {noteDto.UserId} not found.");
 
             // Получаем блокнот
             Notebook? notebook = null;
@@ -156,7 +160,8 @@ namespace MySafeNote.Server.Services
             {
                 notebook = await _notebookRepository.GetByIdAsync(noteDto.NotebookId.Value);
                 if (notebook == null)
-                    throw new ArgumentException($"Блокнот с ИД: {noteDto.NotebookId} не существует.");
+                    //throw new ArgumentException($"Блокнот с ИД: {noteDto.NotebookId} не существует.");
+                    throw new KeyNotFoundException($"Notebook with ID: {noteDto.NotebookId} not found.");
             }
 
             if (noteId == 0) // Создаем новую заметку
@@ -175,7 +180,7 @@ namespace MySafeNote.Server.Services
                 };
 
                 var newNoteId = await _noteRepository.CreateAsync(newNote);
-                _logger.LogInformation("CreateNoteAsync. Create success");
+                _logger.LogInformation("CreateNoteAsync. Create success.");
                 return newNoteId;
             }
             else // Обновляем данные заметки
@@ -183,7 +188,8 @@ namespace MySafeNote.Server.Services
                 var note = await _noteRepository.GetByIdAsync(noteId);
                 if (note == null)
                 {
-                    throw new KeyNotFoundException($"Note с ID: {noteId} не найден.");
+                    //throw new KeyNotFoundException($"Note с ID: {noteId} не найден.");
+                    throw new KeyNotFoundException($"Note with ID: {noteId} not found.");
                 }
 
                 note.Title = noteDto.Title;
@@ -196,7 +202,7 @@ namespace MySafeNote.Server.Services
                 //note.User = user; // Устанавливаем навигационное свойство
 
                 await _noteRepository.UpdateAsync(note);
-                _logger.LogInformation("CreateNoteAsync. Update success");
+                _logger.LogInformation("CreateNoteAsync. Update success.");
                 return note.Id;
             }
         }
@@ -205,18 +211,20 @@ namespace MySafeNote.Server.Services
         {
             if (changedNote == null)
             {
-                throw new ArgumentException("changedNote пустой");
+                throw new ArgumentException("changedNote is null");
             }
 
             var note = await _noteRepository.GetByIdAsync(id);
             if (note == null)
             {
-                throw new KeyNotFoundException($"Note с ID: {id} не найден.");
+                //throw new KeyNotFoundException($"Note с ID: {id} не найден.");
+                throw new KeyNotFoundException($"Note with ID: {id} not found.");
             }
 
             var user = await _userRepository.GetByIdAsync(changedNote.UserId);
             if (user == null)
-                throw new ArgumentException($"Пользователя с ИД: {changedNote.UserId} не существует.");
+                //throw new ArgumentException($"Пользователя с ИД: {changedNote.UserId} не существует.");
+                throw new KeyNotFoundException($"User with ID: {changedNote.UserId} not found.");
 
             // Обновляем данные заметки
             note.Title = changedNote.Title;
@@ -239,7 +247,8 @@ namespace MySafeNote.Server.Services
             var note = await _noteRepository.GetByIdAsync(noteId);
             if (note == null)
             {
-                throw new ArgumentException($"Note с ID: {noteId} не найден.");
+                //throw new ArgumentException($"Note с ID: {noteId} не найден.");
+                throw new KeyNotFoundException($"Note with ID: {noteId} not found.");
             }
 
             var htmlContent = note.NoteBody;
@@ -247,7 +256,8 @@ namespace MySafeNote.Server.Services
 
             if (string.IsNullOrEmpty(htmlContent) || string.IsNullOrEmpty(noteName))
             {
-                throw new ArgumentException("Содержимое заметки пустое.");
+                //throw new ArgumentException("Содержимое заметки пустое.");
+                throw new ArgumentException("The content of the note is empty.");
             }
             // Создание документа DOCX
             using (var memoryStream = new MemoryStream())
@@ -277,12 +287,14 @@ namespace MySafeNote.Server.Services
 
             public async Task<byte[]> ExportUserNotesToHtmlAsync(int userId)
         {
-            _logger.LogInformation($"Экспорт заметок для пользователя с ID: {userId}");
+            //_logger.LogInformation($"Экспорт заметок для пользователя с ID: {userId}");
+            _logger.LogInformation($"Export notes for user with ID: {userId}");
 
             var notes = await _noteRepository.GetNotesByUserIdAsync(userId);
             if (notes == null || !notes.Any())
             {
-                throw new KeyNotFoundException($"Заметки не найдены для пользователя с ID: {userId}");
+                //throw new KeyNotFoundException($"Заметки не найдены для пользователя с ID: {userId}");
+                throw new KeyNotFoundException($"No notes found for user with ID: {userId}");
             }
 
             var tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
@@ -322,8 +334,10 @@ namespace MySafeNote.Server.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Произошла ошибка при экспорте заметок.");
-                throw new Exception("Внутренняя ошибка сервера при экспорте заметок.", ex);
+                //_logger.LogError(ex, "Произошла ошибка при экспорте заметок.");
+                _logger.LogError(ex, "An error occurred while exporting notes.");
+                //throw new Exception("Внутренняя ошибка сервера при экспорте заметок.", ex);
+                throw new Exception("An error occurred while exporting notes.", ex);
             }
             finally
             {
@@ -342,12 +356,14 @@ namespace MySafeNote.Server.Services
         {
             if (file == null || file.Length == 0)
             {
-                throw new ArgumentException("Файл не выбран или пуст.");
+                //throw new ArgumentException("Файл не выбран или пуст.");
+                throw new ArgumentException("File not selected or empty.");
             }
 
             if (Path.GetExtension(file.FileName) != ".zip")
             {
-                throw new ArgumentException("Пожалуйста, загрузите zip-файл.");
+                //throw new ArgumentException("Пожалуйста, загрузите zip-файл.");
+                throw new ArgumentException("Please, download the zip-file.");
             }
 
             var tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
@@ -372,7 +388,8 @@ namespace MySafeNote.Server.Services
 
                     if (parts.Length < 3)
                     {
-                        _logger.LogWarning($"Имя файла '{fileName}' не соответствует ожидаемому формату.");
+                        //_logger.LogWarning($"Имя файла '{fileName}' не соответствует ожидаемому формату.");
+                        _logger.LogWarning($"File name '{fileName}' does not match the expected format.");
                         continue; // Пропускаем файл, если формат неверный
                     }
 
@@ -418,12 +435,15 @@ namespace MySafeNote.Server.Services
                     await _noteRepository.CreateAsync(newNote);
                 }
 
-                _logger.LogInformation("Заметки успешно загружены.");
+                //_logger.LogInformation("Заметки успешно загружены.");
+                _logger.LogInformation("Notes successfully upload.");
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Ошибка при загрузке заметок из zip-файла.");
-                throw new Exception("Внутренняя ошибка сервера при загрузке заметок.", ex);
+                //_logger.LogError(ex, "Ошибка при загрузке заметок из zip-файла.");
+                //throw new Exception("Внутренняя ошибка сервера при загрузке заметок.", ex);
+                _logger.LogError(ex, "Error loading notes from zip-file.");
+                throw new Exception("Error loading notes from zip-file.", ex);
             }
             finally
             {

@@ -38,6 +38,8 @@ const signUpApi = async (
             "signUpApi - Регистрация прошла успешно, loginData записан в LocalStorage"
           );
           return loginData;
+        } else if (response.status === 409) {
+          setReqMessage("Уже существует пользователь с таким Email!");
         } else {
           console.log(`signUpApi - Ошибка соединения:${response.statusText}`);
           setReqMessage("Ошибка сервера");
