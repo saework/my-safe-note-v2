@@ -68,6 +68,7 @@ namespace MySafeNote.Server.Controllers
             try
             {
                 var notesDto = await _noteService.GetAllNotesAsync();
+                _logger.LogDebug("GetAllNotesAsync");
                 return Ok(notesDto);
             }
             catch (Exception ex)
@@ -88,6 +89,7 @@ namespace MySafeNote.Server.Controllers
             try
             {
                 var notesDto = await _noteService.GetNotesByUserIdAsync(userId);
+                _logger.LogDebug("GetNotesByUserIdAsync. UserId: {userId}", userId);
                 return Ok(notesDto);
             }
             catch (Exception ex)
@@ -115,6 +117,7 @@ namespace MySafeNote.Server.Controllers
                 {
                     return NotFound($"Note with ID: {id} not found.");
                 }
+                _logger.LogDebug("GetNoteByIdAsync. NoteId: {id}", id);
                 return Ok(note);
             }
             catch (Exception ex)
@@ -132,6 +135,7 @@ namespace MySafeNote.Server.Controllers
             try
             {
                 var noteData = await _noteService.GetNoteBodyByIdAsync(noteDto);
+                _logger.LogDebug("GetNoteBodyByIdAsync. UserId: {userId}, NoteId: {noteId}.", noteDto?.UserId.ToString(), noteDto?.NoteId.ToString());
                 return Ok(noteData);
             }
             catch (Exception ex)
@@ -154,6 +158,7 @@ namespace MySafeNote.Server.Controllers
             try
             {
                 var noteId = await _noteService.CreateOrUpdateNoteAsync(noteDto);
+                _logger.LogInformation("CreateNoteAsync. Create or update Note. UserId: {userId}, NoteId: {noteId}.", noteDto?.UserId.ToString(), noteDto?.NoteId.ToString());
                 return Ok(noteId);
             }
             catch (Exception ex)
@@ -181,6 +186,7 @@ namespace MySafeNote.Server.Controllers
             try
             {
                 var note = await _noteService.ChangeNoteByIdAsync(id, changedNote);
+                _logger.LogDebug("ChangeNoteByIdAsync. NoteId: {id}.", id);
                 return Ok(note);
             }
             catch (Exception ex)
@@ -198,6 +204,7 @@ namespace MySafeNote.Server.Controllers
             try
             {
                 var deletedId = await _noteService.DeleteNoteByIdAsync(id);
+                _logger.LogInformation("DeleteNoteByIdAsync. NoteId: {id}.", id);
                 return Ok(deletedId);
             }
             catch (Exception ex)
@@ -217,6 +224,7 @@ namespace MySafeNote.Server.Controllers
                 var fileBytes = await _noteService.ConvertNoteBodyToDocxAsync(noteId);
                 var fileName = $"Note_{noteId}.docx";
                 var contentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+                _logger.LogDebug("ConvertNoteBodyToDocxAsync. NoteId: {id}.", noteId);
                 return File(fileBytes, contentType, fileName);
             }
             catch (Exception ex)
@@ -238,6 +246,7 @@ namespace MySafeNote.Server.Controllers
                 var contentType = "application/zip";
                 var zipFileName = $"UserNotes_{userId}.zip";
 
+                _logger.LogDebug("ExportUserNotesToHtmlAsync. UserId: {userId}.", userId);
                 return File(zipBytes, contentType, zipFileName);
                 //return File(zipBytes, "application/zip", $"UserNotes_{userId}.zip");
             }
@@ -261,6 +270,7 @@ namespace MySafeNote.Server.Controllers
             try
             {
                 await _noteService.ImportNotesFromZipAsync(userId, file);
+                _logger.LogDebug("UploadNotesFromZipAsync. UserId: {userId}.", userId);
                 //return Ok("Заметки успешно загружены.");
                 return Ok("Notes uploaded successfully.");
             }

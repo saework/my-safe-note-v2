@@ -55,7 +55,7 @@ namespace MySafeNote.Server.Services
 
         public async Task<List<NoteDtoGet>> GetAllNotesAsync()
         {
-            _logger.LogInformation("GetAllNotesAsync");
+            //_logger.LogInformation("GetAllNotesAsync");
             var notesDto = new List<NoteDtoGet>();
             var notes = await _noteRepository.GetAllAsync();
             if (notes.Any())
@@ -83,7 +83,7 @@ namespace MySafeNote.Server.Services
 
         public async Task<List<NoteDtoGet>> GetNotesByUserIdAsync(int userId)
         {
-            _logger.LogInformation($"GetNotesByUserIdAsync userId = {userId}");
+            //_logger.LogInformation($"GetNotesByUserIdAsync userId = {userId}");
             var notesDto = new List<NoteDtoGet>();
             var notes = await _noteRepository.GetNotesByUserIdAsync(userId);
             foreach (var note in notes)
@@ -136,7 +136,7 @@ namespace MySafeNote.Server.Services
 
         public async Task<int> CreateOrUpdateNoteAsync(NoteDto noteDto)
         {
-            _logger.LogInformation("CreateOrUpdateNoteAsync. Start");
+            //_logger.LogInformation("CreateOrUpdateNoteAsync. Start");
 
             // Проверяем, что данные валидны
             if (noteDto == null)
@@ -180,7 +180,7 @@ namespace MySafeNote.Server.Services
                 };
 
                 var newNoteId = await _noteRepository.CreateAsync(newNote);
-                _logger.LogInformation("CreateNoteAsync. Create success.");
+                _logger.LogDebug("CreateNoteAsync. Create success.");
                 return newNoteId;
             }
             else // Обновляем данные заметки
@@ -202,7 +202,7 @@ namespace MySafeNote.Server.Services
                 //note.User = user; // Устанавливаем навигационное свойство
 
                 await _noteRepository.UpdateAsync(note);
-                _logger.LogInformation("CreateNoteAsync. Update success.");
+                _logger.LogDebug("CreateNoteAsync. Update success.");
                 return note.Id;
             }
         }
@@ -288,7 +288,7 @@ namespace MySafeNote.Server.Services
             public async Task<byte[]> ExportUserNotesToHtmlAsync(int userId)
         {
             //_logger.LogInformation($"Экспорт заметок для пользователя с ID: {userId}");
-            _logger.LogInformation($"Export notes for user with ID: {userId}");
+            //_logger.LogInformation($"Export notes for user with ID: {userId}");
 
             var notes = await _noteRepository.GetNotesByUserIdAsync(userId);
             if (notes == null || !notes.Any())
@@ -436,7 +436,7 @@ namespace MySafeNote.Server.Services
                 }
 
                 //_logger.LogInformation("Заметки успешно загружены.");
-                _logger.LogInformation("Notes successfully upload.");
+                //_logger.LogInformation("Notes successfully upload.");
             }
             catch (Exception ex)
             {

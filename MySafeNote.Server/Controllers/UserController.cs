@@ -48,6 +48,7 @@ namespace MySafeNote.Server.Controllers
             try
             {
                 var users = await _userService.GetAllUsersAsync();
+                _logger.LogDebug("GetUsersAsync");
                 return Ok(users);
             }
             catch (Exception ex)
@@ -69,6 +70,7 @@ namespace MySafeNote.Server.Controllers
                     //return NotFound($"User с ID: {id} не найден.");
                     return NotFound($"User with ID: {id} not found.");
                 }
+                _logger.LogDebug("GetUserByIdAsync. UserId: {userId}.", id);
                 return Ok(user);
             }
             catch (Exception ex)
@@ -89,6 +91,7 @@ namespace MySafeNote.Server.Controllers
                 {
                     return NotFound($"User with Email: {email} not found.");
                 }
+                _logger.LogDebug("GetUserByEmailAsync. Email: {email}.", email);
                 return Ok(user);
             }
             catch (Exception ex)
@@ -103,7 +106,7 @@ namespace MySafeNote.Server.Controllers
         //[Authorize]
         public async Task<ActionResult<User>> ChangeUserByIdAsync(int id, [FromBody] UserDto changedUser)
         {
-            _logger.LogInformation("ChangeUserByIdAsync. UserId: {id}", id);
+            _logger.LogDebug("ChangeUserByIdAsync. UserId: {id}", id);
             if (changedUser is null)
             {
                 return BadRequest("changedUser data is null");
@@ -168,7 +171,7 @@ namespace MySafeNote.Server.Controllers
         [HttpPost("signup/")]
         public async Task<IActionResult> CreateUserAsync([FromBody] UserDto userDto)
         {
-            _logger.LogInformation("CreateUserAsync. Email: {email}", userDto?.Email ?? "null");
+            _logger.LogDebug("CreateUserAsync. Email: {email}", userDto?.Email ?? "null");
             if (userDto == null || string.IsNullOrEmpty(userDto.Email) || string.IsNullOrEmpty(userDto.Password))
             {
                 return BadRequest("Incorrect userDto data.");
@@ -180,7 +183,7 @@ namespace MySafeNote.Server.Controllers
                 if (userExists != null)
                 {
 
-                    _logger.LogInformation("CreateUserAsync. User with this email has already been created. Email: {email}", email);
+                    _logger.LogDebug("CreateUserAsync. User with this email has already been created. Email: {email}", email);
                     return Conflict("User with this email has already been created.");
                     //return Conflict("Пользователь с таким Email уже создан.");
                     
@@ -203,7 +206,7 @@ namespace MySafeNote.Server.Controllers
         [HttpPost("login/")]
         public async Task<IActionResult> LoginUserByEmail([FromBody] UserDto userLoginData)
         {
-            _logger.LogInformation("LoginUserByEmail. Email: {email}", userLoginData?.Email ?? "null");
+            _logger.LogDebug("LoginUserByEmail. Email: {email}", userLoginData?.Email ?? "null");
             if (userLoginData == null)
             {
                 return BadRequest("UserLoginData not found.");

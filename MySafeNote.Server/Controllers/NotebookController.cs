@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 //using MySafeNote.Server.Model;
 using MySafeNote.Core.Dtos;
 using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Office2010.Excel;
 
 namespace MySafeNote.Server.Controllers
 {
@@ -31,6 +32,7 @@ namespace MySafeNote.Server.Controllers
             try
             {
                 var notebooksDto = await _notebookService.GetNotebooksByUserIdAsync(userId);
+                _logger.LogDebug("GetNotebooksByUserIdAsync. UserId: {userId}", userId);
                 return Ok(notebooksDto);
             }
             catch (Exception ex)
@@ -47,6 +49,7 @@ namespace MySafeNote.Server.Controllers
             try
             {
                 var notebookId = await _notebookService.CreateOrUpdateNotebookAsync(notebookDto);
+                _logger.LogInformation("CreateNotebookAsync. NotebookId: {notebookId}", notebookId);
                 return Ok(notebookId);
             }
             catch (Exception ex)
@@ -67,6 +70,7 @@ namespace MySafeNote.Server.Controllers
             try
             {
                 var deletedId = await _notebookService.DeleteNotebookByIdAsync(id);
+                _logger.LogInformation("DeleteNotebookByIdAsync. NotebookId: {notebookId}", id);
                 return Ok(deletedId);
             }
             catch (Exception ex)

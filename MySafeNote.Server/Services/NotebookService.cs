@@ -21,7 +21,7 @@ namespace MySafeNote.Server.Services
 
             public async Task<List<NotebookDto>> GetNotebooksByUserIdAsync(int userId)
             {
-                _logger.LogInformation("GetNotebooksByUserIdAsync userId = {userId}", userId);
+                //_logger.LogInformation("GetNotebooksByUserIdAsync userId = {userId}", userId);
                 var notebooks = await _notebookRepository.GetNotebooksByUserIdAsync(userId);
                 return notebooks.Select(x => new NotebookDto
                 {
