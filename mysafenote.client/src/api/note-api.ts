@@ -190,3 +190,41 @@ export const loadNoteDocxFromServer = async (noteId: number, title: string): Pro
   }
   return result;
 };
+
+export const loadNotesDocxFromServer = async (userId: number): Promise<boolean> => {
+  const url = "api/note/allnotedocx";
+  let result = false;
+  try {
+    const jwtToken = getLoginData("jwtToken");
+    if (!_.isEmpty(jwtToken)) {
+      console.log(`loadNotesDocxFromServer - jwtToken - ${JSON.stringify(jwtToken)}`);
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${jwtToken}`,
+        },
+        body: JSON.stringify(userId),
+      });
+
+      if (!response.ok) {
+        throw new Error(`${response.statusText}`);
+      }
+      const blob = await response.blob(); // Получаем ответ как Blob
+      const zipUrl = window.URL.createObjectURL(blob); // Создаем URL для скачивания
+      const link = document.createElement("a");
+      link.href = zipUrl;
+      const fileName = "Notes.zip";
+      link.setAttribute("download", fileName);
+      document.body.appendChild(link);
+      link.click(); // Имитируем клик для скачивания
+      link.remove(); // Удаляем ссылку из DOM
+      result = true;
+    } else {
+      console.log("loadNotesDocxFromServer - Не определен jwtAuthHeader!");
+    }
+  } catch (error) {
+    console.error("loadNotesDocxFromServer - Ошибка при скачивании файла:", error);
+  }
+  return result;
+};

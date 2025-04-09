@@ -16,7 +16,7 @@ import CreateNotebookModal from "./createNotebook-modal";
 import EditNotebookModal from "./editNotebook-modal";
 import NotesImport from "./notes-import";
 import config from "../configs/config";
-import { deleteNoteFromServer } from "../api/note-api";
+import { deleteNoteFromServer, loadNotesDocxFromServer } from "../api/note-api";
 import { exportNotesFromServer } from "../api/main-api";
 import { StateContext } from "../state/notes-context";
 import { ACTIONS, DispatchContext } from "../state/notes-context";
@@ -277,6 +277,17 @@ function NotesInfo(props: IProps) {
     }
   };
 
+  const handlerImportAllNotesDocx = async () => {
+    try {
+      await loadNotesDocxFromServer(userId);
+    } catch (error) {
+      console.error(
+        "handlerImportAllNotesDocx - Ошибка при выгрузке всех заметок в docx формате:",
+        error
+      );
+    }
+  };
+
   const handlerImportNotes = function () {
     setImportNotesModalShow(true);
   };
@@ -313,6 +324,7 @@ function NotesInfo(props: IProps) {
             handleMenuButtonClick={handleMenuButtonClick}
             handlerExportNotesFromServer={handlerExportNotesFromServer}
             handlerImportNotes={handlerImportNotes}
+            handlerImportAllNotesDocx={handlerImportAllNotesDocx}
             menuVisible={menuVisible}
           />
           <NotesImport

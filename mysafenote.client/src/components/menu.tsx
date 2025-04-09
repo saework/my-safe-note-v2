@@ -7,6 +7,7 @@ interface IProps {
   handleMenuButtonClick: () => void;
   handlerExportNotesFromServer: () => void;
   handlerImportNotes: () => void;
+  handlerImportAllNotesDocx: () => void;
   menuVisible: boolean;
 }
 
@@ -17,6 +18,7 @@ const Menu = React.memo((props: IProps) => {
     handleMenuButtonClick,
     handlerExportNotesFromServer,
     handlerImportNotes,
+    handlerImportAllNotesDocx,
     menuVisible,
   } = props;
 
@@ -56,9 +58,19 @@ const Menu = React.memo((props: IProps) => {
               type="button"
               variant="info"
               size="lg"
-              className="main-menu-import__button"
+              className="main-menu-export__button"
             >
               Загрузить заметки
+            </Button>
+            <Button
+              onClick={handlerImportAllNotesDocx}
+              id="buttonImportAllNotesDocx"
+              type="button"
+              variant="info"
+              size="lg"
+              className="main-menu-import__button"
+            >
+              Выгрузить в docx  
             </Button>
           </div>
         )}

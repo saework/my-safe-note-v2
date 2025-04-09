@@ -10,9 +10,15 @@ namespace MySafeNote.DataAccess.Repositories
     public class NoteRepository : EfRepository<Note>, INoteRepository
     {
         private readonly IUserRepository _userRepository;
-        public NoteRepository(DataContext context, IUserRepository userRepository) : base(context)
+        //private readonly INoteRepository _noteRepository;
+        public NoteRepository(DataContext context, 
+            IUserRepository userRepository
+            //INoteRepository noteRepository
+            ) : base(context)
         {
             _userRepository = userRepository;
+            //_noteRepository = noteRepository;
+
         }
         public async Task<List<Note>> GetAllNotesByUserEmailAsync(string email)
         {
@@ -40,6 +46,23 @@ namespace MySafeNote.DataAccess.Repositories
         {
             var notes = await DbSet.Where(x => x.UserId == userId).ToListAsync();
             return notes;
+        }
+
+        public async Task<List<Note>> GetNotesByNotebookIdAsync(int? notebookId, int userId)
+        {
+            var notesList = new List<Note>();
+            
+            if (notebookId != null)
+                notesList = await DbSet.Where(note => note.NotebookId.HasValue 
+                    && note.UserId == userId 
+                    && note.NotebookId == notebookId).ToListAsync();
+
+            // Если notebookId == null - находим все блокноты без заметки.
+            if (notebookId == null)
+                notesList = await DbSet.Where(note => !note.NotebookId.HasValue
+                    && note.UserId == userId).ToListAsync();
+
+            return notesList;
         }
     }
 }

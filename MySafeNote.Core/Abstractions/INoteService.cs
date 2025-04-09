@@ -15,6 +15,7 @@ namespace MySafeNote.Core.Abstractions
         Task<Note> ChangeNoteByIdAsync(int id, NoteDtoChange changedNote);
         Task<int> DeleteNoteByIdAsync(int id);
         Task<byte[]> ConvertNoteBodyToDocxAsync(int noteId);
+        Task<byte[]> ExportNotesToDocxAsync(int userId);
         Task<byte[]> ExportUserNotesToHtmlAsync(int userId);
         Task ImportNotesFromZipAsync(int userId, IFormFile file);
     }

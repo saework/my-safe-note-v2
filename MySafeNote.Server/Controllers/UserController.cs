@@ -42,7 +42,7 @@ namespace MySafeNote.Server.Controllers
         }
 
         [HttpGet]
-        //[Authorize]
+        [Authorize]
         public async Task<ActionResult<List<User>>> GetUsersAsync()
         {
             try
@@ -59,7 +59,7 @@ namespace MySafeNote.Server.Controllers
         }
 
         [HttpGet("{id}")]
-        //[Authorize]
+        [Authorize]
         public async Task<ActionResult<User>> GetUserByIdAsync(int id)
         {
             try
@@ -81,7 +81,7 @@ namespace MySafeNote.Server.Controllers
         }
 
         [HttpGet("email/{email}")]
-        //[Authorize]
+        [Authorize]
         public async Task<ActionResult<User>> GetUserByEmailAsync(string email)
         {
             try
@@ -103,7 +103,7 @@ namespace MySafeNote.Server.Controllers
 
 
         [HttpPut("{id}")]
-        //[Authorize]
+        [Authorize]
         public async Task<ActionResult<User>> ChangeUserByIdAsync(int id, [FromBody] UserDto changedUser)
         {
             _logger.LogDebug("ChangeUserByIdAsync. UserId: {id}", id);
@@ -134,7 +134,7 @@ namespace MySafeNote.Server.Controllers
         }
 
         [HttpDelete("{id}")]
-        //[Authorize]
+        [Authorize]
         public async Task<ActionResult<int>> DeleteUserByIdAsync(int id)
         {
             try
@@ -151,7 +151,7 @@ namespace MySafeNote.Server.Controllers
         }
 
         [HttpDelete("email/{email}")]
-        //[Authorize]
+        [Authorize]
         public async Task<ActionResult<int>> DeleteUserByEmailAsync(string email)
         {
             try

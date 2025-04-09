@@ -234,6 +234,25 @@ namespace MySafeNote.Server.Controllers
             }
         }
 
+        [HttpPost("allnotedocx/")]
+        [Authorize]
+        public async Task<ActionResult> ExportNotesToDocxAsync([FromBody] int userId)
+        {
+            try
+            {
+                var zipFileBytes = await _noteService.ExportNotesToDocxAsync(userId);
+                var zipFileName = "Notes.zip";
+                var contentType = "application/zip";
+                _logger.LogDebug("ExportNotesToDocxAsync. UserId: {id}.", userId);
+                return File(zipFileBytes, contentType, zipFileName);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "ExportNotesToDocxAsync. UserId: {id}. Error:", userId);
+                return StatusCode(500, $"Internal Server Error. {ex.Message}");
+            }
+        }
+
         // POST: api/Note/export/{userId}
         [HttpPost("export/{userId}")]
         [Authorize]

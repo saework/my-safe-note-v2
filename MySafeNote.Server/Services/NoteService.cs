@@ -285,7 +285,77 @@ namespace MySafeNote.Server.Services
             }
         }
 
-            public async Task<byte[]> ExportUserNotesToHtmlAsync(int userId)
+        public async Task<byte[]> ExportNotesToDocxAsync(int userId)
+        {
+            var notebooks = await _notebookRepository.GetNotebooksByUserIdAsync(userId);
+            var notesByNotebook = new Dictionary<string, List<Note>>();
+
+            // Группируем заметки по блокнотам
+            foreach (var notebook in notebooks)
+            {
+                var notes = await _noteRepository.GetNotesByNotebookIdAsync(notebook.Id, userId);
+                notesByNotebook[notebook.Name] = notes;
+            }
+
+            // Получаем заметки без блокнотов
+            var notesWithoutNotebook = await _noteRepository.GetNotesByNotebookIdAsync(null, userId);
+
+            using (var memoryStream = new MemoryStream())
+            {
+                using (var zipArchive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+                {
+                    // Обрабатываем заметки по блокнотам
+                    foreach (var notebook in notesByNotebook)
+                    {
+                        // Создаем папку для блокнота
+                        var notebookFolder = zipArchive.CreateEntry(notebook.Key + "/", CompressionLevel.Optimal);
+
+                        foreach (var note in notebook.Value)
+                        {
+                            try
+                            {
+                                var docxBytes = await ConvertNoteBodyToDocxAsync(note.Id);
+                                var zipEntry = zipArchive.CreateEntry($"{notebook.Key}/{note.Title}.docx", CompressionLevel.Optimal);
+                                using (var entryStream = zipEntry.Open())
+                                {
+                                    await entryStream.WriteAsync(docxBytes, 0, docxBytes.Length);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                _logger.LogError(ex, "ExportNotesToDocxAsync. Zip-archiving error in note with ID: {noteId} in notebook: {notebookName}. Error:", note.Id, notebook.Key);
+                            }
+                        }
+                    }
+
+                    // Обрабатываем заметки без блокнотов
+                    if (notesWithoutNotebook.Any())
+                    {
+                        var noNotebookFolder = zipArchive.CreateEntry("Без блокнота/", CompressionLevel.Optimal);
+
+                        foreach (var note in notesWithoutNotebook)
+                        {
+                            try
+                            {
+                                var docxBytes = await ConvertNoteBodyToDocxAsync(note.Id);
+                                var zipEntry = zipArchive.CreateEntry($"Без блокнота/{note.Title}.docx", CompressionLevel.Optimal);
+                                using (var entryStream = zipEntry.Open())
+                                {
+                                    await entryStream.WriteAsync(docxBytes, 0, docxBytes.Length);
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                _logger.LogError(ex, "ExportNotesToDocxAsync. Zip-archiving error in note with ID: {noteId} without notebook. Error:", note.Id);
+                            }
+                        }
+                    }
+                }
+                return memoryStream.ToArray();
+            }
+        }
+
+        public async Task<byte[]> ExportUserNotesToHtmlAsync(int userId)
         {
             //_logger.LogInformation($"Экспорт заметок для пользователя с ID: {userId}");
             //_logger.LogInformation($"Export notes for user with ID: {userId}");
