@@ -1,13 +1,6 @@
-import React, { useState, useRef, useMemo, useContext, useEffect } from "react";
+import React, { useState, useRef, useContext, useEffect } from "react";
 import JoditEditor from "jodit-react";
-// import { Button } from "react-bootstrap";
-import {
-  // FormControl,
-  // InputLabel,
-  // Select,
-  // MenuItem,
-  TextField,
-} from "@mui/material";
+import { TextField } from "@mui/material";
 import { StateContext } from "../state/notes-context";
 import { ACTIONS, DispatchContext } from "../state/notes-context";
 import {
@@ -19,9 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { encryptNote, decryptNote } from "../functions";
 import EncryptModal from "../components/encrypt-modal";
 import DecryptModal from "../components/decrypt-modal";
-// import moment from "moment-timezone";
 import noteConfig from "../configs/config";
-
 import NoteButtonsPanel from "../components/note-buttons-panel";
 import NoteDatePanel from "../components/note-date-panel";
 import NoteNotebookSelect from "../components/note-notebook-select";
@@ -34,10 +25,6 @@ const Note = () => {
   const notesState = useContext(StateContext);
   const [loading, setLoading] = useState<boolean>(false);
 
-  // if (!notesState) {
-  //   return <div className="notes-loading-data">Загрузка...</div>;
-  // }
-
   if (!notesState) {
     return <Loader />;
   }
@@ -46,49 +33,18 @@ const Note = () => {
   const currentNoteId = notesState.currentNoteId;
   const currentNotebookId = notesState.currentNotebookId;
   const notebooks = notesState.notebooks;
-
-  // const editor = useRef(null);
-  // const [noteBody, setNoteBody] = useState("");
-  // const [createDate, setCreateDate] = useState("");
-  // const [lastChangeDate, setLastChangeDate] = useState("");
-  // const [title, setTitle] = useState("");
-  // const [notebookName, setNotebookName] = useState("");
-  // const [notebookId, setNotebookId] = useState(currentNotebookId);
-  // const [needLoadNoteBody, setNeedLoadNoteBody] = useState(true);
-  // const [encryptModalShow, setEncryptModalShow] = useState(false);
-  // const [decryptModalShow, setDecryptModalShow] = useState(false);
-  // const [notePasswordHash, setNotePasswordHash] = useState("");
-  // // const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  // const [notebooksForSelect, setNotebooksForSelect] = useState(notebooks);
-
-  // const editor = useRef<any>(null);
-  // const [noteBody, setNoteBody] = useState<string>("");
-  // const [createDate, setCreateDate] = useState<string>("");
-  // const [lastChangeDate, setLastChangeDate] = useState<string>("");
-  // const [title, setTitle] = useState<string>("");
-  // const [notebookName, setNotebookName] = useState<string>("");
-  // const [notebookId, setNotebookId] = useState<number>(currentNotebookId);
-  // const [needLoadNoteBody, setNeedLoadNoteBody] = useState<boolean>(true);
-  // const [encryptModalShow, setEncryptModalShow] = useState<boolean>(false);
-  // const [decryptModalShow, setDecryptModalShow] = useState<boolean>(false);
-  // const [notePasswordHash, setNotePasswordHash] = useState<string>("");
-  // const [notebooksForSelect, setNotebooksForSelect] = useState<any[]>(notebooks);
-
   const editor = useRef<any>(null);
   const [noteBody, setNoteBody] = useState<string>("");
   const [createDate, setCreateDate] = useState<Date | null>(null);
   const [lastChangeDate, setLastChangeDate] = useState<Date | null>(null);
   const [title, setTitle] = useState<string>("");
   const [notebookName, setNotebookName] = useState<string>("");
-  const [notebookId, setNotebookId] = useState<number | null>(
-    currentNotebookId
-  );
+  const [notebookId, setNotebookId] = useState<number | null>(currentNotebookId);
   const [needLoadNoteBody, setNeedLoadNoteBody] = useState<boolean>(true);
   const [encryptModalShow, setEncryptModalShow] = useState<boolean>(false);
   const [decryptModalShow, setDecryptModalShow] = useState<boolean>(false);
   const [notePasswordHash, setNotePasswordHash] = useState<string>("");
-  const [notebooksForSelect, setNotebooksForSelect] =
-    useState<any[]>(notebooks);
+  const [notebooksForSelect, setNotebooksForSelect] = useState<any[]>(notebooks);
 
   const withoutnotebookFilterName = noteConfig.WITHOUTNOTEBOOK_FILTER_NAME;
 
@@ -329,6 +285,7 @@ const Note = () => {
           handleExitNote={handleExitNote}
           currentNoteId={currentNoteId}
           noteBody={noteBody}
+          title={title}
         />
 
         <TextField
@@ -337,6 +294,7 @@ const Note = () => {
           value={title}
           onChange={titleChangeHandler}
           className="note-name__textfield"
+          required
         />
 
         <NoteNotebookSelect
@@ -368,7 +326,6 @@ const Note = () => {
           ref={editor}
           value={noteBody}
           config={config}
-          // tabIndex={1} // tabIndex textarea
           onBlur={(newNoteBody) => onBlurHandle(newNoteBody)}
           className={
             notePasswordHash ? "jodit-note-editor-block" : "jodit-note-editor"

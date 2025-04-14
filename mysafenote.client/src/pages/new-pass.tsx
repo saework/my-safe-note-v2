@@ -49,7 +49,6 @@ function NewPass() {
           >
             Сменить пароль
           </Button>
-          {/* <div className="sign-up__reqMessage-label">{reqMessage}</div> */}
           {reqMessage && <div className="sign-up__reqMessage-label">{reqMessage}</div>}
           <Box>
             <Link to="/login">На главную</Link>

@@ -17,10 +17,6 @@ function Main() {
   const dispatch = useContext(DispatchContext);
   const notesState = useContext(StateContext);
 
-  // if (!notesState) {
-  //   return <div className="notes-loading-data">Загрузка...</div>;
-  // }
-
   if (!notesState || notesState.userId === undefined) {
     return <Loader />;
   }
@@ -65,12 +61,6 @@ function Main() {
   return (
     <div>
       <Container>
-        {/* {loading ? <div>Загрузка...</div> : <NotesInfo handlerLoadFromServer={loadDataFromServer} />} */}
-        {/* <Loader />
-        <NotesInfo handlerLoadFromServer={loadDataFromServer} /> */}
-
-        {/* {loading ? <Loader /> : <NotesInfo handlerLoadFromServer={loadDataFromServer} />} */}
-
         <NotesInfo handlerLoadFromServer={loadDataFromServer} />
         {loading && (
           <div className="loader-overlay">

@@ -36,7 +36,6 @@ export default (props: IProps) => {
         className="btn btn-info clear-text__button"
         type="button"
         id="clearText"
-        // onClick={() => valueClearHandler()}
         onClick={valueClearHandler}
       >
         X

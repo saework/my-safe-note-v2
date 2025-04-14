@@ -1,10 +1,7 @@
 import _ from "lodash";
 import { getLoginData } from "../functions";
 import { INoteRow, INotebook } from "../interfaces";
-import moment from 'moment-timezone'; //!!!
-
-
-//const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));  //!!!убрать!!
+import moment from 'moment-timezone';
 
 export const loadNotesDataFromServer = async (
   userId: number
@@ -18,9 +15,7 @@ export const loadNotesDataFromServer = async (
         jwtToken
       )}`
     );
-
-    //await delay(3000); //!!!убрать!!
-
+    
     const url = `api/note/userid/${userId}`;
     const response = await fetch(url, {
       method: "GET",
@@ -35,13 +30,10 @@ export const loadNotesDataFromServer = async (
       // Преобразуем строки в объекты Date
       const resultData: INoteRow[] = data.map((note) => ({
         ...note,
-        //createDate: new Date(note.createDate),
-        //lastChangeDate: new Date(note.lastChangeDate),
         createDate: moment.utc(note.createDate).local().toDate(), // Преобразуем в локальное время
         lastChangeDate: moment.utc(note.lastChangeDate).local().toDate(),
       }));
       return resultData;
-      //return data;
     } else {
       console.log(
         `loadNotesDataFromServer - Ошибка при получении данных с сервера - ${response.statusText}`

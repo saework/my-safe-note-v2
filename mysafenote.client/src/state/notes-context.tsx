@@ -3,7 +3,6 @@ import { IAction, IRootReducer, INoteRow, ILoginData, INotebook } from "../inter
 import config from "../configs/config";
 
 const allnoteFilterName = config.ALLNOTES_FILTER_NAME;
-const withoutnotebookFilterName = config.WITHOUTNOTEBOOK_FILTER_NAME;
 
 export const ACTIONS = {
   DRAW_ROWS: "DRAW_ROWS",
@@ -34,7 +33,6 @@ export const initialState: IRootReducer = {
   notebooks: [],
 };
 
-// const reducer = (state, action) => {
   const reducer = (state: IRootReducer, action: IAction): IRootReducer => {
   const { payload, type } = action;
   switch (type) {

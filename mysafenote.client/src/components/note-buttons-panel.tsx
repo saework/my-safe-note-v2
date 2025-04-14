@@ -9,6 +9,7 @@ interface IProps {
   notePasswordHash: string;
   currentNoteId: number;
   noteBody: string;
+  title: string;
 }
 
 function NoteButtonsPanel(props: IProps) {
@@ -19,7 +20,8 @@ function NoteButtonsPanel(props: IProps) {
     handleExitNote,
     notePasswordHash,
     currentNoteId,
-    noteBody
+    noteBody,
+    title
   } = props;
 
   return (
@@ -31,6 +33,7 @@ function NoteButtonsPanel(props: IProps) {
           type="button"
           variant="success"
           className="note-headpanel__button"
+          disabled={title == ""}
         >
           <label className="note-headpanel__label">Сохранить</label>
           <img
@@ -46,7 +49,6 @@ function NoteButtonsPanel(props: IProps) {
           type="button"
           variant="success"
           className="note-headpanel__button"
-          // disabled={notePasswordHash}
           disabled={(notePasswordHash !== "") || (!currentNoteId || currentNoteId === 0) || (!noteBody || noteBody === "")}
         >
           <label className="note-headpanel__label">Скачать в docx</label>

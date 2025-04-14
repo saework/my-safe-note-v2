@@ -7,9 +7,9 @@ import React, {
   useCallback,
 } from "react";
 import ReactPaginate from "react-paginate";
-import { Button, Row, Col, Table } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { INoteRow, IRootReducer } from "../interfaces";
+import { INoteRow } from "../interfaces";
 import TableSearch from "./table-search";
 import DeleteModal from "./delete-modal";
 import CreateNotebookModal from "./createNotebook-modal";
@@ -46,31 +46,20 @@ function NotesInfo(props: IProps) {
   const noteRows = notesState.noteRows;
   const notebooks = notesState.notebooks;
   const userId = notesState.userId;
-
-  console.log("NotesInfo");
-  console.log(notesState);
-
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const pageSize = config.PAGINATION_ROW_COUNT;
   const allnoteFilterName = config.ALLNOTES_FILTER_NAME;
   const withoutnotebookFilterName = config.WITHOUTNOTEBOOK_FILTER_NAME;
-
-  const [needSave, setNeedSave] = useState<boolean>(false);
   const [datanoteRows, setDatanoteRows] = useState<INoteRow[]>(noteRows);
   const [filteredData, setFilteredData] = useState<INoteRow[]>([]);
   const [displayData, setDisplayData] = useState<INoteRow[]>([]);
   const [sort, setSort] = useState<"asc" | "desc">("desc");
-  // const [search, setSearch] = useState<any>("");
   const [search, setSearch] = useState<string>("");
 
   const [sortRowNum, setSortRowNum] = useState<string>("\u2193");
   const [sortRowName, setSortRowName] = useState<string>("");
-
-  // const [sortRowDate, setSortRowDate] = useState<any>("");
   const [sortRowDate, setSortRowDate] = useState<string>("");
-  //const [sortRowLastChangeDate, setSortRowLastChangeDate] = useState<any>("");
-  const [sortRowLastChangeDate, setSortRowLastChangeDate] =
-    useState<string>("");
+  const [sortRowLastChangeDate, setSortRowLastChangeDate] = useState<string>("");
 
   const [currentPage, setCurrentPage] = useState(0);
   const [modalShow, setModalShow] = useState(false);
@@ -79,16 +68,12 @@ function NotesInfo(props: IProps) {
   const [delRowId, setDelRowId] = useState(0);
   const [selectedRowId, setSelectedRowId] = useState(0);
   const [currentNotebookId, setCurrentNotebookId] = useState(-1);
-  const [currentNotebookName, setCurrentNotebookName] =
-    useState(allnoteFilterName);
+  const [currentNotebookName, setCurrentNotebookName] = useState(allnoteFilterName);
 
   const [sortField, setSortField] = useState("lastChangeDate");
   const [menuVisible, setMenuVisible] = useState(false);
   const [importNotesModalShow, setImportNotesModalShow] = useState(false);
-  // const [notebooksForSelect, setNotebooksForSelect] = useState<any[]>([]);
-  const [notebooksForSelect, setNotebooksForSelect] = useState<
-    { id: number; name: string }[]
-  >([]);
+  const [notebooksForSelect, setNotebooksForSelect] = useState<{ id: number; name: string }[]>([]);
 
   const getFinalFilteredData = useMemo(() => {
     let filteredNotes = datanoteRows || [];
@@ -116,13 +101,9 @@ function NotesInfo(props: IProps) {
             item.title.toLowerCase().includes(search.toLowerCase());
           const lastChangeDateMatch =
             item.lastChangeDate &&
-            // item.lastChangeDate.toLowerCase().includes(search.toLowerCase());
-            //item.lastChangeDate.toISOString().toLowerCase().includes(search.toLowerCase());
             item.lastChangeDate.toLocaleString().toLowerCase().includes(search.toLowerCase());
           const createDateMatch =
             item.createDate &&
-            // item.createDate.toLowerCase().includes(search.toLowerCase());
-            //item.createDate.toISOString().toLowerCase().includes(search.toLowerCase());
             item.createDate.toLocaleString().toLowerCase().includes(search.toLowerCase());
             
           return titleMatch || lastChangeDateMatch || createDateMatch;
@@ -139,7 +120,7 @@ function NotesInfo(props: IProps) {
     if (noteRows && Array.isArray(noteRows)) {
       setDatanoteRows(noteRows);
     } else {
-      setDatanoteRows([]); // Установите пустой массив, если noteRows не является массивом
+      setDatanoteRows([]);
     }
   }, [noteRows]);
 
@@ -385,7 +366,6 @@ function NotesInfo(props: IProps) {
               sort={sort}
               currentPage={currentPage}
               pageSize={pageSize}
-              timeZone={timeZone}
             />
 
             {pageCount > 1 && ( // Условие для отображения пагинации

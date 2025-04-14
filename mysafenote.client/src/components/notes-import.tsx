@@ -17,9 +17,8 @@ function NotesImport(props: IProps) {
     handleImportNotesCloseModal,
     handlerLoadFromServer,
   } = props;
-  // const [file, setFile] = useState(null);
-  const [file, setFile] = useState<File | null>(null);
 
+  const [file, setFile] = useState<File | null>(null);
   const dispatch = useContext(DispatchContext);
 
   const handlerImportNotesToServer = async () => {

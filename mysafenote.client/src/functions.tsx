@@ -9,22 +9,22 @@ export const getcurrentNoteId = (): number | undefined => {
   const currentNoteId = notesState?.currentNoteId;
   return currentNoteId;
 };
-// export const getRowById = (noteRowId: number): INoteRow => {
-  export const getRowById = (noteRowId: number): INoteRow | undefined => {
+
+export const getRowById = (noteRowId: number): INoteRow | undefined => {
   const notesState = useContext(StateContext);
   const noteRows = notesState?.noteRows;
-  // const NoteRow = _find(noteRows as INoteRow[], { id: noteRowId }) as INoteRow;
   const NoteRow = _find(noteRows as INoteRow[], { id: noteRowId }) as INoteRow | undefined;
   return NoteRow;
 };
+
 export const validateEmail = (email: string): boolean => {
   // eslint-disable-next-line no-useless-escape
   const res =
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return res.test(String(email).toLowerCase());
 };
-// export const getLoginData = (dataType: string): string | {} => {
-  export const getLoginData = (dataType: string): string | { [key: string]: any } | undefined => {
+
+export const getLoginData = (dataType: string): string | { [key: string]: any } | undefined => {
   const loginDataJSON = localStorage.getItem("loginData") as string;
   if (!loginDataJSON) {
     return undefined;
@@ -55,7 +55,6 @@ export const validateEmail = (email: string): boolean => {
 export const encryptNote = (note: string, password: string): string => {
   if (!note || !password) {
     throw new Error("Пожалуйста, введите заметку и пароль.");
-    // return "Пожалуйста, введите заметку и пароль.";
   }
   return CryptoJS.AES.encrypt(note, password).toString();
 };

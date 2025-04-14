@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -8,7 +8,6 @@ import Container from "@mui/material/Container";
 import { Link, useNavigate } from "react-router-dom";
 import signUpApi from "../api/signup-api";
 import Copyright from "../components/copyright";
-// import { StateContext } from "../state/notes-context";
 import { ACTIONS, DispatchContext } from "../state/notes-context";
 
 function SignUp() {

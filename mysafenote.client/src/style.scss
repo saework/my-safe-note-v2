@@ -1,4 +1,3 @@
-//@import '~bootstrap/scss/bootstrap';
 @import 'bootstrap/dist/css/bootstrap.min.css';
 
 $base-color: #28a745;
@@ -6,7 +5,6 @@ $base-color: #28a745;
   margin: 0;
   padding: 0;
 }
-
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
@@ -34,10 +32,8 @@ code {
   margin: 10px 0 10px 0;
 }
 .main-form__button-add {
-  // height: 70px;
   width: 100%;
   width: 83%;
-  // width: 400px;
   height: 55px;
   font-size: 22px;
   border-radius: 8px;
@@ -55,10 +51,6 @@ code {
 }
 .main-info__th-name {
   width: 50%;
-  // word-wrap: break-word; /* Для старых браузеров */
-  // overflow-wrap: break-word; /* Для современных браузеров */
-  // white-space: normal; /* Позволяет переносить текст на новую строку */
-  // overflow: hidden; /* или auto */
 }
 .main-info__th-name:hover {
   cursor: pointer;
@@ -81,10 +73,6 @@ code {
 .main-info__th-period:hover {
   cursor: pointer;
 }
-// .main-info__th-edit {
-//   width: 10%;
-//   // white-space: nowrap; /*чтобы кнопки не переносились */
-// }
 .was-validated .form-control:valid,
 .form-control.is-valid {
   background-position: right calc(0.375em + 0.7875rem) center;
@@ -106,13 +94,10 @@ textarea.form-control.is-valid {
   cursor: pointer;
 }
 th.main-info__th-edit {
-  // width: 50px;
-  // height: 50px;
   min-width: 50px;
   min-height: 50px;
   width: 7%;
 }
-
 th.main-info__th-delete{
   min-width: 50px;
   min-height: 50px;
@@ -230,68 +215,30 @@ th.main-info__th-delete{
 .modal-footer button{
   width: 52px;
 }
-
-// .sign-in__main {
-//   min-height: 100vh;
-// }
-
 .sign-up__box-links {
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
   letter-spacing: normal;
 }
-
 .sign-up__box-links a{
   font-size: 18px;
   letter-spacing: normal;
 }
-
 .sign-in__main-box {
   display: flex;
   justify-content: center;
   flex-direction: column;
   align-items: center;
   margin-top: 64px;
-  // min-height: 100vh;
-  // minHeight="100vh" // Устанавливаем минимальную высоту, чтобы центрировать по вертикали
 }
-
-// .sign-in__main {
-//   margin-top: 64px; /* 8 * 8px, если theme.spacing(1) = 8px */
-//   display: flex;
-//   justify-content: center;
-//   flex-direction: column;
-//   align-items: center;
-
-//   // width: 100%;
-//   // display: block;
-//   // box-sizing: border-box;
-//   // margin-left: auto;
-//   // margin-right: auto;
-// }
-
-// .sign-in__container {
-//     margin-top: 64px; /* 8 * 8px, если theme.spacing(1) = 8px */
-//     display: flex;
-//     flex-direction: column;
-//     align-items: center;
-// }
-
-// .avatar {
-//     margin: 8px; /* 1 * 8px, если theme.spacing(1) = 8px */
-//     // background-color: /* укажите конкретный цвет вместо theme.palette.secondary.main */;
-// }
-
 .sign-in__form form{
     width: 100%; /* Fix IE11 */
     margin-top: 64px; /* 3 * 8px, если theme.spacing(3) = 24px */
 }
-
 button.sign-in__button {
     margin: 24px 0 16px; /* 3 * 8px 0 2 * 8px */
 }
-
 tr.main-info__tr-selected td{
   background-color: #28a74514;
 }
@@ -304,43 +251,25 @@ tr.main-info__tr-selected td:hover{
 .notebook-table-container td{
   font-weight: 500;
 }
-
 .main-form__container{
   display: flex;
-  // justify-content: space-around;
   justify-content: start;
-  // flex-direction: row;
 }
 .main-form__notesinfo-container{
   width: 100%;
 }
-// .main-form__notebooks-container{
-//   margin-right: 40px;
-//   min-width: 250px;
-// }
-
-// .main-form__notebooks-container {
-//   max-height: 200px; /* Установите максимальную высоту по вашему усмотрению */
-//   overflow-y: auto; /* Добавляет вертикальную полосу прокрутки */
-//   border: 1px solid #ccc; /* Добавляет рамку для визуального отделения */
-//   margin-bottom: 10px; /* Отступ снизу для отделения от других элементов */
-// }
-
 .main-form__notebooks-container {
   margin-bottom: 10px; 
   margin-right: 40px;
 }
-
 .notebook-table-container {
   min-width: 250px;
   max-height: 775px; 
   overflow-y: auto; 
-  // border: 1px solid #ccc; 
   margin-top: 10px; 
 }
 .notebook__button-add {
   height: 55px;
-  // width: 80%;
   width: 230px;
   font-size: 20px;
   border-radius: 8px;
@@ -349,21 +278,18 @@ tr.main-info__tr-selected td:hover{
   display: flex;
   justify-content: left;
 }
-
 .menu-container{
   position: relative;
 }
-
 .main-menu-dropdown {
-  position: absolute; /* Позволяет позиционировать меню относительно родительского элемента */
-  background-color: white; /* Цвет фона */
-  border: 1px solid #ccc; /* Рамка */
+  position: absolute; 
+  background-color: white;
+  border: 1px solid #ccc; 
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); /* Тень для эффекта */
-  z-index: 1000; /* Убедитесь, что меню отображается поверх других элементов */
-  margin-top: 5px; /* Отступ сверху от кнопки меню */
-  padding: 10px; /* Отступ внутри меню */
+  z-index: 1000; 
+  margin-top: 5px;
+  padding: 10px;
   width: 242px;
-  // height: 132px;
   height: 192px;
   border-radius: 15px;
   left: 0px;
@@ -388,14 +314,6 @@ tr.main-info__tr-selected td:hover{
   background-color: #0066ff;
   color: white;
 }
-
-// .main-info-notebook__th{
-
-// }
-// .main-info-notebook__td-edit{
-
-// }
-
 .note-notebook__select{
   max-height: 50px;
   overflow-y: auto;
@@ -410,42 +328,26 @@ tr.main-info__tr-selected td:hover{
   background-color: #007bff;
   color: white;
 }
-
 .main-info-notebook__td{
 width: 90%;
 }
-
 .jodit-status-bar{
   display: none !important;
 }
 .jodit-wysiwyg{
-  //  min-height: 500px !important;
-  //min-height: 500px;
-
   min-height: 70vh !important;
 }
 .jodit-workplace{
   min-height: 70vh !important;
-  // min-height: 700px !important;
 }
-
 .jodit-react-container{
-  // padding: 0px;
-  // width: 255px;
-  // height: 47px;
   margin: 10px;
 }
-
 .note-headpanel_container{
   display: flex;
   justify-content: space-between;
-  // justify-content: space-around;
 }
 .note-headpanel__button{
-  // margin-top: 13px;
-  // margin-bottom: 13px;
-  // background-color: #007bff;
-  // color: white;
   width: 255px;
   height: 50px;
 }
@@ -454,26 +356,15 @@ width: 90%;
 }
 div.note-name__textfield{
   width: 100%;
-  //  height: 50px;
-  // margin: 20px 0 20px 0!important;
   margin: 25px 0 15px 0;
-  // padding: 20px !important;
 }
 div.note-name__textfield input{
   font-weight: bold;
-  // font-size: 18px;
-  // height: 40px;
-  //  padding: 10px
 }
 .notebook-date-container{
   display: flex;
-  // justify-content: space-around;
   justify-content: space-between;
-  // justify-content: start;
   margin: 5px 0 0 0;
-}
-.notebook-lastChangeDate__div{
-  // margin-right: 315px;
 }
 .notebook-date-text__label{
   margin-right: 5px;
@@ -495,7 +386,6 @@ button.encrypt-modal__button{
   height: 50px;
 }
 p.encrypt-modal__p{
-  // font-weight: bold;
   font-size: 24px;
 }
 .notebook-small-panel{
@@ -512,12 +402,10 @@ background-color: white;
 z-index: 9999;
 position: absolute;
 }
-
 .jodit-main-container{
   position: relative;
-  width: 100%; /* Ширина контейнера */
-  height: 100%; /* Высота контейнера */
-  // border: 1px solid #000; /* Для наглядности */
+  width: 100%; 
+  height: 100%; 
   overflow: hidden; /* Скрыть переполнение */
 }
 .jodit-block-container{
@@ -529,18 +417,13 @@ position: absolute;
   background-color: rgba(255, 255, 255, 0.8); /* Полупрозрачный белый фон */
   z-index: 2; /* Наложение на содержимое */
   display: flex;
-  justify-content: center; /* Центрирование по горизонтали */
-  align-items: center; /* Центрирование по вертикали */
+  justify-content: center;
+  align-items: center;
 }
 .jodit-block-container img {
-  max-width: 100px; /* Максимальная ширина изображения */
-  max-height: 100px; /* Максимальная высота изображения */
+  max-width: 100px;
+  max-height: 100px;
 }
-
-// .btn-check:checked+.btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check)+.btn:active{
-//   background-color: #007bff;
-// }
-
 button.btn-info:active{
   background-color: #0066ff !important;
 }
@@ -560,14 +443,9 @@ button.btn-info:hover{
 .decrypt-modal__body{
   padding-bottom: 0px;
 }
-// .note-add__button{
-//   width: 252px;
-//   height: 47px;
-// }
-// .note-add-container{
-//   display: flex;
-//   justify-content: center;
-// }
+.note-headpanel__label{
+  cursor: pointer;
+}
 
 @keyframes lds-dual-ring {
   0% {
@@ -584,17 +462,14 @@ button.btn-info:hover{
   left: 0;
   right: 0;
   bottom: 0;
-  // background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный фон */
   display: flex;
-  justify-content: center; /* Центрирование по горизонтали */
-  align-items: center; /* Центрирование по вертикали */
-  z-index: 9999; /* Высокий z-index для отображения поверх приложения */
+  justify-content: center;
+  align-items: center; 
+  z-index: 9999;
 }
-
 .loader {
   width: 48px;
   height: 48px;
-  // border: 5px dotted #FFF; /* Белая пунктирная граница */
   border: 5px dotted #9b9494;
   border-radius: 50%;
   display: inline-block;
@@ -611,41 +486,6 @@ button.btn-info:hover{
     transform: rotate(360deg);
   }
 }
-
-// .loader-overlay {
-//   position: fixed;
-//   top: 0;
-//   left: 0;
-//   right: 0;
-//   bottom: 0;
-//   background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный фон */
-//   display: flex;
-//   justify-content: center; /* Центрирование по горизонтали */
-//   align-items: center; /* Центрирование по вертикали */
-//   z-index: 9999; /* Высокий z-index для отображения поверх приложения */
-// }
-
-// .loader {
-//   font-size: 10px;
-//   width: 1em;
-//   height: 1em;
-//   border-radius: 50%;
-//   position: relative;
-//   text-indent: -9999em;
-//   animation: mulShdSpin 1.1s infinite ease;
-//   transform: translateZ(0);
-// }
-
-// @keyframes mulShdSpin {
-//   0%,
-//   100% {
-//     box-shadow: 0em -2.6em 0em 0em #ffffff, 1.8em -1.8em 0 0em rgba(255,255,255, 0.2), 2.5em 0em 0 0em rgba(255,255,255, 0.2), 1.75em 1.75em 0 0em rgba(255,255,255, 0.2), 0em 2.5em 0 0em rgba(255,255,255, 0.2), -1.8em 1.8em 0 0em rgba(255,255,255, 0.2), -2.6em 0em 0 0em rgba(255,255,255, 0.5), -1.8em -1.8em 0 0em rgba(255,255,255, 0.7);
-//   }
-//   12.5% {
-//     box-shadow: 0em -2.6em 0em 0em rgba(255,255,255, 0.7), 1.8em -1.8em 0 0em #ffffff, 2.5em 0em 0 0em rgba(255,255,255, 0.2), 1.75em 1.75em 0 0em rgba(255,255,255, 0.2), 0em 2.5em 0 0em rgba(255,255,255, 0.2), -1.8em 1.8em 0 0em rgba(255,255,255, 0.2), -2.6em 0em 0 0em rgba(255,255,255, 0.2), -1.8em -1.8em 0 0em rgba(255,255,255, 0.5);
-//   }
-// }
-
 
 @media screen and (min-width: 780px) and (max-width: 1200px) {
   .table th {
@@ -678,11 +518,8 @@ button.btn-info:hover{
   .main-info__page-capt {
     font-size: 19px;
     padding-left: 0px;
-    // margin: 15px auto 20px 0;
   }
   .main-form__button-add {
-    // height: 65px;
-    // font-size: 16px;
     height: 55px;
     font-size: 20px;
     width: 100%;
@@ -698,7 +535,6 @@ button.btn-info:hover{
     padding-right: 0.3rem;
   }
   .main-info__th-num {
-    // min-width: 46px;
     min-width:8%;
     width:8%;
   }
@@ -708,7 +544,6 @@ button.btn-info:hover{
   .main-info__th-text {
     min-width: 130px;
   }
-
   .main-form__notebooks-container{
     display: none;
   }
@@ -730,19 +565,9 @@ button.btn-info:hover{
     height: 50px;
     min-height: 50px;
     margin-bottom: 17px;
-    // padding: 5px;
   }
-  // mb-3.input-group {
-  //   margin-bottom:10px;
-  // }
-
-  // div.css-sc8y68-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root{
-  //   padding: 5px;
-  // }
   div.css-w76bbz-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input{
     padding: 10px;
-    // height: 50px;
-    // min-height: 50px;
   }
   .css-quhxjy-MuiInputBase-root-MuiOutlinedInput-root{
     height: 50px;
@@ -769,68 +594,47 @@ button.btn-info:hover{
   padding: 0;
   color: inherit;
   background-color: transparent;
-}
-button.notebook-modal__button{
-  width: 100%;
-  height: 50px;
-  // font-size: 18px;
-}
-.note-headpanel__button{
-  width:50px;
-  height: 50px;
-  border: none;
-  outline: none;
-  padding: 0;
-  color: inherit;
-  background-color: transparent;
-}
-
-button.note-headpanel__button:active {
-  width:50px;
-  height: 50px;
-  border: none;
-  outline: none;
-  padding: 0;
-  color: inherit;
-  background-color: transparent !important;
-}
-  button.note-headpanel__button:hover {
-    // width:50px;
-    // height: 50px;
+  }
+  button.notebook-modal__button{
+    width: 100%;
+    height: 50px;
+  }
+  .note-headpanel__button{
+    width:50px;
+    height: 50px;
     border: none;
     outline: none;
-    // padding: 0;
+    padding: 0;
+    color: inherit;
+    background-color: transparent;
+  }
+  button.note-headpanel__button:active {
+    width:50px;
+    height: 50px;
+    border: none;
+    outline: none;
+    padding: 0;
+    color: inherit;
+    background-color: transparent !important;
+  }
+  button.note-headpanel__button:hover {
+    border: none;
+    outline: none;
     color: inherit;
     background-color: transparent !important;
   }
   button.note-headpanel__button:disabled {
-    // width:50px;
-    // height: 50px;
     border: none;
     outline: none;
-    // padding: 0;
     color: inherit;
     background-color: transparent !important;
   }
-
-  
-
-  // .note-headpanel__button .btn :hover{
-  //   background-color: transparent;
-  //   border:none;
-  // }
-  // .note-headpanel__button .btn-check:checked+.btn, .btn.active, .btn.show, .btn:first-child:active, :not(.btn-check)+.btn:active{
-  //   background-color: transparent;
-  //   border:none;
-  // }
-
-.note-headpanel__img{
-  width: 50px;
-  height: 50px;
-  display: block;
-}
-.note-headpanel__label{
-  display: none;
-}
-
+  .note-headpanel__img{
+    width: 50px;
+    height: 50px;
+    display: block;
+  }
+  .note-headpanel__label{
+    display: none;
+  }
 }
