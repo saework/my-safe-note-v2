@@ -57,7 +57,8 @@ namespace MySafeNote
                 var connection = builder.Configuration.GetConnectionString("Default");
 
                 // TODO поменять на postgee перед запуском в prod!
-                builder.Services.AddDbContext<DataContext>(options => options.UseSqlite(connection));
+                //builder.Services.AddDbContext<DataContext>(options => options.UseSqlite(connection));
+                builder.Services.AddDbContext<DataContext>(options => options.UseNpgsql(connection));
 
                 // Регистрация репозиториев
                 builder.Services.AddScoped<IUserRepository, UserRepository>();
