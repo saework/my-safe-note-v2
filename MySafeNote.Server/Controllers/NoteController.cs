@@ -1,50 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using MySafeNote.Core;
 using MySafeNote.Core.Abstractions;
-//using MySafeNote.WebHost.Model;
-//using MySafeNote.DataAccess.Repositories;
-//using MySafeNote.Server;
-//using System.Collections.Generic;
-//using System.Linq;
-//using MySafeNote.Server.Controllers;
-//using MySafeNote.Server.Model;
 using Microsoft.AspNetCore.Authorization;
-//using Microsoft.AspNetCore.Identity;
-//using Xceed.Words.NET;
-//using DocumentFormat.OpenXml.Packaging;
-//using HtmlToOpenXml;
-//using System.IO.Compression;
-
-//using System.IO;
-//using System.Text;
-//using DocumentFormat.OpenXml.Spreadsheet;
-//using Microsoft.EntityFrameworkCore;
-//using MySafeNote.DataAccess;
-//using System.Globalization;
-//using Xceed.Words.NET;
-//using Newtonsoft.Json;
 using MySafeNote.Core.Dtos;
-using DocumentFormat.OpenXml.Office2010.Excel;
 using MySafeNote.Server.Services;
-using System.Text.Json;
-using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.ExtendedProperties;
-//using MySafeNote.Server.Services;
 
-
-//---
-//using Microsoft.AspNetCore.Mvc;
-//using System.Collections.Generic;
-//using System.Threading.Tasks;
-//using MySafeNote.Core.Abstractions;
-//using MySafeNote.Core.Dtos;
-//using Microsoft.AspNetCore.Authorization;
-//---
-
-//namespace my_safe_note.Controllers
 namespace MySafeNote.Server.Controllers
 {
     [Route("api/[controller]")]
@@ -83,9 +44,6 @@ namespace MySafeNote.Server.Controllers
         [Authorize]
         public async Task<ActionResult<List<NoteDtoGet>>> GetNotesByUserIdAsync(int userId)
         {
-            //var notesDto = await _noteService.GetNotesByUserIdAsync(userId);
-            //return Ok(notesDto);
-
             try
             {
                 var notesDto = await _noteService.GetNotesByUserIdAsync(userId);
@@ -104,12 +62,6 @@ namespace MySafeNote.Server.Controllers
         [Authorize]
         public async Task<ActionResult<Note>> GetNoteByIdAsync(int id)
         {
-            //var note = await _noteService.GetNoteByIdAsync(id);
-            //if (note == null)
-            //{
-            //    return NotFound($"Note с ID: {id} не найден.");
-            //}
-            //return Ok(note);
             try
             {
                 var note = await _noteService.GetNoteByIdAsync(id);
@@ -152,9 +104,6 @@ namespace MySafeNote.Server.Controllers
         [Authorize]
         public async Task<ActionResult<int>> CreateNoteAsync([FromBody] NoteDto noteDto)
         {
-            //var noteId = await _noteService.CreateOrUpdateNoteAsync(noteDto);
-            //return Ok(noteId);
-
             try
             {
                 var noteId = await _noteService.CreateOrUpdateNoteAsync(noteDto);
@@ -163,15 +112,12 @@ namespace MySafeNote.Server.Controllers
             }
             catch (Exception ex)
             {
-
                 var userId = noteDto?.UserId.ToString() ?? "null";
                 var noteId = noteDto?.NoteId.ToString() ?? "null";
                 var title = noteDto?.Title ?? "null";
-                //var notebookName = noteDto?.NotebookName ?? "null";
                 var notebookId = noteDto?.NotebookId?.ToString() ?? "null";
                 var createDate = noteDto?.CreateDate.ToString("o") ?? "null"; // Формат ISO 8601
                 var lastChangeDate = noteDto?.LastChangeDate.ToString("o") ?? "null";
-                //_logger.LogError(ex, "CreateNoteAsync. UserId: {userId}, NoteId: {noteId}, Title: {title}, NotebookName: {notebookName}, NotebookId: {notebookId}, CreateDate: {createDate}, LastChangeDate: {lastChangeDate}. Error:", userId, noteId, title, notebookName, notebookId, createDate, lastChangeDate);
                 _logger.LogError(ex, "CreateNoteAsync. UserId: {userId}, NoteId: {noteId}, Title: {title}, NotebookId: {notebookId}, CreateDate: {createDate}, LastChangeDate: {lastChangeDate}. Error:", userId, noteId, title, notebookId, createDate, lastChangeDate);
                 
                 return StatusCode(500, "Internal Server Error.");
@@ -261,23 +207,16 @@ namespace MySafeNote.Server.Controllers
             try
             {
                 var zipBytes = await _noteService.ExportUserNotesToHtmlAsync(userId);
-                //var zipBytes = await System.IO.File.ReadAllBytesAsync(zipFilePath);
                 var contentType = "application/zip";
                 var zipFileName = $"UserNotes_{userId}.zip";
 
                 _logger.LogDebug("ExportUserNotesToHtmlAsync. UserId: {userId}.", userId);
                 return File(zipBytes, contentType, zipFileName);
-                //return File(zipBytes, "application/zip", $"UserNotes_{userId}.zip");
             }
-            //catch (Exception ex)
-            //{
-            //    return StatusCode(500, $"Внутренняя ошибка сервера. {ex.Message}");
-            //}
             catch (Exception ex)
             {
                 _logger.LogError(ex, "ExportUserNotesToHtmlAsync. UserId: {id}. Error:", userId);
                 return StatusCode(500, $"Internal Server Error. {ex.Message}");
-                //return StatusCode(500, $"Внутренняя ошибка сервера. {ex.Message}");
             }
         }
 
@@ -290,14 +229,12 @@ namespace MySafeNote.Server.Controllers
             {
                 await _noteService.ImportNotesFromZipAsync(userId, file);
                 _logger.LogDebug("UploadNotesFromZipAsync. UserId: {userId}.", userId);
-                //return Ok("Заметки успешно загружены.");
                 return Ok("Notes uploaded successfully.");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "UploadNotesFromZipAsync. UserId: {id}. Error:", userId);
                 return StatusCode(500, $"Internal Server Error. {ex.Message}");
-                //return StatusCode(500, $"Внутренняя ошибка сервера. {ex.Message}");
             }
         }
     }

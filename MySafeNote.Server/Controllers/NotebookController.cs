@@ -1,17 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MySafeNote.Core.Abstractions;
 using MySafeNote.Core;
-using MySafeNote.DataAccess.Repositories;
 using Microsoft.AspNetCore.Authorization;
-//using MySafeNote.Server.Model;
 using MySafeNote.Core.Dtos;
-using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.Office2010.Excel;
 
 namespace MySafeNote.Server.Controllers
 {
-
     [Route("api/[controller]")]
     [ApiController]
     public class NotebookController : ControllerBase

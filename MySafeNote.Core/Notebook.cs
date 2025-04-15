@@ -6,7 +6,7 @@ namespace MySafeNote.Core
     public class Notebook : BaseEntity
     {
         [Required]
-        [StringLength(256, ErrorMessage = "Поле не может быть более 256 символов.")]
+        [StringLength(256, ErrorMessage = "The field cannot be more than 256 characters.")]
         public string Name { get; set; }
         public int UserId { get; set; }
         public virtual User User { get; set; }

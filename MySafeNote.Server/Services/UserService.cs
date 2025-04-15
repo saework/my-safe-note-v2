@@ -1,23 +1,16 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
-//using MySafeNote.Server.Model;
 using Microsoft.AspNetCore.Identity;
-using System.Text;
 using MySafeNote.Server.Auth;
 using Microsoft.IdentityModel.Tokens;
 using MySafeNote.Core.Dtos;
 using MySafeNote.Core.Abstractions;
 using MySafeNote.Core;
-using MySafeNote.Server.Controllers;
-using Microsoft.Extensions.Logging;
 
 namespace MySafeNote.Server.Services
 {
     public class UserService : IUserService
     {
-
         private readonly IUserRepository _userRepository;
         private readonly INoteRepository _noteRepository;
         private readonly INotebookRepository _notebookRepository;
@@ -60,7 +53,6 @@ namespace MySafeNote.Server.Services
         {
             var user = await _userRepository.GetByIdAsync(id);
             if (user == null)
-                //throw new ArgumentException($"User с ID: {id} не найден.");
                 throw new ArgumentException($"User with ID: {id} not found.");
 
             user.Email = changedUser.Email;
@@ -79,7 +71,6 @@ namespace MySafeNote.Server.Services
         {
             var user = await _userRepository.GetUserByEmailAsync(email);
             if (user == null)
-                //throw new ArgumentException($"User с Email: {email} не найден.");
                 throw new ArgumentException($"User with Email: {email} not found.");
 
             var deleteUserNotes = await _noteRepository.DeleteAllNotesByUserEmailAsync(email);
@@ -89,37 +80,10 @@ namespace MySafeNote.Server.Services
             return await _userRepository.RemoveAsync(user.Id);
         }
 
-        //public string CreateJwtToken(int userId, string email)
-        //{
-        //    // Реализуйте логику создания JWT токена
-        //    return "JWT Token"; // Замените на реальную логику
-        //}
-
         public bool VerifyPassword(User user, string password)
         {
             return _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, password) == PasswordVerificationResult.Success;
         }
-
-        //public static UserLoginDto CreateJwtToken(int userId, string email)
-        //{
-        //    var claims = new List<Claim> { new Claim(ClaimTypes.Name, email) };
-
-        //    var jwt = new JwtSecurityToken(
-        //        issuer: AuthOptions.ISSUER,
-        //        audience: AuthOptions.AUDIENCE,
-        //        claims: claims,
-        //        expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(60)), // время жизни токена
-        //        signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
-
-        //    var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
-
-        //    var response = new UserLoginDto
-        //    {
-        //        AccessToken = encodedJwt,
-        //        UserId = userId
-        //    };
-        //    return response;
-        //}
 
         public UserLoginDto CreateJwtToken(int userId, string email)
         {

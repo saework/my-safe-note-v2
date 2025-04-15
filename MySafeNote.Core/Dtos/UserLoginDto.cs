@@ -1,5 +1,4 @@
-﻿//namespace MySafeNote.Server.Model
-namespace MySafeNote.Core.Dtos
+﻿namespace MySafeNote.Core.Dtos
 {
     public class UserLoginDto
     {

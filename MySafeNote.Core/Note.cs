@@ -1,7 +1,5 @@
-﻿//#nullable enable
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
 
 namespace MySafeNote.Core
 {
@@ -17,6 +15,5 @@ namespace MySafeNote.Core
         public string? NotePasswordHash { get; set; }
         public int UserId { get; set; }
         public virtual User User { get; set; }
-
     }
 }

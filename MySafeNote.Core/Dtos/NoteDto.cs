@@ -1,6 +1,5 @@
 ﻿using MySafeNote.Core;
 using System;
-//namespace MySafeNote.Server.Model
 namespace MySafeNote.Core.Dtos
 {
     public class NoteDto

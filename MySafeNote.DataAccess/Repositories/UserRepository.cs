@@ -2,7 +2,6 @@
 using MySafeNote.Core;
 using MySafeNote.Core.Abstractions;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 
 namespace MySafeNote.DataAccess.Repositories
 {
@@ -24,13 +23,11 @@ namespace MySafeNote.DataAccess.Repositories
 
         public async Task<int> GetUserIdByEmailAsync(string email)
         {
-            //var user = await DbSet.FirstOrDefaultAsync(x => x.Email == email);
             var user = await DbSet.AsNoTracking().FirstOrDefaultAsync(x => x.Email == email);
             if (user != null)
                 return user.Id;
             else
                 return 0;
         }
-
     }
 }

@@ -1,19 +1,11 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using MySafeNote.DataAccess;
 using MySafeNote.DataAccess.Repositories;
 using MySafeNote.Core.Abstractions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.IdentityModel.Tokens;
 using MySafeNote.Server.Auth;
 using MySafeNote.Server.Services;
-using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
-using Microsoft.AspNetCore.Http;
-//using MySafeNote.Server.Middlewares;
-//using MySafeNote.Server.Configs;
 using Serilog;
 
 namespace MySafeNote
@@ -22,18 +14,6 @@ namespace MySafeNote
     {
         public static void Main(string[] args)
         {
-            // Ќастройка логировани€
-            //LoggingConfiguration.ConfigureLogging();
-
-            //Log.Logger = new LoggerConfiguration()
-            //    .ReadFrom.Configuration(new ConfigurationBuilder()
-            //        .SetBasePath(Directory.GetCurrentDirectory())
-            //        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            //        .Build())
-            //    .CreateLogger();
-
-            //Log.Information("Start MySafeNote Server");
-
             try
             {
                 var builder = WebApplication.CreateBuilder(args);
@@ -52,19 +32,19 @@ namespace MySafeNote
                     {
                         options.TokenValidationParameters = new TokenValidationParameters
                         {
-                            // указывает, будет ли валидироватьс€ издатель при валидации токена
+                            // ”казывает, будет ли валидироватьс€ издатель при валидации токена
                             ValidateIssuer = true,
-                            // строка, представл€юща€ издател€
+                            // —трока, представл€юща€ издател€
                             ValidIssuer = AuthOptions.ISSUER,
-                            // будет ли валидироватьс€ потребитель токена
+                            // Ѕудет ли валидироватьс€ потребитель токена
                             ValidateAudience = true,
-                            // установка потребител€ токена
+                            // ”становка потребител€ токена
                             ValidAudience = AuthOptions.AUDIENCE,
-                            // будет ли валидироватьс€ врем€ существовани€
+                            // Ѕудет ли валидироватьс€ врем€ существовани€
                             ValidateLifetime = true,
-                            // установка ключа безопасности
+                            // ”становка ключа безопасности
                             IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-                            // валидаци€ ключа безопасности
+                            // ¬алидаци€ ключа безопасности
                             ValidateIssuerSigningKey = true,
                         };
                     });
@@ -76,7 +56,7 @@ namespace MySafeNote
                 // Ќастройка контекста базы данных
                 var connection = builder.Configuration.GetConnectionString("Default");
 
-                // TODO помен€ть на postgee перед запуском в prod !!!
+                // TODO помен€ть на postgee перед запуском в prod!
                 builder.Services.AddDbContext<DataContext>(options => options.UseSqlite(connection));
 
                 // –егистраци€ репозиториев
@@ -91,9 +71,6 @@ namespace MySafeNote
 
                 var app = builder.Build();
 
-                // Middleware дл€ обработки ошибок
-                //app.UseMiddleware<ErrorHandlingMiddleware>();
-
                 app.UseAuthentication();
                 app.UseAuthorization();
 
@@ -107,7 +84,6 @@ namespace MySafeNote
                 app.UseDefaultFiles();
                 app.UseStaticFiles();
 
-                // Configure the HTTP request pipeline.
                 if (app.Environment.IsDevelopment())
                 {
                     app.UseSwagger();
@@ -116,12 +92,11 @@ namespace MySafeNote
 
                 app.UseHttpsRedirection();
 
-                //pp.UseAuthorization();
-                app.MapControllers(); // Ќастройка маршрутов контроллеров
+                app.MapControllers();
 
                 app.MapFallbackToFile("/index.html");
 
-                app.Run(); // «апуск приложени€
+                app.Run();
             }
             catch (Exception ex)
             {

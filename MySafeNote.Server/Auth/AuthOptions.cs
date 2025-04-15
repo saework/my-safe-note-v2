@@ -5,7 +5,7 @@ namespace MySafeNote.Server.Auth
 {
     public class AuthOptions
     {   
-        // TODO перед запуском в prod - поменять коды и убрать и ГИТ !!!
+        // TODO перед запуском в prod - поменять коды и убрать из ГИТ !!!
 
         public const string ISSUER = "MyAuthServer"; // издатель токена
         public const string AUDIENCE = "MyAuthClient"; // потребитель токена

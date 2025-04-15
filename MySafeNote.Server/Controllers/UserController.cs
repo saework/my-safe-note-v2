@@ -1,31 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using MySafeNote.Core;
 using MySafeNote.Core.Abstractions;
-//using MySafeNote.WebHost.Model;
-//using MySafeNote.DataAccess.Repositories;
-//using Microsoft.IdentityModel.Tokens;
-//using MySafeNote.Server.Auth;
-//using System.IdentityModel.Tokens.Jwt;
-//using System.Security.Claims;
-
-//using MySafeNote.Server.Model;
-//using MySafeNote.Server.Services;
-//using Microsoft.AspNetCore.Identity;
-//using MySafeNote.Server.Controllers.my_safe_note.Controllers;
-//using MySafeNote.Server;
-//using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Authorization;
-//using  MySafeNote.Server.Controllers.Services;
 using MySafeNote.Core.Dtos;
-using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.Office2010.Excel;
-//using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace MySafeNote.Server.Controllers
-//namespace my_safe_note.Controllers
 {
 
     [Route("api/[controller]")]
@@ -67,7 +47,6 @@ namespace MySafeNote.Server.Controllers
                 var user = await _userService.GetUserByIdAsync(id);
                 if (user == null)
                 {
-                    //return NotFound($"User с ID: {id} не найден.");
                     return NotFound($"User with ID: {id} not found.");
                 }
                 _logger.LogDebug("GetUserByIdAsync. UserId: {userId}.", id);
@@ -101,7 +80,6 @@ namespace MySafeNote.Server.Controllers
             }
         }
 
-
         [HttpPut("{id}")]
         [Authorize]
         public async Task<ActionResult<User>> ChangeUserByIdAsync(int id, [FromBody] UserDto changedUser)
@@ -113,10 +91,8 @@ namespace MySafeNote.Server.Controllers
             }
             if (string.IsNullOrEmpty(changedUser.Email) || string.IsNullOrEmpty(changedUser.Password))
             {
-                //return BadRequest("Не определен Email или Password");
                 return BadRequest("Email or Password not found");
             }
-
             try
             {
                 var updatedUser = await _userService.UpdateUserAsync(id, changedUser);
@@ -125,8 +101,6 @@ namespace MySafeNote.Server.Controllers
             }
             catch (Exception ex)
             {
-                //_logger.LogError("Ошибка при обновлении пользователя. {errMessage}", ex.Message);
-                //var email = changedUser?.Email.ToString() ?? "null";
                 var email = changedUser?.Email ?? "null";
                 _logger.LogError(ex, "ChangeUserByIdAsync. UserId: {id}, Email: {email}. Error:", id, email);
                 return StatusCode(500, "Internal Server Error.");
@@ -162,7 +136,6 @@ namespace MySafeNote.Server.Controllers
             }
             catch (Exception ex)
             {
-                //_logger.LogError("Ошибка при удалении пользователя. {errMessage}", ex.Message);
                 _logger.LogError(ex, "DeleteUserByEmailAsync. Email: {email}. Error:", email);
                 return StatusCode(500, "Internal Server Error.");
             }
@@ -182,11 +155,8 @@ namespace MySafeNote.Server.Controllers
                 var userExists = await _userService.GetUserByEmailAsync(userDto.Email.Trim());
                 if (userExists != null)
                 {
-
-                    _logger.LogDebug("CreateUserAsync. User with this email has already been created. Email: {email}", email);
-                    return Conflict("User with this email has already been created.");
-                    //return Conflict("Пользователь с таким Email уже создан.");
-                    
+                   _logger.LogDebug("CreateUserAsync. User with this email has already been created. Email: {email}", email);
+                   return Conflict("User with this email has already been created.");
                 }
                 var newUserId = await _userService.CreateUserAsync(userDto);
                 var response = _userService.CreateJwtToken(newUserId, userDto.Email);
@@ -195,8 +165,6 @@ namespace MySafeNote.Server.Controllers
             }
             catch (Exception ex)
             {
-                //_logger.LogError("Внутренняя ошибка сервера. {errMessage}", ex.Message);
-                //var email = userDto?.Email.ToString() ?? "null";
                 var email = userDto?.Email ?? "null";
                 _logger.LogError(ex, "CreateUserAsync. Email: {email}. Error:", email);
                 return StatusCode(500, "Internal Server Error.");
@@ -237,14 +205,12 @@ namespace MySafeNote.Server.Controllers
                 }
                 var userId = user.Id;
                 var response = _userService.CreateJwtToken(userId, email);
-                //_logger.LogInformation("LoginUserByEmail. User LogIn. UserId: {userId}", userId);
                 _logger.LogInformation("LoginUserByEmail. User LogIn. Email: {email}, UserId: {userId}", email, userId);
 
                 return Ok(response);
             }
             catch (Exception ex)
             {
-                //_logger.LogError("Внутренняя ошибка сервера. {errMessage}", ex.Message);
                 var email = userLoginData?.Email ?? "null";
                 _logger.LogError(ex, "LoginUserByEmail. Email: {email}. Error:", email);
                 return StatusCode(500, "Internal Server Error.");
