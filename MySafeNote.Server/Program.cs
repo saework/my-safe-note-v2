@@ -18,6 +18,9 @@ namespace MySafeNote
             {
                 var builder = WebApplication.CreateBuilder(args);
 
+                // Настройка AuthOptions
+                AuthOptions.Configure(builder.Configuration);
+
                 Log.Logger = new LoggerConfiguration()
                     .ReadFrom.Configuration(builder.Configuration)
                     .CreateLogger();
@@ -55,9 +58,6 @@ namespace MySafeNote
 
                 // Настройка контекста базы данных
                 var connection = builder.Configuration.GetConnectionString("Default");
-
-                // TODO поменять на postgee перед запуском в prod!
-                //builder.Services.AddDbContext<DataContext>(options => options.UseSqlite(connection));
                 builder.Services.AddDbContext<DataContext>(options => options.UseNpgsql(connection));
 
                 // Регистрация репозиториев
