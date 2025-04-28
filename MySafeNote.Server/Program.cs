@@ -58,7 +58,15 @@ namespace MySafeNote
 
                 // Настройка контекста базы данных
                 var connection = builder.Configuration.GetConnectionString("Default");
-                builder.Services.AddDbContext<DataContext>(options => options.UseNpgsql(connection));
+                builder.Services.AddDbContext<DataContext>(options =>
+                    options.UseNpgsql(connection, npgsqlOptions =>
+                        npgsqlOptions.EnableRetryOnFailure(
+                            maxRetryCount: 5,
+                            maxRetryDelay: TimeSpan.FromSeconds(10),
+                            errorCodesToAdd: null
+                        )
+                    )
+                );
 
                 // Регистрация репозиториев
                 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -90,7 +98,6 @@ namespace MySafeNote
                     app.UseSwagger();
                     app.UseSwaggerUI();
                 }
-
                 app.UseHttpsRedirection();
 
                 app.MapControllers();

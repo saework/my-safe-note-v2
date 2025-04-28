@@ -85,7 +85,7 @@ function SignIn() {
           </Button>
           <div className="sign-up__reqMessage-label">{reqMessage}</div>
           <Box className="sign-up__box-links">
-            <Link to="/newpassword">Забыли пароль?</Link>
+            {/* <Link to="/newpassword">Забыли пароль?</Link> TODO Реализовть в новой версии  */} 
             <Link to="/signup">Нет аккаунта? Регистрация</Link>
           </Box>
         </form>

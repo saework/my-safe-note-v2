@@ -1,6 +1,6 @@
 {
-  "short_name": "mynotif.ru",
-  "name": "Сервис «Мои уведомления»",
+  "short_name": "mysafenote.ru",
+  "name": "Сервис «Мои заметки»",
   "icons": [
     {
       "src": "favicon.ico",
