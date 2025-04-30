@@ -446,6 +446,23 @@ button.btn-info:hover{
 .note-headpanel__label{
   cursor: pointer;
 }
+.fixed-toolbar .jodit-toolbar__box {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: white; /* или другой цвет фона */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Тень для панели */
+}
+div.fixed-toolbar {
+  overflow: visible;
+}
+// div.jodit_fullsize {
+//   max-width: 1320px !important;
+//   display: flex;
+//   justify-content: center;
+// }
 
 @keyframes lds-dual-ring {
   0% {
@@ -520,8 +537,10 @@ button.btn-info:hover{
     padding-left: 0px;
   }
   .main-form__button-add {
-    height: 55px;
-    font-size: 20px;
+    // height: 55px;
+    // font-size: 20px;
+    height: 47px;
+    font-size: 18px;
     width: 100%;
   }
   .main-form__button-cancel {
@@ -561,10 +580,17 @@ button.btn-info:hover{
     justify-content: space-between;
   }
   .notebook-small-panel__select{
-    width: 75%;
-    height: 50px;
-    min-height: 50px;
-    margin-bottom: 17px;
+    width: 100%;
+    height: 47px;
+    margin-bottom: 15px;
+    // min-height: 50px;
+    // margin-bottom: 17px;
+  }
+  .notebook-small__select{
+    // width: 75%;
+    height: 47px;
+    // min-height: 50px;
+    // margin-bottom: 17px;
   }
   div.css-w76bbz-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input{
     padding: 10px;
@@ -574,6 +600,7 @@ button.btn-info:hover{
   }
   .notebook-lastChangeDate__div, .notebook-createDate__div{
     font-size: 16px;
+    width: 130px;
   }
   .notebook-small-add__img{
     width: 47px;
@@ -637,4 +664,32 @@ button.btn-info:hover{
   .note-headpanel__label{
     display: none;
   }
+  .note_main-container{
+    margin: 10px 10px 3px 10px;
+  }
+
+
+//   .jodit-toolbar__box {
+//     position: fixed; /* Фиксированное позиционирование */
+//     top: 0; /* Расположение вверху */
+//     left: 0; /* Расположение слева */
+//     width: 100%; /* Ширина на всю страницу */
+//     z-index: 1000; /* Уровень наложения */
+//     background-color: white; /* Фон панели инструментов */
+//     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Тень */
+// }
+// .jodit {
+//     margin-top: 50px; /* Отступ сверху, чтобы контент не перекрывался панелью */
+// }
+
+// .fixed-toolbar .jodit-toolbar__box {
+//   position: fixed;
+//   top: 0;
+//   left: 0;
+//   width: 100%;
+//   z-index: 1000;
+//   background-color: white; /* или другой цвет фона */
+//   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Тень для панели */
+// }
+
 }

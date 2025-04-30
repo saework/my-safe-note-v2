@@ -31,6 +31,7 @@ const NotebookSmallPanel = React.memo((props: IProps) => {
           <FormControl fullWidth>
             <InputLabel id="notes-notebook-select-label">Блокнот</InputLabel>
             <Select
+              className="notebook-small__select"
               labelId="notes-notebook-select-label"
               value={currentNotebookId}
               onChange={(e) =>

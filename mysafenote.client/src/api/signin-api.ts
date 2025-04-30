@@ -44,7 +44,9 @@ const signInApi = async (
         setReqMessage("Ошибка сервера");
       }
     } else {
-      setReqMessage("Email имеет не верный формат!");
+      // setReqMessage("Email имеет не верный формат!"); //!!!comm
+      setReqMessage("Логин имеет не верный формат!");
+      //setReqMessage("Логин должен содержать только английские буквы или цифры (минимум 3 символа)!");
     }
   } else {
     setReqMessage("Заполните обязательные поля!");

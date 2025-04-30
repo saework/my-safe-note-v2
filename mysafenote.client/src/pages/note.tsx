@@ -45,8 +45,10 @@ const Note = () => {
   const [decryptModalShow, setDecryptModalShow] = useState<boolean>(false);
   const [notePasswordHash, setNotePasswordHash] = useState<string>("");
   const [notebooksForSelect, setNotebooksForSelect] = useState<any[]>(notebooks);
+  const [isToolbarFixed, setIsToolbarFixed] = useState<boolean>(false); // Состояние для фиксированной панели инструментов  //!!!
 
   const withoutnotebookFilterName = noteConfig.WITHOUTNOTEBOOK_FILTER_NAME;
+  const ToolbarFixedHeight = noteConfig.TOOLBAR_FIXED_HEIGHT;
 
   useEffect(() => {
     if (userId === 0 || !userId) {
@@ -80,6 +82,27 @@ const Note = () => {
       setNotebooksForSelect(notebooksForSelectNewVal);
     }
   }, [notebooks]);
+
+  //!!!
+// Обработчик прокрутки
+useEffect(() => {
+  console.log(window.scrollY);
+  const handleScroll = () => {
+    // if (window.scrollY > 300 && window.innerWidth <= 768) { // Проверяем ширину экрана для мобильных устройств
+    // if (window.scrollY > ToolbarFixedHeight) {
+      if (window.scrollY > 300) {
+      setIsToolbarFixed(true);
+    } else {
+      setIsToolbarFixed(false);
+    }
+  };
+
+  window.addEventListener("scroll", handleScroll);
+  return () => {
+    window.removeEventListener("scroll", handleScroll);
+  };
+}, []);
+  //!!!
 
   const handleCheckNotebook = (notebookIdCheckedVal: number) => {
     setNotebookId(notebookIdCheckedVal);
@@ -207,8 +230,62 @@ const Note = () => {
     }
   };
 
-  const config: any = {
-    buttons: [
+  // const config: any = {
+  //   buttons: [
+  //     "bold",
+  //     "italic",
+  //     "underline",
+  //     "strikethrough",
+  //     "superscript",
+  //     "subscript",
+  //     "paragraph",
+  //     "font",
+  //     "fontsize",
+  //     "brush",
+  //     "eraser",
+
+  //     "indent",
+  //     "outdent",
+  //     "align",
+
+  //     "ul",
+  //     "ol",
+
+  //     "lineHeight",
+
+  //     "hr",
+  //     "image",
+  //     "table",
+  //     "link",
+  //     "symbols",
+
+  //     "spellcheck",
+
+  //     "selectall",
+  //     "cut",
+  //     "copy",
+  //     "paste",
+
+  //     "undo",
+  //     "redo",
+  //     "find",
+
+  //     "source",
+  //     "fullsize",
+  //     "preview",
+  //     "print",
+  //   ],
+  //   uploader: { insertImageAsBase64URI: true },
+  //   readonly: false,
+  //   toolbarAdaptive: false,
+  //   language: "ru",
+  //   i18n: "ru",
+  // };
+
+  //!!!
+  // Определяем кнопки для панели инструментов в зависимости от ширины экрана
+  const getToolbarButtons = () => {
+    const commonButtons = [
       "bold",
       "italic",
       "underline",
@@ -224,19 +301,24 @@ const Note = () => {
       "indent",
       "outdent",
       "align",
+      "left",
+      "center",
+      "justify",
+      "right",
+
 
       "ul",
       "ol",
 
-      "lineHeight",
+      //"lineHeight",
 
       "hr",
       "image",
       "table",
-      "link",
-      "symbols",
+      // "link",
+      // "symbols",
 
-      "spellcheck",
+      //"spellcheck",
 
       "selectall",
       "cut",
@@ -247,17 +329,38 @@ const Note = () => {
       "redo",
       "find",
 
-      "source",
-      "fullsize",
-      "preview",
+      //"source",
+      //"fullsize",
+      //"preview",
       "print",
-    ],
+      ];
+
+      // Если ширина экрана меньше или равна 768 пикселей, убираем некоторые кнопки
+      if (window.innerWidth <= 768) {
+        return commonButtons.filter(button => 
+          !["print", "superscript", "subscript", "selectall", "cut", "copy", "paste", "indent", "outdent", "ul", "left", "center", "justify", "right"].includes(button)
+        //).concat(["align"])
+        );
+      } else {
+        return commonButtons.filter(button => 
+          !["align"].includes(button)
+        );
+      } 
+    
+    // Если ширина экрана больше 768 пикселей, возвращаем все кнопки
+      return commonButtons;
+    };
+  
+  const config: any = {
+    buttons: getToolbarButtons(), // Используем функцию для получения кнопок
     uploader: { insertImageAsBase64URI: true },
     readonly: false,
     toolbarAdaptive: false,
     language: "ru",
     i18n: "ru",
   };
+
+  //!!!
 
   const titleChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
@@ -321,7 +424,9 @@ const Note = () => {
         handleDecrypt={handleDecrypt}
       />
 
-      <div className="jodit-main-container">
+      {/* <div className="jodit-main-container"> */}
+      <div className={`jodit-main-container ${isToolbarFixed ? 'fixed-toolbar' : ''}`}>
+      {/* <div className="jodit-main-container fixed-toolbar"> */}
         <JoditEditor
           ref={editor}
           value={noteBody}

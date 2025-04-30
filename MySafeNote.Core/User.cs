@@ -6,7 +6,7 @@ namespace MySafeNote.Core
     public class User : BaseEntity
     {
         [Required]
-        [EmailAddress]
+        //[EmailAddress]
         public string Email { get; set; }
         [Required]
         public string PasswordHash { get; set; }
