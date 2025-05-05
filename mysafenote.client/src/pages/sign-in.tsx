@@ -56,7 +56,8 @@ function SignIn() {
             required
             fullWidth
             id="email"
-            label="Email адрес"
+            // label="Email адрес"
+            label="Логин"
             name="email"
             autoComplete="email"
             autoFocus

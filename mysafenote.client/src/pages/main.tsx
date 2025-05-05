@@ -16,6 +16,15 @@ function Main() {
   const navigate = useNavigate();
   const dispatch = useContext(DispatchContext);
   const notesState = useContext(StateContext);
+  const [initialLoad, setInitialLoad] = useState<boolean>(true); //!!!
+
+  //!!!
+  useEffect(() => {
+    // При монтировании компонента всегда устанавливаем флаг необходимости загрузки
+    dispatch?.({ type: ACTIONS.NEED_LOAD_DATA, payload: true });
+    setInitialLoad(false);
+  }, [dispatch]);
+  //!!!
 
   if (!notesState || notesState.userId === undefined) {
     return <Loader />;
@@ -47,6 +56,11 @@ function Main() {
         }
       } catch (error) {
         console.error("Ошибка при загрузке данных:", error);
+        //!!!
+        localStorage.removeItem("loginData");
+        dispatch?.({ type: ACTIONS.RESET_STORE, payload: 0 });
+        navigate("/login");
+        //!!!
       } finally {
         dispatch?.({ type: ACTIONS.NEED_LOAD_DATA, payload: false });
         setLoading(false);

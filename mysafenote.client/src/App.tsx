@@ -33,6 +33,8 @@ function App() {
           <Route path="/newpassword" element={<NewPass />} />
           <Route path="/main" element={<Main />} />
           <Route path="/note" element={<Note />} />
+          {/* <Route path="/main" element={loggedIn ? <Main /> : <Navigate to="/login" />} />
+          <Route path="/note" element={loggedIn ? <Note /> : <Navigate to="/login" />} /> */}
           <Route
             path="/"
             element={

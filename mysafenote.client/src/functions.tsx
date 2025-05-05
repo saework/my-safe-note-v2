@@ -24,7 +24,8 @@ export const validateEmail = (email: string): boolean => {
   // return res.test(String(email).toLowerCase()); //!!!comm
   
     // Проверяем, что email состоит минимум из 3 символов и содержит только буквы и цифры
-    const res = /^[a-zA-Z0-9]{3,}$/;
+    //const res = /^[a-zA-Z0-9]{3,}$/;
+    const res = /^[a-zA-Z0-9@-_.]{3,}$/;
     return res.test(String(email));
 };
 
