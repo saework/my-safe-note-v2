@@ -13,7 +13,7 @@ namespace MySafeNote.DataAccess
         public DataContext(DbContextOptions<DataContext> options)
             : base(options)
         {
-            Database.EnsureCreated(); // Создаем базу данных при первом обращении
+            //Database.EnsureCreated(); // Создаем базу данных при первом обращении //!!!comm
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

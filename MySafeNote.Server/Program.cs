@@ -84,11 +84,57 @@ namespace MySafeNote
                 app.UseAuthorization();
 
                 // Инициализация базы данных
+                //using (var scope = app.Services.CreateScope())
+                //{
+                //    var dbContext = scope.ServiceProvider.GetRequiredService<DataContext>();
+                //    DbInitializer.Initialize(dbContext);
+                //}
+
+                //!!!
+                //// Применяем миграции и инициализируем БД
+                //using (var scope = app.Services.CreateScope())
+                //{
+                //    var services = scope.ServiceProvider;
+                //    try
+                //    {
+                //        var dbContext = services.GetRequiredService<DataContext>();
+                //        dbContext.Database.Migrate(); // Применяем миграции
+                //        DbInitializer.Initialize(dbContext); // Заполняем начальными данными
+                //    }
+                //    catch (Exception ex)
+                //    {
+                //        var logger = services.GetRequiredService<ILogger<Program>>();
+                //        logger.LogError(ex, "Error migration or initialization of the database");
+                //    }
+                //}
+
+                // Применение миграций и инициализация БД
                 using (var scope = app.Services.CreateScope())
                 {
-                    var dbContext = scope.ServiceProvider.GetRequiredService<DataContext>();
-                    DbInitializer.Initialize(dbContext);
+                    var services = scope.ServiceProvider;
+                    try
+                    {
+                        var context = services.GetRequiredService<DataContext>();
+
+                        // Проверяем наличие pending-миграций
+                        var pendingMigrations = context.Database.GetPendingMigrations();
+                        if (pendingMigrations.Any())
+                        {
+                            Log.Information("Applying migrations: {Migrations}", string.Join(", ", pendingMigrations));
+                            context.Database.Migrate();
+                        }
+
+                        // Инициализация тестовых данных
+                        DbInitializer.Initialize(context);
+                        Log.Information("The database has been initialized successfully");
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Fatal(ex, "Error migration or initialization of the database");
+                        throw; // Прерываем запуск приложения при критической ошибке
+                    }
                 }
+                //!!!
 
                 app.UseDefaultFiles();
                 app.UseStaticFiles();
