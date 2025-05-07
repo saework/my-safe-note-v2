@@ -19,12 +19,7 @@ export const getRowById = (noteRowId: number): INoteRow | undefined => {
 
 export const validateEmail = (email: string): boolean => {
   // eslint-disable-next-line no-useless-escape
-  // const res =
-  //   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  // return res.test(String(email).toLowerCase()); //!!!comm
-  
-    // Проверяем, что email состоит минимум из 3 символов и содержит только буквы и цифры
-    //const res = /^[a-zA-Z0-9]{3,}$/;
+    // Проверяем, что логин состоит минимум из 3 символов и содержит только буквы и цифры, тире и точка
     const res = /^[a-zA-Z0-9@-_.]{3,}$/;
     return res.test(String(email));
 };

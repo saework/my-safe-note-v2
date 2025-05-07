@@ -418,7 +418,6 @@ position: absolute;
   z-index: 2; /* Наложение на содержимое */
   display: flex;
   justify-content: center;
-  // align-items: center;
 }
 .jodit-block-container img {
   max-width: 100px;
@@ -463,11 +462,6 @@ div.fixed-toolbar {
   font-size: 26px;
   margin-left: 10px;
 }
-// div.jodit_fullsize {
-//   max-width: 1320px !important;
-//   display: flex;
-//   justify-content: center;
-// }
 
 @keyframes lds-dual-ring {
   0% {
@@ -542,8 +536,6 @@ div.fixed-toolbar {
     padding-left: 0px;
   }
   .main-form__button-add {
-    // height: 55px;
-    // font-size: 20px;
     height: 47px;
     font-size: 18px;
     width: 100%;
@@ -588,14 +580,9 @@ div.fixed-toolbar {
     width: 100%;
     height: 47px;
     margin-bottom: 15px;
-    // min-height: 50px;
-    // margin-bottom: 17px;
   }
   .notebook-small__select{
-    // width: 75%;
     height: 47px;
-    // min-height: 50px;
-    // margin-bottom: 17px;
   }
   div.css-w76bbz-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input{
     padding: 10px;
@@ -672,29 +659,4 @@ div.fixed-toolbar {
   .note_main-container{
     margin: 10px 10px 3px 10px;
   }
-
-
-//   .jodit-toolbar__box {
-//     position: fixed; /* Фиксированное позиционирование */
-//     top: 0; /* Расположение вверху */
-//     left: 0; /* Расположение слева */
-//     width: 100%; /* Ширина на всю страницу */
-//     z-index: 1000; /* Уровень наложения */
-//     background-color: white; /* Фон панели инструментов */
-//     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Тень */
-// }
-// .jodit {
-//     margin-top: 50px; /* Отступ сверху, чтобы контент не перекрывался панелью */
-// }
-
-// .fixed-toolbar .jodit-toolbar__box {
-//   position: fixed;
-//   top: 0;
-//   left: 0;
-//   width: 100%;
-//   z-index: 1000;
-//   background-color: white; /* или другой цвет фона */
-//   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Тень для панели */
-// }
-
 }

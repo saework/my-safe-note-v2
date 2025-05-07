@@ -39,16 +39,13 @@ const signUpApi = async (
           );
           return loginData;
         } else if (response.status === 409) {
-          // setReqMessage("Уже существует пользователь с таким Email!"); //!!!comm
           setReqMessage("Уже существует пользователь с таким логином!");
         } else {
           console.log(`signUpApi - Ошибка соединения:${response.statusText}`);
           setReqMessage("Ошибка сервера");
         }
       } else {
-        // setReqMessage("Email имеет не верный формат!"); //!!!comm
         setReqMessage("Логин должен содержать английские буквы или цифры (минимум 3 символа)");
-        //setReqMessage("Логин имеет не верный формат!");
       }
     } else {
       setReqMessage("Пароли не совпадают!");

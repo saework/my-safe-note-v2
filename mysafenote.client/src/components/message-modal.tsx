@@ -10,11 +10,6 @@ interface IProps {
 
 function MessageModal(props: IProps) {
 const { modalShow, handleCloseMessageModal, handleExitNote } = props;
-//const { modalShow, handleExitNote } = props;
-
-//   const handleCloseModal = () => {
-//     handleCloseMessageModal();
-//   };
 
   return (
     <Modal
@@ -29,12 +24,8 @@ const { modalShow, handleCloseMessageModal, handleExitNote } = props;
         <Modal.Title 
         id="contained-modal-title-vcenter"
         className="message-modal__title"
-        // >Выйти без сохранения заметки?</Modal.Title>
         >Выйти без сохранения?</Modal.Title>
       </Modal.Header>
-      {/* <Modal.Body>
-        <p>Выйти без сохранения заметки?</p>
-      </Modal.Body> */}
       <Modal.Footer>
         <Button
           className="delete-modal__button"

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useRef, useContext, useEffect, useMemo } from "react";
 import JoditEditor from "jodit-react";
 import { TextField } from "@mui/material";
 import { StateContext } from "../state/notes-context";
@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { encryptNote, decryptNote } from "../functions";
 import EncryptModal from "../components/encrypt-modal";
 import DecryptModal from "../components/decrypt-modal";
-import MessageModal from "../components/message-modal"; //!!!
+import MessageModal from "../components/message-modal";
 import noteConfig from "../configs/config";
 import NoteButtonsPanel from "../components/note-buttons-panel";
 import NoteDatePanel from "../components/note-date-panel";
@@ -35,7 +35,7 @@ const Note = () => {
   const currentNotebookId = notesState.currentNotebookId;
   const notebooks = notesState.notebooks;
   const editor = useRef<any>(null);
-  const [editorInstance, setEditorInstance] = useState<any>(null); //!!!
+  const [editorInstance, setEditorInstance] = useState<any>(null);
   const [noteBody, setNoteBody] = useState<string>("");
   const [createDate, setCreateDate] = useState<Date | null>(null);
   const [lastChangeDate, setLastChangeDate] = useState<Date | null>(null);
@@ -47,9 +47,9 @@ const Note = () => {
   const [decryptModalShow, setDecryptModalShow] = useState<boolean>(false);
   const [notePasswordHash, setNotePasswordHash] = useState<string>("");
   const [notebooksForSelect, setNotebooksForSelect] = useState<any[]>(notebooks);
-  const [isToolbarFixed, setIsToolbarFixed] = useState<boolean>(false); // Состояние для фиксированной панели инструментов  //!!!
-  const [hasChanges, setHasChanges] = useState<boolean>(false); //!!!
-  const [messageModalShow, setMessageModalShow] = useState<boolean>(false); //!!!
+  const [isToolbarFixed, setIsToolbarFixed] = useState<boolean>(false); // Состояние для фиксированной панели инструментов
+  const [hasChanges, setHasChanges] = useState<boolean>(false);
+  const [messageModalShow, setMessageModalShow] = useState<boolean>(false);
 
   const withoutnotebookFilterName = noteConfig.WITHOUTNOTEBOOK_FILTER_NAME;
   const ToolbarFixedHeight = noteConfig.TOOLBAR_FIXED_HEIGHT;
@@ -87,15 +87,10 @@ const Note = () => {
     }
   }, [notebooks]);
 
-  //!!!
 // Обработчик прокрутки
 useEffect(() => {
-  //console.log(window.scrollY);
   const handleScroll = () => {
-    // if (window.scrollY > 300 && window.innerWidth <= 768) { // Проверяем ширину экрана для мобильных устройств
-    // if (window.scrollY > ToolbarFixedHeight) {
-    if (window.scrollY > 300) {
-    // if (window.scrollY > ToolbarFixedHeight) {
+    if (window.scrollY > ToolbarFixedHeight) {
       setIsToolbarFixed(true);
     } else {
       setIsToolbarFixed(false);
@@ -107,11 +102,10 @@ useEffect(() => {
     window.removeEventListener("scroll", handleScroll);
   };
 }, []);
-  //!!!
 
   const handleCheckNotebook = (notebookIdCheckedVal: number) => {
     setNotebookId(notebookIdCheckedVal);
-    setHasChanges(true); //!!!
+    setHasChanges(true);
   };
 
   const handlerLoadNoteBodyFromServer = async () => {
@@ -182,18 +176,7 @@ useEffect(() => {
     setHasChanges(false); // Сбрасываем флаг изменений после сохранения
   };
 
-  //!!!comm
-  // const handleExitNote = () => {
-  //   dispatch?.({ type: ACTIONS.CHECK_ID_ROW, payload: 0 });
-  //   dispatch?.({ type: "NEED_LOAD_DATA", payload: true });
-  //   const url = "/main";
-  //   navigate(url);
-  // };
-  //!!!comm
-  //!!!
   const handleExitNote = () => {
-    console.log(hasChanges);
-    console.log(messageModalShow);
     if (hasChanges === true && messageModalShow != true){
       setMessageModalShow(true);
     }else{
@@ -203,7 +186,6 @@ useEffect(() => {
       navigate(url);
     }
   };
-  //!!!
 
   const handleLoadNoteDocxFromServer = async () => {
     await loadNoteDocxFromServer(currentNoteId, title);
@@ -256,59 +238,6 @@ useEffect(() => {
     setHasChanges(false);
   };
 
-  // const config: any = {
-  //   buttons: [
-  //     "bold",
-  //     "italic",
-  //     "underline",
-  //     "strikethrough",
-  //     "superscript",
-  //     "subscript",
-  //     "paragraph",
-  //     "font",
-  //     "fontsize",
-  //     "brush",
-  //     "eraser",
-
-  //     "indent",
-  //     "outdent",
-  //     "align",
-
-  //     "ul",
-  //     "ol",
-
-  //     "lineHeight",
-
-  //     "hr",
-  //     "image",
-  //     "table",
-  //     "link",
-  //     "symbols",
-
-  //     "spellcheck",
-
-  //     "selectall",
-  //     "cut",
-  //     "copy",
-  //     "paste",
-
-  //     "undo",
-  //     "redo",
-  //     "find",
-
-  //     "source",
-  //     "fullsize",
-  //     "preview",
-  //     "print",
-  //   ],
-  //   uploader: { insertImageAsBase64URI: true },
-  //   readonly: false,
-  //   toolbarAdaptive: false,
-  //   language: "ru",
-  //   i18n: "ru",
-  // };
-
-  //!!!
   // Определяем кнопки для панели инструментов в зависимости от ширины экрана
   const getToolbarButtons = () => {
     const commonButtons = [
@@ -365,26 +294,13 @@ useEffect(() => {
       if (window.innerWidth <= 768) {
         return commonButtons.filter(button => 
           !["print", "superscript", "subscript", "selectall", "cut", "copy", "paste", "indent", "outdent", "ul", "left", "center", "justify", "right"].includes(button)
-        //).concat(["align"])
         );
       } else {
         return commonButtons.filter(button => 
           !["align"].includes(button)
         );
       } 
-    
-    // // Если ширина экрана больше 768 пикселей, возвращаем все кнопки
-    //   return commonButtons;
     };
-  
-  // const config: any = {
-  //   buttons: getToolbarButtons(), // Используем функцию для получения кнопок
-  //   uploader: { insertImageAsBase64URI: true },
-  //   readonly: false,
-  //   toolbarAdaptive: false,
-  //   language: "ru",
-  //   i18n: "ru",
-  // };
 
   const config: any = useMemo(() => ({
     placeholder: "", // Отключаем стандартный плейсхолдер
@@ -396,32 +312,20 @@ useEffect(() => {
     language: "ru",
     i18n: "ru",
   }), []);
-  //!!!
 
   const titleChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
-    setHasChanges(true); //!!!
+    setHasChanges(true);
   };
   const onBlurHandle = (newNoteBody: string) => {
     setNoteBody(newNoteBody);
-    //setHasChanges(true); //!!!
   };
 
-  //!!!
   const handleEditorChange = (newContent: string) => {
     if (hasChanges != true && newContent !== noteBody) {
-      //setNoteBody(newContent);
       setHasChanges(true);
     }
   };
-
-  // const handleEditorChange = useCallback((newContent: string) => {
-  //   if (hasChanges != true && newContent !== noteBody) {
-  //     //setNoteBody(newContent);
-  //     setHasChanges(true);
-  //   }
-  // }, [noteBody]);
-  //!!!
 
   const handleEncryptDecryptClick = () => {
     if (!notePasswordHash) {
@@ -484,23 +388,18 @@ useEffect(() => {
         handleCloseMessageModal= {() => setMessageModalShow(false)}
       />
 
-      {/* <div className="jodit-main-container"> */}
       <div className={`jodit-main-container ${isToolbarFixed ? 'fixed-toolbar' : ''}`}>
-      {/* <div className="jodit-main-container fixed-toolbar"> */}
         <JoditEditor
-        //!!!
           ref={(instance) => {
             if (instance && !editorInstance) {
               setEditorInstance(instance);
             }
           }}
-          //!!!
-          //ref={editor} //!!!comm
-          key={currentNoteId} // Важно! При смене заметки пересоздаём редактор
+          key={currentNoteId} //При смене заметки пересоздаём редактор
           value={noteBody}
           config={config}
           onBlur={(newNoteBody) => onBlurHandle(newNoteBody)}
-          onChange={handleEditorChange} //!!!
+          onChange={handleEditorChange}
           className={
             notePasswordHash ? "jodit-note-editor-block" : "jodit-note-editor"
           }

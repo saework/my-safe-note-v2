@@ -83,31 +83,6 @@ namespace MySafeNote
                 app.UseAuthentication();
                 app.UseAuthorization();
 
-                // Инициализация базы данных
-                //using (var scope = app.Services.CreateScope())
-                //{
-                //    var dbContext = scope.ServiceProvider.GetRequiredService<DataContext>();
-                //    DbInitializer.Initialize(dbContext);
-                //}
-
-                //!!!
-                //// Применяем миграции и инициализируем БД
-                //using (var scope = app.Services.CreateScope())
-                //{
-                //    var services = scope.ServiceProvider;
-                //    try
-                //    {
-                //        var dbContext = services.GetRequiredService<DataContext>();
-                //        dbContext.Database.Migrate(); // Применяем миграции
-                //        DbInitializer.Initialize(dbContext); // Заполняем начальными данными
-                //    }
-                //    catch (Exception ex)
-                //    {
-                //        var logger = services.GetRequiredService<ILogger<Program>>();
-                //        logger.LogError(ex, "Error migration or initialization of the database");
-                //    }
-                //}
-
                 // Применение миграций и инициализация БД
                 using (var scope = app.Services.CreateScope())
                 {
@@ -134,7 +109,6 @@ namespace MySafeNote
                         throw; // Прерываем запуск приложения при критической ошибке
                     }
                 }
-                //!!!
 
                 app.UseDefaultFiles();
                 app.UseStaticFiles();
