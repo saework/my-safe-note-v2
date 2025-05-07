@@ -52,7 +52,7 @@ function NoteButtonsPanel(props: IProps) {
           type="button"
           variant="success"
           className="note-headpanel__button"
-          disabled={(notePasswordHash !== "") || (!currentNoteId || currentNoteId === 0) || (!noteBody || noteBody === "")}
+          disabled={(notePasswordHash !== "") || (!currentNoteId || currentNoteId === 0) || (!noteBody || noteBody === "") || hasChanges }
         >
           <label className="note-headpanel__label">Скачать в docx</label>
           <img

@@ -410,8 +410,17 @@ namespace MySafeNote.Server.Services
                     }
 
                     var noteTitle = parts[0];
-                    var createDate = DateTime.ParseExact(parts[1], "yyyyMMdd_HHmmss", CultureInfo.InvariantCulture);
-                    var lastChangeDate = DateTime.ParseExact(parts[2], "yyyyMMdd_HHmmss", CultureInfo.InvariantCulture);
+                    //var createDate = DateTime.ParseExact(parts[1], "yyyyMMdd_HHmmss", CultureInfo.InvariantCulture);
+                    //var lastChangeDate = DateTime.ParseExact(parts[2], "yyyyMMdd_HHmmss", CultureInfo.InvariantCulture);
+                    //!!!
+                    var createDate = DateTime.SpecifyKind(
+                        DateTime.ParseExact(parts[1], "yyyyMMdd_HHmmss", CultureInfo.InvariantCulture),
+                        DateTimeKind.Utc);
+
+                    var lastChangeDate = DateTime.SpecifyKind(
+                        DateTime.ParseExact(parts[2], "yyyyMMdd_HHmmss", CultureInfo.InvariantCulture),
+                        DateTimeKind.Utc);
+                    //!!!
                     var notebookId = parts.Length > 3 && int.TryParse(parts[3], out var id) ? id : (int?)null;
                     var notebookName = parts.Length > 4 ? parts[4] : string.Empty;
 

@@ -90,11 +90,12 @@ const Note = () => {
   //!!!
 // Обработчик прокрутки
 useEffect(() => {
-  console.log(window.scrollY);
+  //console.log(window.scrollY);
   const handleScroll = () => {
     // if (window.scrollY > 300 && window.innerWidth <= 768) { // Проверяем ширину экрана для мобильных устройств
     // if (window.scrollY > ToolbarFixedHeight) {
-      if (window.scrollY > 300) {
+    if (window.scrollY > 300) {
+    // if (window.scrollY > ToolbarFixedHeight) {
       setIsToolbarFixed(true);
     } else {
       setIsToolbarFixed(false);
@@ -191,6 +192,8 @@ useEffect(() => {
   //!!!comm
   //!!!
   const handleExitNote = () => {
+    console.log(hasChanges);
+    console.log(messageModalShow);
     if (hasChanges === true && messageModalShow != true){
       setMessageModalShow(true);
     }else{
@@ -224,6 +227,7 @@ useEffect(() => {
       userId,
     };
     await saveNoteToServer(note);
+    setHasChanges(false);
   };
 
   const handleDecrypt = async (password: string) => {
@@ -249,6 +253,7 @@ useEffect(() => {
     } catch (error) {
       console.error("Ошибка при расшифровке:", error);
     }
+    setHasChanges(false);
   };
 
   // const config: any = {
@@ -382,6 +387,8 @@ useEffect(() => {
   // };
 
   const config: any = useMemo(() => ({
+    placeholder: "", // Отключаем стандартный плейсхолдер
+    showPlaceholder: false, // Полностью отключаем надпись
     buttons: getToolbarButtons(), // Используем функцию для получения кнопок
     uploader: { insertImageAsBase64URI: true },
     readonly: false,
@@ -397,7 +404,7 @@ useEffect(() => {
   };
   const onBlurHandle = (newNoteBody: string) => {
     setNoteBody(newNoteBody);
-    setHasChanges(true); //!!!
+    //setHasChanges(true); //!!!
   };
 
   //!!!
@@ -489,6 +496,7 @@ useEffect(() => {
           }}
           //!!!
           //ref={editor} //!!!comm
+          key={currentNoteId} // Важно! При смене заметки пересоздаём редактор
           value={noteBody}
           config={config}
           onBlur={(newNoteBody) => onBlurHandle(newNoteBody)}
