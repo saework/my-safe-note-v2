@@ -78,6 +78,15 @@ namespace MySafeNote
                 builder.Services.AddScoped<INotebookService, NotebookService>();
                 builder.Services.AddScoped<IUserService, UserService>();
 
+               //!!!
+                builder.WebHost.ConfigureKestrel(options =>
+                {
+                    options.Limits.MaxRequestBodySize = 10 * 1024 * 1024; // 10MB //TODO вынести в конфиг файл!
+                    options.Limits.MaxRequestBufferSize = 10 * 1024 * 1024;
+                    options.Limits.KeepAliveTimeout = TimeSpan.FromMinutes(5);
+                });
+                //!!!
+
                 var app = builder.Build();
 
                 app.UseAuthentication();
