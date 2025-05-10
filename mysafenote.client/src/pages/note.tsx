@@ -347,6 +347,7 @@ useEffect(() => {
           currentNoteId={currentNoteId}
           noteBody={noteBody}
           title={title}
+          notebookId={notebookId}
           hasChanges={hasChanges || currentNoteId === 0} // Разрешаем сохранение для новой заметки или при изменениях
         />
 

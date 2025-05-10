@@ -10,6 +10,7 @@ interface IProps {
   currentNoteId: number;
   noteBody: string;
   title: string;
+  notebookId:number | null;
   hasChanges: boolean;
 }
 
@@ -23,6 +24,7 @@ function NoteButtonsPanel(props: IProps) {
     currentNoteId,
     noteBody,
     title,
+    notebookId,
     hasChanges
   } = props;
 
@@ -35,7 +37,7 @@ function NoteButtonsPanel(props: IProps) {
           type="button"
           variant="success"
           className="note-headpanel__button"
-          disabled={title == "" || !hasChanges || (notePasswordHash !== "")}
+          disabled={title == "" || !hasChanges || (notePasswordHash !== "") || (notebookId == null || notebookId === 0)}
         >
           <label className="note-headpanel__label">Сохранить</label>
           <img

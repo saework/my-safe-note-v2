@@ -73,6 +73,9 @@ export const loadNoteBodyFromServer = async (userId: number, noteId: number): Pr
       console.log("saveNoteToServer - Заметка сохранена на сервера");
       const responseData = await response.json();
       result = responseData;
+    } else if (response.status === 413) {
+      console.log("saveNoteToServer - Ошибка сохранения - Содержимое заметки более 10 Mb");
+      alert("Содержимое заметки не должно превышать 10 Mb"); //TODO переделать на кастомный компонент Message!
     } else {
       console.log(
         `saveNoteToServer - Ошибка при сохранении заметки на сервер - ${response.statusText}`
