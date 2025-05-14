@@ -78,19 +78,61 @@ namespace MySafeNote
                 builder.Services.AddScoped<INotebookService, NotebookService>();
                 builder.Services.AddScoped<IUserService, UserService>();
 
+                //!!!comm
+                //builder.WebHost.ConfigureKestrel(options =>
+                //{
+                //    options.Limits.MaxRequestBodySize = 10 * 1024 * 1024; // 10MB //TODO вынести в конфиг файл!
+                //    options.Limits.MaxRequestBufferSize = 10 * 1024 * 1024;
+                //    options.Limits.KeepAliveTimeout = TimeSpan.FromMinutes(5);
+                //});
+                //!!!comm
+
+                //!!!
+                var maxRequestBodySizeMB = builder.Configuration.GetValue<int>("RequestLimits:MaxRequestBodySizeMB");
+                var maxRequestBodySize = maxRequestBodySizeMB * 1024 * 1024; // Переводим в байты
+
                 builder.WebHost.ConfigureKestrel(options =>
                 {
-                    options.Limits.MaxRequestBodySize = 10 * 1024 * 1024; // 10MB //TODO вынести в конфиг файл!
-                    options.Limits.MaxRequestBufferSize = 10 * 1024 * 1024;
+                    options.Limits.MaxRequestBodySize = maxRequestBodySize;
+                    options.Limits.MaxRequestBufferSize = maxRequestBodySize;
                     options.Limits.KeepAliveTimeout = TimeSpan.FromMinutes(5);
                 });
+                //!!!
 
                 var app = builder.Build();
 
                 app.UseAuthentication();
                 app.UseAuthorization();
 
-                // Применение миграций и инициализация БД
+                //!!!comm
+                //// Применение миграций и инициализация БД
+                //using (var scope = app.Services.CreateScope())
+                //{
+                //    var services = scope.ServiceProvider;
+                //    try
+                //    {
+                //        var context = services.GetRequiredService<DataContext>();
+
+                //        // Проверяем наличие pending-миграций
+                //        var pendingMigrations = context.Database.GetPendingMigrations();
+                //        if (pendingMigrations.Any())
+                //        {
+                //            Log.Information("Applying migrations: {Migrations}", string.Join(", ", pendingMigrations));
+                //            context.Database.Migrate();
+                //        }
+
+                //        // Инициализация тестовых данных
+                //        DbInitializer.Initialize(context);
+                //        Log.Information("The database has been initialized successfully");
+                //    }
+                //    catch (Exception ex)
+                //    {
+                //        Log.Fatal(ex, "Error migration or initialization of the database");
+                //        throw; // Прерываем запуск приложения при критической ошибке
+                //    }
+                //}
+                //!!!comm
+                //!!!
                 using (var scope = app.Services.CreateScope())
                 {
                     var services = scope.ServiceProvider;
@@ -98,12 +140,22 @@ namespace MySafeNote
                     {
                         var context = services.GetRequiredService<DataContext>();
 
-                        // Проверяем наличие pending-миграций
-                        var pendingMigrations = context.Database.GetPendingMigrations();
-                        if (pendingMigrations.Any())
+                        // Проверяем наличие таблицы __EFMigrationsHistory
+                        var hasMigrationsHistoryTable = context.Database.ExecuteSqlRaw("SELECT COUNT(*) FROM information_schema.tables WHERE table_name = '__EFMigrationsHistory'") > 0;
+
+                        if (!hasMigrationsHistoryTable)
                         {
-                            Log.Information("Applying migrations: {Migrations}", string.Join(", ", pendingMigrations));
-                            context.Database.Migrate();
+                            Log.Information("The __EFMigrationsHistory table does not exist. Skipping migrations.");
+                        }
+                        else
+                        {
+                            // Проверяем наличие pending-миграций
+                            var pendingMigrations = context.Database.GetPendingMigrations();
+                            if (pendingMigrations.Any())
+                            {
+                                Log.Information("Applying migrations: {Migrations}", string.Join(", ", pendingMigrations));
+                                context.Database.Migrate();
+                            }
                         }
 
                         // Инициализация тестовых данных
@@ -116,6 +168,7 @@ namespace MySafeNote
                         throw; // Прерываем запуск приложения при критической ошибке
                     }
                 }
+                //!!!
 
                 app.UseDefaultFiles();
                 app.UseStaticFiles();
