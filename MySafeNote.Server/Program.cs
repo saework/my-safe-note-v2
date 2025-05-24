@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using MySafeNote.Server.Auth;
 using MySafeNote.Server.Services;
 using Serilog;
+using Microsoft.Extensions.Options;
 
 namespace MySafeNote
 {
@@ -28,6 +29,50 @@ namespace MySafeNote
                 Log.Information("Start MySafeNote Server");
 
                 builder.Host.UseSerilog();
+
+                //!!!
+
+                builder.Services.AddCors(options =>
+                {
+                    options.AddPolicy("MobilePolicy", policy =>
+                    {
+                        policy.WithOrigins(
+                                "capacitor://localhost",
+                                "http://localhost",
+                                "https://mysafenote.ru"  // Добавьте production-URL
+                            )
+                            .AllowAnyMethod()  // Разрешите все методы (GET, POST, PUT, DELETE)
+                            .AllowAnyHeader()   // Разрешите все заголовки
+                            .AllowCredentials(); // Если используете куки/JWT
+                    });
+                });
+
+                //builder.Services.AddCors(options =>
+                //{
+                //    options.AddPolicy("ProductionPolicy", policy =>
+                //    {
+                //        policy.WithOrigins(
+                //                "https://mysafenote.ru" // Только production-домен
+                //            )
+                //            .WithMethods("GET", "POST", "PUT", "DELETE") // Только необходимые методы
+                //            .WithHeaders("Content-Type", "Authorization") // Только нужные заголовки
+                //            .AllowCredentials() // Только если используете куки/сессии
+                //            .SetPreflightMaxAge(TimeSpan.FromMinutes(10)); // Кеширование CORS-префлайта
+                //    });
+
+                //    // Отдельная политика для мобильных приложений
+                //    options.AddPolicy("MobilePolicy", policy =>
+                //    {
+                //        policy.WithOrigins(
+                //                "capacitor://localhost",
+                //                "http://localhost"
+                //            )
+                //            .WithMethods("GET", "POST")
+                //            .WithHeaders("Content-Type")
+                //            .DisallowCredentials(); // Для мобильных приложений credentials обычно не нужны
+                //    });
+                //});
+                //!!!
 
                 builder.Services.AddAuthorization();
                 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -90,6 +135,8 @@ namespace MySafeNote
 
                 var app = builder.Build();
 
+                //app.UseCors(app.Environment.IsDevelopment() ? "MobilePolicy" : "ProductionPolicy"); //!!!
+                app.UseCors("MobilePolicy"); //!!!
                 app.UseAuthentication();
                 app.UseAuthorization();
 

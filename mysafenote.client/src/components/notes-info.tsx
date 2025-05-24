@@ -189,6 +189,10 @@ function NotesInfo(props: IProps) {
 
   const handleExitButtonClick = () => {
     localStorage.removeItem("loginData");
+    //!!!
+    localStorage.removeItem("notesData");
+    localStorage.removeItem("notebooksData");
+    //!!!
     dispatch?.({ type: ACTIONS.RESET_STORE, payload: 0 });
     navigate("/login");
   };

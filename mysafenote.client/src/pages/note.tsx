@@ -25,6 +25,7 @@ const Note = () => {
   const dispatch = useContext(DispatchContext);
   const notesState = useContext(StateContext);
   const [loading, setLoading] = useState<boolean>(false);
+  //const [retryCount, setRetryCount] = useState<number>(0); //!!!
 
   if (!notesState) {
     return <Loader />;
@@ -108,6 +109,7 @@ useEffect(() => {
     setHasChanges(true);
   };
 
+  //!!!comm
   const handlerLoadNoteBodyFromServer = async () => {
     setLoading(true);
     try {
@@ -128,10 +130,51 @@ useEffect(() => {
       }
     } catch (error) {
       console.error("Ошибка при загрузке данных заметки:", error);
+      //navigate("/main");  //!!!
     } finally {
       setLoading(false);
     }
   };
+  //!!!comm
+//!!!
+  // const handlerLoadNoteBodyFromServer = async (attempt: number = 1): Promise<void> => {
+  //   setLoading(true);
+  //   try {
+  //     let noteDataFromServer = await loadNoteBodyFromServer(
+  //       userId,
+  //       currentNoteId
+  //     );
+  //     console.log("loadNoteBodyFromServer");
+  //     if (noteDataFromServer) {
+  //       setTitle(noteDataFromServer.title);
+  //       setCreateDate(noteDataFromServer.createDate);
+  //       setLastChangeDate(noteDataFromServer.lastChangeDate);
+  //       setNoteBody(noteDataFromServer.noteBody || "");
+  //       setNotebookName(noteDataFromServer.notebookName || "");
+  //       setNotebookId(noteDataFromServer.notebookId || null);
+  //       setNotePasswordHash(noteDataFromServer.notePasswordHash || "");
+  //       setHasChanges(false);
+  //       setRetryCount(0); // Сбрасываем счетчик попыток при успешной загрузке
+  //     }
+  //   } catch (error) {
+  //     console.error(`Ошибка при загрузке данных заметки (попытка ${attempt}):`, error);
+      
+  //     if (attempt < 3) {
+  //       // Экспоненциальная задержка: 1s, 2s, 4s
+  //       const delay = Math.pow(2, attempt - 1) * 1000;
+  //       setTimeout(() => handlerLoadNoteBodyFromServer(attempt + 1), delay);
+  //     } else {
+  //       // После 3 неудачных попыток переходим на главную
+  //       navigate("/main");
+  //     }
+  //   } finally {
+  //     if (attempt >= 3) {
+  //       setLoading(false);
+  //     }
+  //   }
+  // };
+//!!!
+
 
   const handleSaveNoteToServer = async () => {
     console.log("handleSaveNoteToServer");
