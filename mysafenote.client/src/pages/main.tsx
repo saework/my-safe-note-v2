@@ -31,14 +31,16 @@ function Main() {
   const userId = notesState.userId;
   const needLoadData = notesState.needLoadData;
 
-  useEffect(() => {
-    if (!userId) {
-      navigate("/login");
-    }
-  }, [userId, navigate]);
+  //!!!comm
+  // useEffect(() => {
+  //   if (!userId) {
+  //     navigate("/login");
+  //   }
+  // }, [userId, navigate]);
+  //!!!comm
 
   const loadDataFromServer = async () => {
-    if (userId && needLoadData) {
+    //if (userId && needLoadData) { //!!!comm
       setLoading(true);
       try {
         const notesData = await loadNotesDataFromServer(userId);
@@ -54,21 +56,42 @@ function Main() {
         }
       } catch (error) {
         console.error("Ошибка при загрузке данных:", error);
-
-        localStorage.removeItem("loginData");
-        dispatch?.({ type: ACTIONS.RESET_STORE, payload: 0 });
-        navigate("/login");
-
+        //!!!comm
+        // localStorage.removeItem("loginData"); 
+        // dispatch?.({ type: ACTIONS.RESET_STORE, payload: 0 });
+        // navigate("/login");
+        //!!!comm
       } finally {
         dispatch?.({ type: ACTIONS.NEED_LOAD_DATA, payload: false });
         setLoading(false);
       }
-    }
+   // }  //!!!comm
   };
+//!!! comm
+  // useEffect(() => {
+  //   loadDataFromServer();
+  // }, [userId, needLoadData, dispatch]);
+//!!!comm
 
+//!!!
   useEffect(() => {
-    loadDataFromServer();
+    console.log(userId);
+    if (!userId) {
+      const loginDataJSON = localStorage.getItem("loginData");
+      console.log(loginDataJSON);
+      if (navigator.onLine && loginDataJSON) {
+        loadDataFromServer();
+      } else {
+        console.log("Нет интернет-соединения. Пожалуйста, проверьте подключение.");
+        navigate("/login");
+      }
+    } else {
+        if (navigator.onLine && needLoadData)
+          loadDataFromServer();
+    }
   }, [userId, needLoadData, dispatch]);
+  //}, [userId, dispatch]);
+//!!!
 
   return (
     <div>

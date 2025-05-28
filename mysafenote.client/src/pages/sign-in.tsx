@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -17,6 +17,19 @@ function SignIn() {
   const [email, setEmailVal] = useState<string>("");
   const [password, setPasswordVal] = useState<string>("");
   const navigate = useNavigate();
+
+  //!!!
+  useEffect(() => {
+    const loginDataJSON = localStorage.getItem("loginData");
+    const notesData = localStorage.getItem("notesData");
+    console.log(notesData);
+    console.log(loginDataJSON);
+    // if (navigator.onLine && notesData && loginDataJSON) {
+    if (navigator.onLine && loginDataJSON) {
+      navigate("/main");
+    }
+  }, [navigate]);
+  //!!!
 
   // Войти по логину и паролю
   const signInHandler = async () => {
