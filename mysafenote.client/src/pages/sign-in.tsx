@@ -21,8 +21,8 @@ function SignIn() {
   //!!!
   useEffect(() => {
     const loginDataJSON = localStorage.getItem("loginData");
-    const notesData = localStorage.getItem("notesData");
-    console.log(notesData);
+    //const notesData = localStorage.getItem("notesData");
+    //console.log(notesData);
     console.log(loginDataJSON);
     // if (navigator.onLine && notesData && loginDataJSON) {
     if (navigator.onLine && loginDataJSON) {

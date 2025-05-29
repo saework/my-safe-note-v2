@@ -34,6 +34,9 @@ export const loadNotesDataFromServer = async (
         lastChangeDate: moment.utc(note.lastChangeDate).local().toDate(),
       }));
       return resultData;
+
+    } else if (response.status === 401) {
+          console.log("loadNotesDataFromServer - Ошибка. Пользователь не авторизован");
     } else {
       console.log(
         `loadNotesDataFromServer - Ошибка при получении данных с сервера - ${response.statusText}`
@@ -71,6 +74,10 @@ export const loadNotebooksDataFromServer = async (
       const data: INotebook[] = await response.json();
       console.log("loadNotebooksDataFromServer - Получены данные с сервера");
       return data;
+
+    } else if (response.status === 401) {
+    console.log("loadNotebooksDataFromServer - Ошибка. Пользователь не авторизован");
+
     } else {
       console.log(
         `loadNotebooksDataFromServer - Ошибка при получении данных с сервера - ${response.statusText}`

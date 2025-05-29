@@ -43,18 +43,31 @@ function Main() {
     //if (userId && needLoadData) { //!!!comm
       setLoading(true);
       try {
+        
         const notesData = await loadNotesDataFromServer(userId);
         const notebooksData = await loadNotebooksDataFromServer(userId);
-        
-        dispatch?.({ type: ACTIONS.LOAD_BD, payload: notesData });
-        dispatch?.({ type: ACTIONS.LOAD_NOTEBOOKS, payload: notebooksData });
 
-        const loginDataJSON = localStorage.getItem("loginData");
-        if (loginDataJSON) {
-          const loginData = JSON.parse(loginDataJSON);
-          dispatch?.({ type: ACTIONS.LOGIN_SAVE_STORE, payload: loginData });
+        console.log(notesData);
+        console.log(notesData);
+        if (notesData)  //!!!
+        {
+          dispatch?.({ type: ACTIONS.LOAD_BD, payload: notesData });
+          dispatch?.({ type: ACTIONS.LOAD_NOTEBOOKS, payload: notebooksData });
+
+          const loginDataJSON = localStorage.getItem("loginData");
+          if (loginDataJSON) {
+            const loginData = JSON.parse(loginDataJSON);
+            dispatch?.({ type: ACTIONS.LOGIN_SAVE_STORE, payload: loginData });
+          }
+          //!!!
+        } else {
+          localStorage.removeItem("loginData"); 
+          dispatch?.({ type: ACTIONS.RESET_STORE, payload: 0 });
+          navigate("/login");
         }
+        //!!!
       } catch (error) {
+        
         console.error("Ошибка при загрузке данных:", error);
         //!!!comm
         // localStorage.removeItem("loginData"); 
