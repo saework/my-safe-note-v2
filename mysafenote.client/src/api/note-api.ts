@@ -5,7 +5,7 @@ import moment from 'moment-timezone';
 
 export const loadNoteBodyFromServer = async (userId: number, noteId: number): Promise<IResponseNoteDto | undefined> => {
   const url = `api/note/notebody`;
-  const jwtToken = getLoginData("jwtToken");
+  const jwtToken = await getLoginData("jwtToken");
   if (!_.isEmpty(jwtToken)) {
     console.log(
       `loadNoteBodyFromServer - jwtToken - ${JSON.stringify(jwtToken)}`
@@ -49,7 +49,7 @@ export const loadNoteBodyFromServer = async (userId: number, noteId: number): Pr
   export const saveNoteToServer = async (noteData: INoteDto): Promise<number> => {
   let result = 0;
   const url = `api/note/savenote`;
-  const jwtToken = getLoginData("jwtToken");
+  const jwtToken = await getLoginData("jwtToken");
   if (!_.isEmpty(jwtToken)) {
     console.log(`saveNoteToServer - jwtToken - ${JSON.stringify(jwtToken)}`);
     const response = await fetch(url, {
@@ -89,7 +89,7 @@ export const loadNoteBodyFromServer = async (userId: number, noteId: number): Pr
 
 export const deleteNoteFromServer = async (noteId: number): Promise<boolean> => {
   const url = `api/note/${noteId}`;
-  const jwtToken = getLoginData("jwtToken"); 
+  const jwtToken = await getLoginData("jwtToken"); 
 
   if (!_.isEmpty(jwtToken)) {
     console.log(
@@ -124,7 +124,7 @@ export const loadNoteDocxFromServer = async (noteId: number, title: string): Pro
   const url = "api/note/notedocx";
   let result = false;
   try {
-    const jwtToken = getLoginData("jwtToken");
+    const jwtToken = await getLoginData("jwtToken");
     if (!_.isEmpty(jwtToken)) {
       console.log(
         `loadNoteDocxFromServer - jwtToken - ${JSON.stringify(jwtToken)}`
@@ -164,7 +164,7 @@ export const loadNotesDocxFromServer = async (userId: number): Promise<boolean> 
   const url = "api/note/allnotedocx";
   let result = false;
   try {
-    const jwtToken = getLoginData("jwtToken");
+    const jwtToken = await getLoginData("jwtToken");
     if (!_.isEmpty(jwtToken)) {
       console.log(`loadNotesDocxFromServer - jwtToken - ${JSON.stringify(jwtToken)}`);
       const response = await fetch(url, {

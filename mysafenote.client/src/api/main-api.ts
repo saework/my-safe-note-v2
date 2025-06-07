@@ -6,8 +6,9 @@ import moment from 'moment-timezone';
 export const loadNotesDataFromServer = async (
   userId: number
 ): Promise<INoteRow[] | undefined> => {
-  const jwtToken = getLoginData("jwtToken");
-  if (userId === 0 || !userId) userId = Number(getLoginData("userId"));
+  const jwtToken = await getLoginData("jwtToken");
+  console.log(jwtToken);
+  if (userId === 0 || !userId) userId = Number(await getLoginData("userId"));
 
   if (!_.isEmpty(jwtToken) && userId > 0) {
     console.log(
@@ -52,8 +53,8 @@ export const loadNotesDataFromServer = async (
 export const loadNotebooksDataFromServer = async (
   userId: number
 ): Promise<INotebook[] | undefined> => {
-  const jwtToken = getLoginData("jwtToken");
-  if (userId === 0 || !userId) userId = Number(getLoginData("userId"));
+  const jwtToken = await getLoginData("jwtToken");
+  if (userId === 0 || !userId) userId = Number(await getLoginData("userId"));
 
   if (!_.isEmpty(jwtToken) && userId > 0) {
     console.log(
@@ -92,8 +93,8 @@ export const loadNotebooksDataFromServer = async (
 
 export const exportNotesFromServer = async (userId: number): Promise<void> => {
   try {
-    const jwtToken = getLoginData("jwtToken");
-    if (userId === 0 || !userId) userId = Number(getLoginData("userId"));
+    const jwtToken = await getLoginData("jwtToken");
+    if (userId === 0 || !userId) userId = Number(await getLoginData("userId"));
 
     if (!_.isEmpty(jwtToken) && userId > 0) {
       console.log(
@@ -142,8 +143,8 @@ export const importNotesToServer = async (
 ): Promise<boolean> => {
   let result = false;
   try {
-    const jwtToken = getLoginData("jwtToken");
-    if (userId === 0 || !userId) userId = Number(getLoginData("userId"));
+    const jwtToken = await getLoginData("jwtToken");
+    if (userId === 0 || !userId) userId = Number(await getLoginData("userId"));
 
     if (!_.isEmpty(jwtToken) && userId > 0) {
       console.log(

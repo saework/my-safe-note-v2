@@ -10,6 +10,7 @@ import signInApi from "../api/signin-api";
 import Copyright from "../components/copyright";
 import { ACTIONS, DispatchContext } from "../state/notes-context";
 import "../style.scss";
+import { db } from "../db-utils/db-config"; //!!!
 
 function SignIn() {
   const dispatch = useContext(DispatchContext);
@@ -19,15 +20,33 @@ function SignIn() {
   const navigate = useNavigate();
 
   //!!!
+  // useEffect(() => {
+  //   const loginDataJSON = localStorage.getItem("loginData");
+  //   //const notesData = localStorage.getItem("notesData");
+  //   //console.log(notesData);
+  //   console.log(loginDataJSON);
+  //   // if (navigator.onLine && notesData && loginDataJSON) {
+  //   if (navigator.onLine && loginDataJSON) {
+  //     navigate("/main");
+  //   }
+  // }, [navigate]);
+
   useEffect(() => {
-    const loginDataJSON = localStorage.getItem("loginData");
-    //const notesData = localStorage.getItem("notesData");
-    //console.log(notesData);
-    console.log(loginDataJSON);
-    // if (navigator.onLine && notesData && loginDataJSON) {
-    if (navigator.onLine && loginDataJSON) {
-      navigate("/main");
-    }
+    const checkAuthStatus = async () => {
+      try {
+        // Проверяем наличие данных в IndexedDB
+        const loginData = await db.get('auth', 'loginData');
+        console.log('Login data from IndexedDB:', loginData);
+        
+        if (navigator.onLine && loginData) {
+          navigate("/main");
+        }
+      } catch (error) {
+        console.error("Error checking auth status:", error);
+      }
+    };
+
+    checkAuthStatus();
   }, [navigate]);
   //!!!
 

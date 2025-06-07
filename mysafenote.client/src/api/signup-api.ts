@@ -1,6 +1,7 @@
 import React from "react";
 import { validateEmail } from "../functions";
 import { ILoginData } from "../interfaces";
+import { db } from "../db-utils/db-config"; //!!!
 
 const signUpApi = async (
   email: string,
@@ -33,7 +34,16 @@ const signUpApi = async (
             jwtToken: responseData.accessToken,
           };
           // сохраняем в хранилище sessionStorage токен доступа
-          localStorage.setItem("loginData", JSON.stringify(loginData));
+          //localStorage.setItem("loginData", JSON.stringify(loginData)); //!!!
+          //!!!
+          console.log(loginData);
+
+          await db.add("auth", {
+            key: "loginData",
+            ...loginData,
+          });
+          //!!!
+
           console.log(
             "signUpApi - Регистрация прошла успешно, loginData записан в LocalStorage"
           );

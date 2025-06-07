@@ -4,7 +4,7 @@ import { INotebookDto } from "../interfaces";
 
 export const saveNotebookToServer = async (notebookData: INotebookDto): Promise<number> => {
   const url = `api/notebook/savenotebook`;
-  const jwtToken = getLoginData("jwtToken");
+  const jwtToken = await getLoginData("jwtToken");
   let result = 0;
   if (!_.isEmpty(jwtToken)) {
     console.log(`saveNotebookToServer - jwtToken - ${JSON.stringify(jwtToken)}`);
@@ -41,7 +41,7 @@ export const saveNotebookToServer = async (notebookData: INotebookDto): Promise<
 
 export const deleteNotebookFromServer = async (notebookId: number): Promise<boolean> => {
   const url = `api/notebook/${notebookId}`;
-  const jwtToken = getLoginData("jwtToken");
+  const jwtToken = await getLoginData("jwtToken");
   let result = false;
   if (!_.isEmpty(jwtToken)) {
     console.log(

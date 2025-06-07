@@ -10,6 +10,7 @@ import { StateContext } from "../state/notes-context";
 import { ACTIONS, DispatchContext } from "../state/notes-context";
 import { useNavigate } from "react-router-dom";
 import Loader from '../components/loader';
+import { db } from "../db-utils/db-config";
 
 function Main() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -54,14 +55,23 @@ function Main() {
           dispatch?.({ type: ACTIONS.LOAD_BD, payload: notesData });
           dispatch?.({ type: ACTIONS.LOAD_NOTEBOOKS, payload: notebooksData });
 
-          const loginDataJSON = localStorage.getItem("loginData");
-          if (loginDataJSON) {
-            const loginData = JSON.parse(loginDataJSON);
+          //!!!comm
+          // const loginDataJSON = localStorage.getItem("loginData"); 
+          // if (loginDataJSON) {
+          //   const loginData = JSON.parse(loginDataJSON);
+          //   dispatch?.({ type: ACTIONS.LOGIN_SAVE_STORE, payload: loginData });
+          // }
+          //!!!comm
+          //!!!
+          const loginData = await db.get('auth', 'loginData');
+          if (loginData) {
             dispatch?.({ type: ACTIONS.LOGIN_SAVE_STORE, payload: loginData });
           }
           //!!!
+
         } else {
-          localStorage.removeItem("loginData"); 
+          //localStorage.removeItem("loginData"); //!!!comm
+          //await db.delete('auth', 'loginData'); //!!!раскомм!
           dispatch?.({ type: ACTIONS.RESET_STORE, payload: 0 });
           navigate("/login");
         }
@@ -87,23 +97,46 @@ function Main() {
 //!!!comm
 
 //!!!
-  useEffect(() => {
-    console.log(userId);
-    if (!userId) {
-      const loginDataJSON = localStorage.getItem("loginData");
-      console.log(loginDataJSON);
-      if (navigator.onLine && loginDataJSON) {
-        loadDataFromServer();
-      } else {
-        console.log("Нет интернет-соединения. Пожалуйста, проверьте подключение.");
-        navigate("/login");
-      }
-    } else {
-        if (navigator.onLine && needLoadData)
-          loadDataFromServer();
-    }
-  }, [userId, needLoadData, dispatch]);
+  // useEffect(() => {
+  //   console.log(userId);
+  //   if (!userId) {
+  //     const loginDataJSON = localStorage.getItem("loginData");
+  //     console.log(loginDataJSON);
+  //     if (navigator.onLine && loginDataJSON) {
+  //       loadDataFromServer();
+  //     } else {
+  //       console.log("Нет интернет-соединения. Пожалуйста, проверьте подключение.");
+  //       navigate("/login");
+  //     }
+  //   } else {
+  //       if (navigator.onLine && needLoadData)
+  //         loadDataFromServer();
+  //   }
+  // }, [userId, needLoadData, dispatch]);
   //}, [userId, dispatch]);
+
+    useEffect(() => {
+    const checkAuthAndLoad = async () => {
+      console.log(userId);
+      if (!userId) {
+        // Проверяем авторизацию в IndexedDB
+        const loginData = await db.get('auth', 'loginData');
+        console.log('Login data from IndexedDB:', loginData);
+        
+        if (navigator.onLine && loginData) {
+          loadDataFromServer();
+        } else {
+          console.log("Нет интернет-соединения или сохранённой сессии");
+          navigate("/login");
+        }
+      } else if (navigator.onLine && needLoadData) {
+        loadDataFromServer();
+      }
+    };
+
+    checkAuthAndLoad();
+    }, [userId, needLoadData, dispatch]);
+  //}, [userId, needLoadData, dispatch, navigate]);
 //!!!
 
   return (

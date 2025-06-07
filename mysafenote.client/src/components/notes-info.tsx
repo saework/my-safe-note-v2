@@ -27,6 +27,8 @@ import NotebookSmallPanel from "./notebook-small-panel";
 import Header from "./header";
 import Menu from "./menu";
 import Loader from '../components/loader';
+import { db } from "../db-utils/db-config"; //!!!
+
 
 interface IProps {
   handlerLoadFromServer: () => void;
@@ -187,12 +189,14 @@ function NotesInfo(props: IProps) {
     setCurrentPage(0);
   };
 
-  const handleExitButtonClick = () => {
-    localStorage.removeItem("loginData");
-    //!!!
-    localStorage.removeItem("notesData");
-    localStorage.removeItem("notebooksData");
-    //!!!
+  const handleExitButtonClick = async () => {
+  //const handleExitButtonClick = () => { //!!!comm
+    //localStorage.removeItem("loginData"); //!!!comm
+    await db.delete('auth', 'loginData'); //!!!
+    //!!!!
+    //localStorage.removeItem("notesData");
+    //localStorage.removeItem("notebooksData");
+    //!!!!
     dispatch?.({ type: ACTIONS.RESET_STORE, payload: 0 });
     navigate("/login");
   };

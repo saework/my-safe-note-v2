@@ -3,6 +3,8 @@ import React, { useContext } from "react";
 import { INoteRow } from "./interfaces";
 import { StateContext } from "./state/notes-context";
 import CryptoJS from "crypto-js";
+import { db } from "./db-utils/db-config"; //!!!
+import { ILoginData } from "./interfaces"; //!!!
 
 export const getcurrentNoteId = (): number | undefined => {
   const notesState = useContext(StateContext);
@@ -24,32 +26,71 @@ export const validateEmail = (email: string): boolean => {
     return res.test(String(email));
 };
 
-export const getLoginData = (dataType: string): string | { [key: string]: any } | undefined => {
-  const loginDataJSON = localStorage.getItem("loginData") as string;
-  if (!loginDataJSON) {
+//!!!comm
+// export const getLoginData = (dataType: string): string | { [key: string]: any } | undefined => {
+//   const loginDataJSON = localStorage.getItem("loginData") as string;
+//   if (!loginDataJSON) {
+//     return undefined;
+//   }
+//   const loginData = JSON.parse(loginDataJSON);
+//   let res;
+//   if (loginData) {
+//     if (dataType === "currenUser") {
+//       res = loginData.currenUser;
+//     }
+//     if (dataType === "userId") {
+//       res = loginData.userId;
+//     }
+//     if (dataType === "jwtToken") {
+//       res = loginData.jwtToken;
+//     }
+//     if (dataType === "jwtAuthHeader") {
+//       const { jwtToken } = loginData;
+//       if (jwtToken) {
+//         res = { Authorization: `bearer ${jwtToken}` };
+//       }
+//     }
+//   }
+//   return res;
+// };
+//!!!comm
+//!!!
+export const getLoginData = async (
+  dataType: "currentUser" | "userId" | "jwtToken" | "jwtAuthHeader"
+): Promise<
+  string | // для currentUser и jwtToken
+  number | // для userId
+  { Authorization: string } | // для jwtAuthHeader
+  undefined
+> => {
+  try {
+    // Получаем данные из IndexedDB вместо localStorage
+    const loginData = await db.get<ILoginData>('auth', 'loginData');
+    
+    if (!loginData) {
+      return undefined;
+    }
+
+    switch (dataType) {
+      case "currentUser":
+        return loginData.currentUser;
+      case "userId":
+        return loginData.userId;
+      case "jwtToken":
+        return loginData.jwtToken;
+      case "jwtAuthHeader":
+        return loginData.jwtToken 
+          ? { Authorization: `bearer ${loginData.jwtToken}` } 
+          : undefined;
+      default:
+        return undefined;
+    }
+  } catch (error) {
+    console.error("Error getting login data from IndexedDB:", error);
     return undefined;
   }
-  const loginData = JSON.parse(loginDataJSON);
-  let res;
-  if (loginData) {
-    if (dataType === "currenUser") {
-      res = loginData.currenUser;
-    }
-    if (dataType === "userId") {
-      res = loginData.userId;
-    }
-    if (dataType === "jwtToken") {
-      res = loginData.jwtToken;
-    }
-    if (dataType === "jwtAuthHeader") {
-      const { jwtToken } = loginData;
-      if (jwtToken) {
-        res = { Authorization: `bearer ${jwtToken}` };
-      }
-    }
-  }
-  return res;
 };
+//!!!
 
 // Функция для шифрования заметки
 export const encryptNote = (note: string, password: string): string => {
