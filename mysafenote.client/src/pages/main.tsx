@@ -71,7 +71,7 @@ function Main() {
 
         } else {
           //localStorage.removeItem("loginData"); //!!!comm
-          //await db.delete('auth', 'loginData'); //!!!раскомм!
+          await db.delete('auth', 'loginData');
           dispatch?.({ type: ACTIONS.RESET_STORE, payload: 0 });
           navigate("/login");
         }
@@ -121,7 +121,7 @@ function Main() {
       if (!userId) {
         // Проверяем авторизацию в IndexedDB
         const loginData = await db.get('auth', 'loginData');
-        console.log('Login data from IndexedDB:', loginData);
+        console.log('loginData из IndexedDB:', loginData);
         
         if (navigator.onLine && loginData) {
           loadDataFromServer();

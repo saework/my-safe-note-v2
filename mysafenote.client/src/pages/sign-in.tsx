@@ -36,13 +36,13 @@ function SignIn() {
       try {
         // Проверяем наличие данных в IndexedDB
         const loginData = await db.get('auth', 'loginData');
-        console.log('Login data from IndexedDB:', loginData);
+        console.log('loginData из IndexedDB:', loginData);
         
         if (navigator.onLine && loginData) {
           navigate("/main");
         }
       } catch (error) {
-        console.error("Error checking auth status:", error);
+        console.error("checkAuthStatus - Ошибка:", error);
       }
     };
 

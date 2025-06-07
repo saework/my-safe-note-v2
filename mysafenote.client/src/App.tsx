@@ -35,7 +35,7 @@ function App() {
         const jwtToken = await getLoginData("jwtToken");
         setLoggedIn(jwtToken !== undefined);
       } catch (error) {
-        console.error("Error checking auth:", error);
+        console.error("checkAuth - Ошибка:", error);
         setLoggedIn(false);
       } finally {
         setLoading(false); // Завершаем загрузку в любом случае

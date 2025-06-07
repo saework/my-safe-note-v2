@@ -12,6 +12,7 @@ const signUpApi = async (
   if (email && password && passwordRpt) {
     if (password === passwordRpt) {
       const validEmail = validateEmail(email);
+      try {
       if (validEmail === true) {
         console.log(password);
         const url = "api/User/signup";
@@ -37,10 +38,12 @@ const signUpApi = async (
           //localStorage.setItem("loginData", JSON.stringify(loginData)); //!!!
           //!!!
           console.log(loginData);
-
+          await db.delete("auth", "loginData");
           await db.add("auth", {
-            key: "loginData",
-            ...loginData,
+            key: "loginData", // Это keyPath
+            currentUser: loginData.currentUser,
+            userId: loginData.userId,
+            jwtToken: loginData.jwtToken, // Должно совпадать с keyPath индекса
           });
           //!!!
 
@@ -57,6 +60,12 @@ const signUpApi = async (
       } else {
         setReqMessage("Логин должен содержать английские буквы или цифры (минимум 3 символа)");
       }
+      //!!!
+      } catch (error) {
+        console.error("Ошибка при сохранении в IndexedDB:", error);
+        setReqMessage("Ошибка сохранения сессии");
+      }
+      //!!!
     } else {
       setReqMessage("Пароли не совпадают!");
     }

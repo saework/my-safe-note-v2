@@ -63,11 +63,12 @@ const signInApi = async (
           console.log(`signInApi - Ошибка соединения:${response.statusText}`);
           setReqMessage("Ошибка сервера");
         }
+       //!!!
       } catch (error) {
-        //!!!
         console.error("Ошибка при сохранении в IndexedDB:", error);
         setReqMessage("Ошибка сохранения сессии");
       }
+      //!!!
     } else {
       setReqMessage("Логин имеет не верный формат!");
     }

@@ -86,7 +86,7 @@ export const getLoginData = async (
         return undefined;
     }
   } catch (error) {
-    console.error("Error getting login data from IndexedDB:", error);
+    console.error("getLoginData - Ошибка получения loginData данных из IndexedDB:", error);
     return undefined;
   }
 };
