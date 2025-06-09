@@ -93,7 +93,9 @@ namespace MySafeNote.Server.Services
                 issuer: AuthOptions.ISSUER,
                 audience: AuthOptions.AUDIENCE,
                 claims: claims,
-                expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(60)), // время жизни токена
+                //expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(60)), // время жизни токена //!!!comm
+                //expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(43200)), // время жизни токена //!!!
+                expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(AuthOptions.TOKEN_LIFETIME_MINUTES)), // время жизни токена //!!!
                 signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
 
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);

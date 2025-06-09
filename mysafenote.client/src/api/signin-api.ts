@@ -43,6 +43,21 @@ const signInApi = async (
             jwtToken: loginData.jwtToken, // Должно совпадать с keyPath индекса
           });
 
+
+const parseJwt = (token: string) => {
+  try {
+    return JSON.parse(atob(token.split('.')[1]));
+  } catch {
+    return null;
+  }
+};
+
+
+  const payload = parseJwt(loginData.jwtToken);
+  console.log("Токен истекает:", new Date(payload.exp * 1000));
+
+//!!!убрать
+
   //           await db.add("auth", {
   //   key: "loginData",
   //   currentUser: "test@test.ru",
