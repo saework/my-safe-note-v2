@@ -3,8 +3,8 @@ import React, { useContext } from "react";
 import { INoteRow } from "./interfaces";
 import { StateContext } from "./state/notes-context";
 import CryptoJS from "crypto-js";
-import { db } from "./db-utils/db-config"; //!!!
-import { ILoginData } from "./interfaces"; //!!!
+import { db } from "./db-utils/db-config";
+import { ILoginData } from "./interfaces";
 
 export const getcurrentNoteId = (): number | undefined => {
   const notesState = useContext(StateContext);
@@ -26,35 +26,6 @@ export const validateEmail = (email: string): boolean => {
     return res.test(String(email));
 };
 
-//!!!comm
-// export const getLoginData = (dataType: string): string | { [key: string]: any } | undefined => {
-//   const loginDataJSON = localStorage.getItem("loginData") as string;
-//   if (!loginDataJSON) {
-//     return undefined;
-//   }
-//   const loginData = JSON.parse(loginDataJSON);
-//   let res;
-//   if (loginData) {
-//     if (dataType === "currenUser") {
-//       res = loginData.currenUser;
-//     }
-//     if (dataType === "userId") {
-//       res = loginData.userId;
-//     }
-//     if (dataType === "jwtToken") {
-//       res = loginData.jwtToken;
-//     }
-//     if (dataType === "jwtAuthHeader") {
-//       const { jwtToken } = loginData;
-//       if (jwtToken) {
-//         res = { Authorization: `bearer ${jwtToken}` };
-//       }
-//     }
-//   }
-//   return res;
-// };
-//!!!comm
-//!!!
 export const getLoginData = async (
   dataType: "currentUser" | "userId" | "jwtToken" | "jwtAuthHeader"
 ): Promise<
@@ -64,7 +35,7 @@ export const getLoginData = async (
   undefined
 > => {
   try {
-    // Получаем данные из IndexedDB вместо localStorage
+    // Получаем данные из IndexedDB
     const loginData = await db.get<ILoginData>('auth', 'loginData');
     
     if (!loginData) {
@@ -90,7 +61,6 @@ export const getLoginData = async (
     return undefined;
   }
 };
-//!!!
 
 // Функция для шифрования заметки
 export const encryptNote = (note: string, password: string): string => {

@@ -32,42 +32,17 @@ const signInApi = async (
             userId: responseData.userId,
             jwtToken: responseData.accessToken,
           };
-          //localStorage.setItem('loginData', JSON.stringify(loginData)); //!!!comm
-          //!!!
-          console.log(loginData);
+
           await db.delete("auth", "loginData");
           await db.add("auth", {
-            key: "loginData", // Это keyPath
+            key: "loginData", //keyPath
             currentUser: loginData.currentUser,
             userId: loginData.userId,
             jwtToken: loginData.jwtToken, // Должно совпадать с keyPath индекса
           });
 
-
-const parseJwt = (token: string) => {
-  try {
-    return JSON.parse(atob(token.split('.')[1]));
-  } catch {
-    return null;
-  }
-};
-
-
-  const payload = parseJwt(loginData.jwtToken);
-  console.log("Токен истекает:", new Date(payload.exp * 1000));
-
-//!!!убрать
-
-  //           await db.add("auth", {
-  //   key: "loginData",
-  //   currentUser: "test@test.ru",
-  //   userId: 1,
-  //   jwtToken: "eyJhbGci353JH4"
-  // });
-
-          //!!!
           console.log(
-            "signInApi - Аутентификация прошла успешно, loginData записан в LocalStorage"
+            "signInApi - Аутентификация прошла успешно, loginData записан в IndexedDB"
           );
           return loginData;
         } else if (response.status === 401) {
@@ -78,12 +53,10 @@ const parseJwt = (token: string) => {
           console.log(`signInApi - Ошибка соединения:${response.statusText}`);
           setReqMessage("Ошибка сервера");
         }
-       //!!!
       } catch (error) {
         console.error("Ошибка при сохранении в IndexedDB:", error);
         setReqMessage("Ошибка сохранения сессии");
       }
-      //!!!
     } else {
       setReqMessage("Логин имеет не верный формат!");
     }

@@ -11,24 +11,12 @@ import {
 } from "react-router-dom";
 import Note from "./pages/note.js";
 import { getLoginData } from "./functions";
-import Loader from './components/loader'; //!!!
+import Loader from "./components/loader";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true); //!!!
+  const [loading, setLoading] = useState<boolean>(true);
 
-  //!!!comm
-  // useEffect(() => {
-  //   const jwtToken =  getLoginData("jwtToken");
-  //   //if (jwtToken) {
-  //   if (jwtToken != undefined) { //!!!
-  //     setLoggedIn(true);
-  //   } else {
-  //     setLoggedIn(false);
-  //   }
-  // }, []);
-  //!!!comm
-  //!!!
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -45,14 +33,17 @@ function App() {
     checkAuth();
   }, []);
 
-    if (loading) {
-    return <div>{loading && (
+  if (loading) {
+    return (
+      <div>
+        {loading && (
           <div className="loader-overlay">
             <Loader />
           </div>
-        )}</div>; 
+        )}
+      </div>
+    );
   }
-  //!!!
 
   return (
     <>

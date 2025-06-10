@@ -19,7 +19,7 @@ import NoteDatePanel from "../components/note-date-panel";
 import NoteNotebookSelect from "../components/note-notebook-select";
 import { INoteDto } from "../interfaces";
 import Loader from "../components/loader";
-import { db } from "../db-utils/db-config"; //!!!
+import { db } from "../db-utils/db-config";
 
 const Note = () => {
   const navigate = useNavigate();
@@ -55,24 +55,10 @@ const Note = () => {
   const withoutnotebookFilterName = noteConfig.WITHOUTNOTEBOOK_FILTER_NAME;
   const ToolbarFixedHeight = noteConfig.TOOLBAR_FIXED_HEIGHT;
 
-  //!!!comm
-  // useEffect(() => {
-  //   if (userId === 0 || !userId) {
-  //     const loginDataJSON = localStorage.getItem("loginData");
-  //     if (loginDataJSON) {
-  //       const loginData = JSON.parse(loginDataJSON);
-  //       dispatch?.({ type: ACTIONS.LOGIN_SAVE_STORE, payload: loginData });
-  //       navigate("/main");
-  //     }
-  //   }
-  // }, [userId, currentNoteId]);
-  //!!!comm
-  //!!!
   useEffect(() => {
     const checkAuthAndRedirect = async () => {
       if (userId === 0 || !userId) {
         try {
-          // Получаем данные из IndexedDB вместо localStorage
           const loginData = await db.get('auth', 'loginData');
           if (loginData) {
             dispatch?.({ type: ACTIONS.LOGIN_SAVE_STORE, payload: loginData });
@@ -86,7 +72,6 @@ const Note = () => {
 
     checkAuthAndRedirect();
   }, [userId, currentNoteId, dispatch, navigate]);
-  //!!!
 
   useEffect(() => {
     if (needLoadNoteBody) {

@@ -10,7 +10,7 @@ import signInApi from "../api/signin-api";
 import Copyright from "../components/copyright";
 import { ACTIONS, DispatchContext } from "../state/notes-context";
 import "../style.scss";
-import { db } from "../db-utils/db-config"; //!!!
+import { db } from "../db-utils/db-config";
 
 function SignIn() {
   const dispatch = useContext(DispatchContext);
@@ -18,18 +18,6 @@ function SignIn() {
   const [email, setEmailVal] = useState<string>("");
   const [password, setPasswordVal] = useState<string>("");
   const navigate = useNavigate();
-
-  //!!!
-  // useEffect(() => {
-  //   const loginDataJSON = localStorage.getItem("loginData");
-  //   //const notesData = localStorage.getItem("notesData");
-  //   //console.log(notesData);
-  //   console.log(loginDataJSON);
-  //   // if (navigator.onLine && notesData && loginDataJSON) {
-  //   if (navigator.onLine && loginDataJSON) {
-  //     navigate("/main");
-  //   }
-  // }, [navigate]);
 
   useEffect(() => {
     const checkAuthStatus = async () => {
@@ -48,7 +36,6 @@ function SignIn() {
 
     checkAuthStatus();
   }, [navigate]);
-  //!!!
 
   // Войти по логину и паролю
   const signInHandler = async () => {

@@ -1,7 +1,7 @@
 import React from "react";
 import { validateEmail } from "../functions";
 import { ILoginData } from "../interfaces";
-import { db } from "../db-utils/db-config"; //!!!
+import { db } from "../db-utils/db-config";
 
 const signUpApi = async (
   email: string,
@@ -34,21 +34,17 @@ const signUpApi = async (
             userId: responseData.userId,
             jwtToken: responseData.accessToken,
           };
-          // сохраняем в хранилище sessionStorage токен доступа
-          //localStorage.setItem("loginData", JSON.stringify(loginData)); //!!!
-          //!!!
-          console.log(loginData);
+
           await db.delete("auth", "loginData");
           await db.add("auth", {
-            key: "loginData", // Это keyPath
+            key: "loginData", //keyPath
             currentUser: loginData.currentUser,
             userId: loginData.userId,
             jwtToken: loginData.jwtToken, // Должно совпадать с keyPath индекса
           });
-          //!!!
 
           console.log(
-            "signUpApi - Регистрация прошла успешно, loginData записан в LocalStorage"
+            "signUpApi - Регистрация прошла успешно, loginData записан в IndexedDB"
           );
           return loginData;
         } else if (response.status === 409) {
@@ -60,12 +56,10 @@ const signUpApi = async (
       } else {
         setReqMessage("Логин должен содержать английские буквы или цифры (минимум 3 символа)");
       }
-      //!!!
       } catch (error) {
         console.error("Ошибка при сохранении в IndexedDB:", error);
         setReqMessage("Ошибка сохранения сессии");
       }
-      //!!!
     } else {
       setReqMessage("Пароли не совпадают!");
     }
