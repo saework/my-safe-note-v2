@@ -19,6 +19,7 @@ import NoteDatePanel from "../components/note-date-panel";
 import NoteNotebookSelect from "../components/note-notebook-select";
 import { INoteDto } from "../interfaces";
 import Loader from "../components/loader";
+import { db } from "../db-utils/db-config";
 
 const Note = () => {
   const navigate = useNavigate();
@@ -55,15 +56,22 @@ const Note = () => {
   const ToolbarFixedHeight = noteConfig.TOOLBAR_FIXED_HEIGHT;
 
   useEffect(() => {
-    if (userId === 0 || !userId) {
-      const loginDataJSON = localStorage.getItem("loginData");
-      if (loginDataJSON) {
-        const loginData = JSON.parse(loginDataJSON);
-        dispatch?.({ type: ACTIONS.LOGIN_SAVE_STORE, payload: loginData });
-        navigate("/main");
+    const checkAuthAndRedirect = async () => {
+      if (userId === 0 || !userId) {
+        try {
+          const loginData = await db.get('auth', 'loginData');
+          if (loginData) {
+            dispatch?.({ type: ACTIONS.LOGIN_SAVE_STORE, payload: loginData });
+            navigate("/main");
+          }
+        } catch (error) {
+          console.error("Error checking auth status:", error);
+        }
       }
-    }
-  }, [userId, currentNoteId]);
+    };
+
+    checkAuthAndRedirect();
+  }, [userId, currentNoteId, dispatch, navigate]);
 
   useEffect(() => {
     if (needLoadNoteBody) {

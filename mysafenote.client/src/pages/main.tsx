@@ -10,6 +10,7 @@ import { StateContext } from "../state/notes-context";
 import { ACTIONS, DispatchContext } from "../state/notes-context";
 import { useNavigate } from "react-router-dom";
 import Loader from '../components/loader';
+import { db } from "../db-utils/db-config";
 
 function Main() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -31,44 +32,57 @@ function Main() {
   const userId = notesState.userId;
   const needLoadData = notesState.needLoadData;
 
-  useEffect(() => {
-    if (!userId) {
-      navigate("/login");
-    }
-  }, [userId, navigate]);
-
   const loadDataFromServer = async () => {
-    if (userId && needLoadData) {
       setLoading(true);
       try {
+        
         const notesData = await loadNotesDataFromServer(userId);
         const notebooksData = await loadNotebooksDataFromServer(userId);
-        
-        dispatch?.({ type: ACTIONS.LOAD_BD, payload: notesData });
-        dispatch?.({ type: ACTIONS.LOAD_NOTEBOOKS, payload: notebooksData });
 
-        const loginDataJSON = localStorage.getItem("loginData");
-        if (loginDataJSON) {
-          const loginData = JSON.parse(loginDataJSON);
-          dispatch?.({ type: ACTIONS.LOGIN_SAVE_STORE, payload: loginData });
+        console.log(notesData);
+        if (notesData)  
+        {
+          dispatch?.({ type: ACTIONS.LOAD_BD, payload: notesData });
+          dispatch?.({ type: ACTIONS.LOAD_NOTEBOOKS, payload: notebooksData });
+
+          const loginData = await db.get('auth', 'loginData');
+          if (loginData) {
+            dispatch?.({ type: ACTIONS.LOGIN_SAVE_STORE, payload: loginData });
+          }
+        } else {
+          await db.delete('auth', 'loginData');
+          dispatch?.({ type: ACTIONS.RESET_STORE, payload: 0 });
+          navigate("/login");
         }
       } catch (error) {
+        
         console.error("Ошибка при загрузке данных:", error);
-
-        localStorage.removeItem("loginData");
-        dispatch?.({ type: ACTIONS.RESET_STORE, payload: 0 });
-        navigate("/login");
-
       } finally {
         dispatch?.({ type: ACTIONS.NEED_LOAD_DATA, payload: false });
         setLoading(false);
       }
-    }
   };
+    useEffect(() => {
+    const checkAuthAndLoad = async () => {
+      console.log(userId);
+      if (!userId) {
+        // Проверяем авторизацию в IndexedDB
+        const loginData = await db.get('auth', 'loginData');
+        console.log('loginData из IndexedDB:', loginData);
+        
+        if (navigator.onLine && loginData) {
+          loadDataFromServer();
+        } else {
+          console.log("Нет интернет-соединения или сохранённой сессии");
+          navigate("/login");
+        }
+      } else if (navigator.onLine && needLoadData) {
+        loadDataFromServer();
+      }
+    };
 
-  useEffect(() => {
-    loadDataFromServer();
-  }, [userId, needLoadData, dispatch]);
+    checkAuthAndLoad();
+    }, [userId, needLoadData, dispatch]);
 
   return (
     <div>

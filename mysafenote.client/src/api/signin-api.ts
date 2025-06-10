@@ -1,6 +1,7 @@
 import React from "react";
 import { validateEmail } from "../functions";
 import { ILoginData } from "../interfaces";
+import { db } from "../db-utils/db-config";
 
 const signInApi = async (
   email: string,
@@ -10,38 +11,51 @@ const signInApi = async (
   if (email && password) {
     const validEmail = validateEmail(email);
     if (validEmail === true) {
-      const url = "api/User/login";
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        }),
-      });
-      if (response.ok === true) {
-        const responseData = await response.json();
+      try {
+        const url = "api/User/login";
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email,
+            password: password,
+          }),
+        });
+        if (response.ok === true) {
+          const responseData = await response.json();
 
-        let loginData = {
-          currentUser: email,
-          userId: responseData.userId,
-          jwtToken: responseData.accessToken 
+          let loginData = {
+            currentUser: email,
+            userId: responseData.userId,
+            jwtToken: responseData.accessToken,
+          };
+
+          await db.delete("auth", "loginData");
+          await db.add("auth", {
+            key: "loginData", //keyPath
+            currentUser: loginData.currentUser,
+            userId: loginData.userId,
+            jwtToken: loginData.jwtToken, // Должно совпадать с keyPath индекса
+          });
+
+          console.log(
+            "signInApi - Аутентификация прошла успешно, loginData записан в IndexedDB"
+          );
+          return loginData;
+        } else if (response.status === 401) {
+          setReqMessage("Не верный логин или пароль!");
+        } else if (response.status === 404) {
+          setReqMessage("Пользователь с таким логином не найден");
+        } else {
+          console.log(`signInApi - Ошибка соединения:${response.statusText}`);
+          setReqMessage("Ошибка сервера");
         }
-        localStorage.setItem('loginData', JSON.stringify(loginData));
-        console.log(
-          "signInApi - Аутентификация прошла успешно, loginData записан в LocalStorage"
-        );
-        return loginData;
-      } else if (response.status === 401) {
-        setReqMessage("Не верный логин или пароль!");
-      } else if (response.status === 404) {
-        setReqMessage("Пользователь с таким логином не найден");
-      } else {
-        console.log(`signInApi - Ошибка соединения:${response.statusText}`);
-        setReqMessage("Ошибка сервера");
+      } catch (error) {
+        console.error("Ошибка при сохранении в IndexedDB:", error);
+        setReqMessage("Ошибка сохранения сессии");
       }
     } else {
       setReqMessage("Логин имеет не верный формат!");

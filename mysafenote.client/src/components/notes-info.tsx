@@ -27,6 +27,8 @@ import NotebookSmallPanel from "./notebook-small-panel";
 import Header from "./header";
 import Menu from "./menu";
 import Loader from '../components/loader';
+import { db } from "../db-utils/db-config";
+
 
 interface IProps {
   handlerLoadFromServer: () => void;
@@ -187,8 +189,8 @@ function NotesInfo(props: IProps) {
     setCurrentPage(0);
   };
 
-  const handleExitButtonClick = () => {
-    localStorage.removeItem("loginData");
+  const handleExitButtonClick = async () => {
+    await db.delete('auth', 'loginData');
     dispatch?.({ type: ACTIONS.RESET_STORE, payload: 0 });
     navigate("/login");
   };

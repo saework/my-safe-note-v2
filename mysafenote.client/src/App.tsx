@@ -11,18 +11,39 @@ import {
 } from "react-router-dom";
 import Note from "./pages/note.js";
 import { getLoginData } from "./functions";
+import Loader from "./components/loader";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const jwtToken = getLoginData("jwtToken");
-    if (jwtToken) {
-      setLoggedIn(true);
-    } else {
-      setLoggedIn(false);
-    }
+    const checkAuth = async () => {
+      try {
+        const jwtToken = await getLoginData("jwtToken");
+        setLoggedIn(jwtToken !== undefined);
+      } catch (error) {
+        console.error("checkAuth - Ошибка:", error);
+        setLoggedIn(false);
+      } finally {
+        setLoading(false); // Завершаем загрузку в любом случае
+      }
+    };
+
+    checkAuth();
   }, []);
+
+  if (loading) {
+    return (
+      <div>
+        {loading && (
+          <div className="loader-overlay">
+            <Loader />
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <>

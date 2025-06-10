@@ -6,8 +6,9 @@ import moment from 'moment-timezone';
 export const loadNotesDataFromServer = async (
   userId: number
 ): Promise<INoteRow[] | undefined> => {
-  const jwtToken = getLoginData("jwtToken");
-  if (userId === 0 || !userId) userId = Number(getLoginData("userId"));
+  const jwtToken = await getLoginData("jwtToken");
+  console.log(jwtToken);
+  if (userId === 0 || !userId) userId = Number(await getLoginData("userId"));
 
   if (!_.isEmpty(jwtToken) && userId > 0) {
     console.log(
@@ -34,6 +35,9 @@ export const loadNotesDataFromServer = async (
         lastChangeDate: moment.utc(note.lastChangeDate).local().toDate(),
       }));
       return resultData;
+
+    } else if (response.status === 401) {
+          console.log("loadNotesDataFromServer - Ошибка. Пользователь не авторизован");
     } else {
       console.log(
         `loadNotesDataFromServer - Ошибка при получении данных с сервера - ${response.statusText}`
@@ -49,8 +53,8 @@ export const loadNotesDataFromServer = async (
 export const loadNotebooksDataFromServer = async (
   userId: number
 ): Promise<INotebook[] | undefined> => {
-  const jwtToken = getLoginData("jwtToken");
-  if (userId === 0 || !userId) userId = Number(getLoginData("userId"));
+  const jwtToken = await getLoginData("jwtToken");
+  if (userId === 0 || !userId) userId = Number(await getLoginData("userId"));
 
   if (!_.isEmpty(jwtToken) && userId > 0) {
     console.log(
@@ -71,6 +75,10 @@ export const loadNotebooksDataFromServer = async (
       const data: INotebook[] = await response.json();
       console.log("loadNotebooksDataFromServer - Получены данные с сервера");
       return data;
+
+    } else if (response.status === 401) {
+    console.log("loadNotebooksDataFromServer - Ошибка. Пользователь не авторизован");
+
     } else {
       console.log(
         `loadNotebooksDataFromServer - Ошибка при получении данных с сервера - ${response.statusText}`
@@ -85,8 +93,8 @@ export const loadNotebooksDataFromServer = async (
 
 export const exportNotesFromServer = async (userId: number): Promise<void> => {
   try {
-    const jwtToken = getLoginData("jwtToken");
-    if (userId === 0 || !userId) userId = Number(getLoginData("userId"));
+    const jwtToken = await getLoginData("jwtToken");
+    if (userId === 0 || !userId) userId = Number(await getLoginData("userId"));
 
     if (!_.isEmpty(jwtToken) && userId > 0) {
       console.log(
@@ -135,8 +143,8 @@ export const importNotesToServer = async (
 ): Promise<boolean> => {
   let result = false;
   try {
-    const jwtToken = getLoginData("jwtToken");
-    if (userId === 0 || !userId) userId = Number(getLoginData("userId"));
+    const jwtToken = await getLoginData("jwtToken");
+    if (userId === 0 || !userId) userId = Number(await getLoginData("userId"));
 
     if (!_.isEmpty(jwtToken) && userId > 0) {
       console.log(

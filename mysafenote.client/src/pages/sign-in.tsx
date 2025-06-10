@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -10,6 +10,7 @@ import signInApi from "../api/signin-api";
 import Copyright from "../components/copyright";
 import { ACTIONS, DispatchContext } from "../state/notes-context";
 import "../style.scss";
+import { db } from "../db-utils/db-config";
 
 function SignIn() {
   const dispatch = useContext(DispatchContext);
@@ -17,6 +18,24 @@ function SignIn() {
   const [email, setEmailVal] = useState<string>("");
   const [password, setPasswordVal] = useState<string>("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      try {
+        // Проверяем наличие данных в IndexedDB
+        const loginData = await db.get('auth', 'loginData');
+        console.log('loginData из IndexedDB:', loginData);
+        
+        if (navigator.onLine && loginData) {
+          navigate("/main");
+        }
+      } catch (error) {
+        console.error("checkAuthStatus - Ошибка:", error);
+      }
+    };
+
+    checkAuthStatus();
+  }, [navigate]);
 
   // Войти по логину и паролю
   const signInHandler = async () => {
